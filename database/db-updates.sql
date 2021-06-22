@@ -415,35 +415,6 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.9.20210414' WHERE `conf_na
 UPDATE `tbl_configurations` SET `conf_val` = 'RV-2.2' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 
 
--- Table structure for table `tbl_gdpr_data_requests`
-
-CREATE TABLE `tbl_gdpr_data_requests` (
-  `gdprdatareq_id` int(11) NOT NULL,
-  `gdprdatareq_user_id` int(11) NOT NULL,
-  `gdprdatareq_type` tinyint(1) NOT NULL DEFAULT '0',
-  `gdprdatareq_reason` text NOT NULL,
-  `gdprdatareq_status` tinyint(1) NOT NULL DEFAULT '0',
-  `gdprdatareq_added_on` datetime NOT NULL,
-  `gdprdatareq_updated_on` datetime NOT NULL,
-  `gdprdatareq_request_sent` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Indexes for table `tbl_gdpr_data_requests`
---
-ALTER TABLE `tbl_gdpr_data_requests`
-  ADD PRIMARY KEY (`gdprdatareq_id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `tbl_gdpr_data_requests`
---
-ALTER TABLE `tbl_gdpr_data_requests`
-  MODIFY `gdprdatareq_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
 INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Resume_Section_Title', '1', 'Add your resumes & eperiences');
 
 INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Resume_section_desc', '1', 'You have to add your resume, its a mandatory to create a profile as a tutor.');
@@ -533,7 +504,7 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.19.0.20210618' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 
 
-REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_REGISTER_WITH_EMAIL', 1, 'REGISTER WITH EMAIL')
+REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_REGISTER_WITH_EMAIL', 1, 'REGISTER WITH EMAIL');
 REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_BY_SIGNING_UP_YOU_AGREE_TO_TERMS', 1, 'By signing up with Yo!Coach, you agree to %s and %s');
 
 CREATE TABLE `tbl_gdpr_data_requests` (
@@ -554,4 +525,4 @@ CREATE TABLE `tbl_gdpr_data_requests` (
 ALTER TABLE `tbl_gdpr_data_requests`
   ADD PRIMARY KEY (`gdprdatareq_id`);
 
-  INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Gdpr_Delete_Account_Request_Description', '1', 'There shall be a popup saying “This request will delete all your personal data from the platform. After deleting you will have to again signup to use the platform');
+  REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Gdpr_Delete_Account_Request_Description', '1', 'This request will delete all your personal data from the platform. After deleting you will have to again signup to use the platform');
