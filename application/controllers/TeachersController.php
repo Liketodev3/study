@@ -455,7 +455,8 @@ class TeachersController extends MyAppController
         $weekStartDate = Fatapp::getPostedData('start', FatUtility::VAR_STRING, '');
         $weekEndDate = Fatapp::getPostedData('end', FatUtility::VAR_STRING, '');
         $userTimezone = MyDate::getUserTimeZone();
-        $systemTimeZone = MyDate::getTimeZone();
+		$systemTimeZone = MyDate::getTimeZone();
+
         if (empty($weekStartDate) || empty($weekEndDate)) {
             $weekStartAndEndDate = MyDate::getWeekStartAndEndDate(new DateTime());
             $weekStartDate = $weekStartAndEndDate['weekStart'];

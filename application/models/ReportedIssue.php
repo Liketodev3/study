@@ -398,6 +398,11 @@ class ReportedIssue extends MyAppModel
 
     public function getLessonToReport(int $sldetailId)
     {
+        $reportHours = FatApp::getConfig('CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION');
+        if ($reportHours < 1) {
+            $this->error = Label::getLabel('LBL_INVALID_REQUEST');
+            return false;
+        }
         $srch = new SearchBase('tbl_scheduled_lesson_details', 'sldetail');
         $srch->joinTable(ScheduledLesson::DB_TBL, 'INNER JOIN', 'slesson.slesson_id=sldetail.sldetail_slesson_id', 'slesson');
         $srch->addMultipleFields(['slesson_end_date', 'slesson_end_time']);
@@ -410,7 +415,6 @@ class ReportedIssue extends MyAppModel
             $this->error = Label::getLabel('LBL_INVALID_REQUEST');
             return false;
         }
-        $reportHours = FatApp::getConfig('CONF_REPORT_ISSUE_HOURS_AFTER_COMPLETION');
         $lessonEnddate = $lesson['slesson_end_date'] . ' ' . $lesson['slesson_end_time'];
         $lessonReportDate = strtotime($lessonEnddate . " +" . $reportHours . " hour");
         if ($lessonReportDate <= strtotime(date('Y-m-d H:i:s'))) {
@@ -480,8 +484,11 @@ class ReportedIssue extends MyAppModel
         $srch->joinTable('tbl_order_products', 'INNER JOIN', 'op.op_order_id=orders.order_id', 'op');
         $srch->addMultipleFields(['sldetail.sldetail_id', 'sldetail.sldetail_is_teacher_paid', 'orders.order_id',
             'slesson.slesson_id', 'slesson.slesson_teacher_id', 'op.op_unit_price', 'op.op_commission_percentage']);
-        $startdate = "CONCAT(slesson.slesson_end_date, ' ', slesson.slesson_end_time)";
-        $srch->addDirectCondition('DATE_ADD(' . $startdate . ', INTERVAL ' . $hours . ' HOUR) < NOW()', 'AND');
+        if ($hours > 0) {
+            $srch->addDirectCondition('DATE_ADD(slesson_teacher_end_time, INTERVAL ' . $hours . ' HOUR) < NOW()', 'AND');
+        } else {
+            $srch->addDirectCondition('slesson_teacher_end_time < NOW()', 'AND');
+        }
         $srch->addCondition('sldetail.sldetail_learner_status', '=', ScheduledLesson::STATUS_COMPLETED);
         $srch->addCondition('sldetail.sldetail_is_teacher_paid', '=', 0);
         $srch->addDirectCondition('repiss.repiss_id IS NULL', 'AND');

@@ -268,4 +268,26 @@ class MyDate extends FatDate
         }
         return date('Y-m-d H:i:s', strtotime('+1 hours', strtotime($date)));
     }
+
+    /**
+     * Get hours and minuties formatted string.
+     *
+     * @param integer $seconds
+     * @param string  $format
+     *
+     * @return string
+     */
+    public static function  getHoursMinutes(int $seconds, string $format = '%02d:%02d') : string
+    {
+
+        if (empty($seconds) || !is_numeric($seconds)) {
+            return false;
+        }
+
+        $minutes = round($seconds / 60);
+        $hours = floor($minutes / 60);
+        $remainMinutes = ($minutes % 60);
+
+        return sprintf($format, $hours, $remainMinutes);
+    }
 }

@@ -38,7 +38,7 @@ class TeacherGeneralAvailability extends MyAppModel
         }
 
         if (!empty($rows)) {
-            $weekStartDateDB = '2018-01-07';
+            $weekStartDateDB = static::DB_WEEK_STARTDATE;
             $weekDiff = MyDate::week_between_two_dates($weekStartDateDB, $weekStartDate);
             $bookingBefore = $teacherBookingBefore ?? 0;
 

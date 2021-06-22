@@ -6,6 +6,7 @@ $colorClass = [
     3 => 'cell-green-80',
     4 => 'cell-green-100',
 ];
+$hourStringLabel = Label::getLabel('LBL_{hourstring}_HRS');
 ?>
 <?php if ($teachers) { ?>
     <div class="sorting__head">
@@ -162,18 +163,31 @@ $colorClass = [
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php $timeslots = $teacher['testat_timeslots'] ?? CommonHelper::getEmptyDaySlots(); ?>
+                                                <?php 
+                                                    $timeslots = $teacher['testat_timeslots'] ?? CommonHelper::getEmptyDaySlots();
+                                                    // prx($timeslots);
+                                                 ?>
                                                 <?php foreach ($slots as $index => $slot) { ?>
                                                     <tr>
                                                         <td>
                                                             <div class="cal-cell"><?php echo $slot; ?></div>
                                                         </td>
-                                                        <?php foreach ($timeslots as $day => $hours) { ?>
-                                                            <?php $hour = $hours[$index] ?? 0; ?>
+                                                        <?php 
+                                                        // prx($timeslots);
+                                                        foreach ($timeslots as $day => $hours) { ?>
+                                                            <?php
+                                                                if (!empty($hours[$index])) {
+                                                                    $hourString = Mydate::getHoursMinutes($hours[$index]);
+                                                                    $hour  = str_replace(":", '.', $hourString);
+                                                                    $hour = (ceil(FatUtility::float($hour)));
+                                                                    $hour = ($hour == 0) ? 1 : $hour;
+                                                                    $hourStringLabel = str_replace('{hourstring}', $hourString, $hourStringLabel);
+                                                                }
+                                                            ?>
                                                             <td class="is-hover">
-                                                                <?php if ($hour > 0) { ?>
+                                                                <?php if (!empty($hours[$index])) { ?>
                                                                     <div class="cal-cell <?php echo $colorClass[$hour]; ?>"></div>
-                                                                    <div class="tooltip tooltip--top bg-black"><?php echo $hour; ?> <?php echo Label::getLabel('LBL_Hrs', $siteLangId); ?></div>
+                                                                    <div class="tooltip tooltip--top bg-black"><?php echo $hourStringLabel; ?></div>
                                                                 <?php } else { ?>
                                                                     <div class="cal-cell"></div>
                                                                 <?php } ?>
