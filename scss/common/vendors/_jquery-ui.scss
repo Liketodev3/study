@@ -88,7 +88,7 @@
 .ui-autocomplete {
     position: absolute;
     top: 0;
-    #{theme('direction.left','value')}: 0;
+    left: 0;
     cursor: default; max-height: 220px; overflow-x:hidden; overflow-y: auto;
 }
 .ui-menu {

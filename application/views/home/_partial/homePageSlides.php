@@ -1,6 +1,6 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <?php $layoutDirection = CommonHelper::getLayoutDirection(); ?>
-<section class="section padding-0">
+<section class="section section--slideshow">
     <div class="slideshow slideshow-js">
         <?php foreach ($slides as $slide) {
             $desktop_url = '';
