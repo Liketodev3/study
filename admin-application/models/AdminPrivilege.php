@@ -147,7 +147,7 @@ class AdminPrivilege
             static::SECTION_PRICE_SLAB => Label::getLabel('MSG_Price_Slab', $langId),
             static::SECTION_IMAGE_ATTRIBUTES => Label::getLabel('MSG_Image_Attributes', $langId),
             static::SECTION_ROBOTS => Label::getLabel('MSG_Robots_Txt', $langId),
-            static::SECTION_GDPR_REQUESTS => Label::getLabel('Msg_Manage_Gdpr_Requests',CommonHelper::getLangId()),
+            static::SECTION_GDPR_REQUESTS => Label::getLabel('Msg_Manage_Gdpr_Requests', CommonHelper::getLangId()),
 
         ];
         return $arr;
@@ -750,11 +750,13 @@ class AdminPrivilege
         return $this->checkPermission($adminId, static::SECTION_COMMISSION_REPORT, static::PRIVILEGE_READ, $returnResult);
     }
 
-    public function canViewGdprRequests($adminId = 0,$returnResult = false){
+    public function canViewGdprRequests($adminId = 0, $returnResult = false)
+    {
         return $this->checkPermission($adminId, static::SECTION_GDPR_REQUESTS, static::PRIVILEGE_READ, $returnResult);
     }
 
-    public function canEditGdprRequests($adminId = 0,$returnResult = false){
+    public function canEditGdprRequests($adminId = 0, $returnResult = false)
+    {
         return $this->checkPermission($adminId, static::SECTION_GDPR_REQUESTS, static::PRIVILEGE_WRITE, $returnResult);
     }
 
@@ -772,7 +774,7 @@ class AdminPrivilege
     {
         return $this->checkPermission($adminId, static::SECTION_ROBOTS, static::PRIVILEGE_READ, $returnResult);
     }
-    
+
     public function canEditRobotsSection($adminId = 0, $returnResult = false)
     {
         return $this->checkPermission($adminId, static::SECTION_ROBOTS, static::PRIVILEGE_WRITE, $returnResult);
