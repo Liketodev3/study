@@ -697,7 +697,7 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         /* validation[ */
         $lessonDetail = ScheduledLesson::getAttributesById($lessonId);
         $canEdit = ($lessonDetail['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING) ||
-            (($lessonDetail['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) &&
+                (($lessonDetail['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) &&
                 (strtotime($lessonDetail['slesson_end_date'] . " " . $lessonDetail['slesson_end_time']) > strtotime(date('Y-m-d H:i:s'))));
 
         if (($lessonDetail['slesson_teacher_id'] != UserAuthentication::getLoggedUserId()) || !$canEdit) {
@@ -1064,7 +1064,9 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             FatUtility::dieJsonError(Label::getLabel('LBL_Cannot_End_Lesson_So_Early!'));
         }
         $db = FatApp::getDb();
-        $db->startTransaction();
+        if (!$db->startTransaction()) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_SOMETHING_WENT_WRONG_PLEASE_TRY_AGAIN'));
+        }
         $dataUpdateArr = [];
         $lessonMeetingDetail = new LessonMeetingDetail($lessonId, $lessonRow['teacherId']);
         if ($meetingRow = $lessonMeetingDetail->getMeetingDetails(LessonMeetingDetail::KEY_ZOOM_RAW_DATA)) {
@@ -1097,20 +1099,17 @@ class TeacherScheduledLessonsController extends TeacherBaseController
             $db->rollbackTransaction();
             FatUtility::dieJsonError($sLessonObj->getError());
         }
-        if ($lessonRow['slesson_grpcls_id'] == 0) {
-            $lessonDetailArray = [
-                'sldetail_learner_end_time' => date('Y-m-d H:i:s'),
-                'sldetail_learner_status' => ScheduledLesson::STATUS_COMPLETED
-            ];
-            $scheduledLessonDetailObj = new ScheduledLessonDetails($lessonRow['sldetail_id']);
-            $scheduledLessonDetailObj->assignValues($lessonDetailArray);
-            if (!$scheduledLessonDetailObj->save()) {
-                $db->rollbackTransaction();
-                FatUtility::dieJsonError($scheduledLessonDetailObj->getError());
-            }
+        $record = new TableRecord(ScheduledLessonDetails::DB_TBL);
+        $record->assignValues(['sldetail_learner_end_time' => date('Y-m-d H:i:s'),
+            'sldetail_learner_status' => ScheduledLesson::STATUS_COMPLETED]);
+        if (!$record->update(['smt' => 'sldetail_slesson_id = ?', 'vals' => [$lessonRow['slesson_id']]])) {
+            $db->rollbackTransaction();
+            FatUtility::dieJsonError($record->getError());
         }
-        $db->commitTransaction();
-        FatUtility::dieJsonSuccess(Label::getLabel('LBL_Lesson_Ended_Successfully!'));
+        if (!$db->commitTransaction()) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_SOMETHING_WENT_WRONG_PLEASE_TRY_AGAIN'));
+        }
+        FatUtility::dieJsonSuccess(Label::getLabel('LBL_LESSON_ENDED_SUCCESSFULLY!'));
     }
 
     public function endLessonNotification($lessonId)
@@ -1118,4 +1117,5 @@ class TeacherScheduledLessonsController extends TeacherBaseController
         $this->set('lesonId', $lessonId);
         $this->_template->render(false, false);
     }
+
 }
