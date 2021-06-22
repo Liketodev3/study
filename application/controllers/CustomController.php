@@ -35,7 +35,7 @@ class CustomController extends MyAppController
                 }
             }
             $orderObj = $orderObj->getLessonsByOrderId($orderId);
-            $orderObj->addFld(['slesson_grpcls_id','op_qty']);
+            $orderObj->addFld(['slesson_grpcls_id', 'op_qty']);
             $orderObj->doNotCalculateRecords(true);
             $orderObj->doNotLimitRecords(true);
             $lessonInfo = FatApp::getDb()->fetch($orderObj->getResultSet());
@@ -107,7 +107,7 @@ class CustomController extends MyAppController
     {
         $textMessage = Label::getLabel('MSG_learner_success_trial_{dashboard-url}_{contact-us-page-url}');
         $arrReplace = [
-            '{dashboard-url}' => CommonHelper::generateUrl('learner'),
+            '{dashboard-url}' => CommonHelper::generateUrl('learner', '', [], CONF_WEBROOT_DASHBOARD),
             '{contact-us-page-url}' => CommonHelper::generateUrl('contact'),
         ];
         foreach ($arrReplace as $key => $val) {
