@@ -525,3 +525,7 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 
 
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_You_already_Requested_Delete_Account', '1', 'You Already Requested For Delete Account');
+
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.20.0.20210622' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+
+-- -------------------------------------------------- --
