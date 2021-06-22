@@ -524,4 +524,4 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 ('LBL_Delete_Account_Form', '1', 'Delete Account');
 
 
-REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_You_already_Requested_Delete_Account', '1', 'You Already Requested For Delete Account ?');
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_You_already_Requested_Delete_Account', '1', 'You Already Requested For Delete Account');
