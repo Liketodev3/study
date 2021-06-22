@@ -23,15 +23,15 @@ $(document).ready(function(){
 		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
 		fcom.ajax(fcom.makeUrl('GuestUser', 'updateEmail'), data, function(ans) {
-			$.systemMessage.close();
+			$.mbsmessage.close();
 			if (ans.status != 1) {
 				$(document).trigger('close.mbsmessage');
-				$.systemMessage(ans.msg , 'alert alert--danger');
+				$.mbsmessage(ans.msg , true, 'alert alert--danger');
 			}else{
-				$.systemMessage(ans.msg , 'alert alert--success');
+				$.mbsmessage(ans.msg , true, 'alert alert--success');
 			}
 			if( ans.redirectUrl ){
-				setTimeout(function(){window.location.href = ans.redirectUrl }, 2000);
+				setTimeout(function(){window.location.href = ans.redirectUrl }, 1000);
 			}
 
 			frm.reset();

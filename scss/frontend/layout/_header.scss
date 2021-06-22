@@ -1,25 +1,37 @@
-//
-//HEADER
-//
+$header: 'header';
 
-.header{
-    position: sticky;
+.#{$header} {
+   
     #{theme('direction.left','value')}: 0;
-    #{theme('direction.right','value')}: 0;
-    top: 0;
-    z-index: 11;
+    #{theme('direction.right','value')}: 0; position: sticky; top: 0; transition: all 0.5s;
+   
+    z-index: 11; 
 
-    // @media(min-width: theme('breakpoints.xxxl','value')) {
-    //     .container{
-    //         width: 1800px;
-    //     }
-    // }
+    @media(min-width: theme('breakpoints.xxxl','value')) {
+        .container{
+            max-width: 1800px;
+            width: 100%;
+        }
+    }
+
+
+    @media(max-width: theme('breakpoints.xl','value')) {
+       &{ position: sticky; top: 0;}
+    }
+    
+    @media(min-width: theme('breakpoints.xl','value')) {
+        &.nav-down{transform: translateY(0);}
+        &.nav-up{transform: translateY(-100%);}
+    }
+
 }
+
+
 
 $header-primary: 'header-primary';
 
 .#{$header-primary} {
-    padding: calc(var(--margin-8) - 1px) 0;
+    padding: theme('padding.6') 0;
     
     color: #111;
     background: theme('color.white');
@@ -30,7 +42,7 @@ $header-primary: 'header-primary';
     box-shadow:0px 3px 3px #0000000F;
 
     @media(max-width: theme('breakpoints.md','value')) {
-        padding: calc(var(--margin-4) - 1px) 0;
+        padding:theme('padding.4') 0;;
     }
 
     .header__logo{
@@ -73,10 +85,12 @@ $header-primary: 'header-primary';
 
         .header-dropdown{
             .is-visible{
-                @media(max-width: theme('breakpoints.md','value')){
-                    bottom: 100%;
+                @media(max-width: theme('breakpoints.xl','value')){
                     opacity: 1;
                     visibility: visible;
+                }
+                @media(max-width: theme('breakpoints.md','value')){
+                    bottom: 100%;
                     z-index: 3;
                     padding-top: 0;
                     top: 60px;
@@ -116,6 +130,17 @@ $header-primary: 'header-primary';
                 padding-top: 0;
                 width: calc(100% - 30px);
                 #{theme('direction.left','value')}: 15px;
+            }
+        }
+    }
+}
+
+.header__right{
+    .header-dropdown{
+        .is-visible{
+            @media(max-width: theme('breakpoints.xl','value')){
+                opacity: 1;
+                visibility: visible;
             }
         }
     }
@@ -302,13 +327,18 @@ $header-dropdown--arrow: 'header-dropdown--arrow';
     min-width: 200px;
     z-index: 2;
     #{theme('direction.right','value')}: 0;
-    top: 160%;
+    top: 100%;
     position: absolute;
     padding: 0;
     opacity: 0;
     visibility: hidden;
     width: 100%;
-    padding-top: calc(var(--padding-8) - 1px); 
+  
+    @media(min-width: theme('breakpoints.xl','value')){
+        &{
+            top: 150%;  padding-top: calc(var(--padding-8) - 2px); 
+        }
+    }
 }
 
 .menu--inline{
@@ -360,7 +390,7 @@ $header-dropdown--arrow: 'header-dropdown--arrow';
 
 .header-dropdown{
     position: relative;
-    @media(min-width: theme('breakpoints.md','value')) {
+    @media(min-width: theme('breakpoints.xl','value')) {
         &:hover{
             .header-dropdown__target{
                 opacity: 1;
@@ -586,13 +616,32 @@ $header-dropdown--arrow: 'header-dropdown--arrow';
         }
         
         .header-controls__action{
-            padding: theme('padding.5') theme('padding.5');
+            @media(min-width: theme('breakpoints.md','value')){
+                padding: theme('padding.5') theme('padding.5');
+            }
             display: block;
             position: relative;
-            svg{
-                fill: var(--color-white);
-            }
+        }
+        
+    }
 
+    div{
+        &:not(.header-dropwown--profile){
+           
+            @media(max-width: theme('breakpoints.md','value')){
+                a{
+                    padding: theme('padding.5') theme('padding.4');
+                    height: auto;
+                    svg{
+                        fill: theme('color.white');
+                        width: 17px;
+                        height: 17px;
+                    }
+                    .lang{
+                        display: none;
+                    }
+                }
+            }
            
         }
     }

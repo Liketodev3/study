@@ -434,7 +434,7 @@ $margin-bottom-6: "margin-bottom-6";
         height: 2.8rem !important;
         border: 1px solid var(--color-gray-300) !important;
         position: relative;
-        border-radius: var(--radius-1) !important;
+        border-radius: 0 !important;
 
         .select2-selection__rendered{
             line-height: 38px !important;
@@ -551,7 +551,7 @@ $scheduled-lesson-popup: "scheduled-lesson-popup";
 .#{$scheduled-lesson-popup} {
     
     .fc-header-toolbar{
-        margin-top: 20px;
+        margin-top: 0;
     }
 }
 
@@ -581,8 +581,8 @@ $fc-scroller-harness: "fc-scroller-harness";
 
             .fc-daygrid-event {
                 background: var(--color-gray-100);
-                padding: var(--padding-4) var(--padding-3);
-                height: 50px;
+                padding: var(--padding-2) var(--padding-3);
+                height: 35px;
                 border-#{theme('direction.left','value')}: 2px solid var(--color-primary);
                 border-radius: 0;
                 margin-#{theme('direction.left','value')}: var(--margin-2) ;
@@ -972,11 +972,17 @@ $dashboard-calendar: "dashboard-calendar";
 
 .dashboard-calendar{
     .fc-header-toolbar{
+        margin-top: 0 !important;
+        border: none;
+        padding: theme('padding.4') theme('padding.4');
         @media(max-width:theme('breakpoints.md','value')){
             flex-direction: row;
         }
         .fc-toolbar-chunk{
             width: auto;
+            &:first-child{
+                display: none;
+            }
             .fc-today-button{
                 padding: 0 theme('padding.5') !important;
             }
@@ -1015,4 +1021,15 @@ $dashboard-calendar: "dashboard-calendar";
 }
 .fc .fc-toolbar{
     flex-wrap: wrap;
+}
+
+.calendar-loader {
+    position: absolute;
+    width: 100%;
+    background: rgba(255,255,255, 0.5);
+    height: 100%;
+    z-index: 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

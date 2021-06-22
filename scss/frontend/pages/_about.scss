@@ -155,18 +155,12 @@ $section--value: 'section--value';
         
         @media(min-width: theme('breakpoints.lg','value')){
             #{theme('direction.left','value')}: 82px;
+            position: absolute;
         }
         .slick-active{
             button{
                 background-color: var(--color-white);
                 border-color: var(--color-white);
-            }
-        }
-        li{
-            &:not(.slick-active){
-                button{
-                    opacity: 0.15;
-                }
             }
         }
     }

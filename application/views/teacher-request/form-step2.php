@@ -19,7 +19,7 @@ $profileImageUploaded = User::isProfilePicUploaded($user['user_id']);
         <div class="head__title">
             <h4><?php echo Label::getLabel('LBL_Tutor_registration', $siteLangId); ?></h4>
         </div>
-    </div> 
+    </div>
     <div class="page-block__body">
         <?php echo $frm->getFormTag() ?>
         <div class="row justify-content-center no-gutters">
@@ -48,7 +48,12 @@ $profileImageUploaded = User::isProfilePicUploaded($user['user_id']);
                                     <?php if (!$profileImageUploaded) { ?><span class="spn_must_field">*</span><?php } ?>
                                 </h6>
                                 <p><?php echo Label::getLabel('LBL_Profile_Pic_Fld_Desc', $siteLangId); ?></p>
-                                <div class="btn-file"><?php echo $profileImageField->getHTML(); ?></div>
+                                <span class="btn btn--bordered color-primary btn--small btn--fileupload btn--wide margin-right-2">
+                                    <?php
+                                    echo $profileImageField->getHTML();
+                                    echo Label::getLabel('LBL_Upload');
+                                    ?>
+                                </span>
                             </div>
                         </div>
                         <div class="row">
@@ -101,7 +106,7 @@ $profileImageUploaded = User::isProfilePicUploaded($user['user_id']);
                             </div>
                         </div>
                     </div>
-                </div>          
+                </div>
             </div>
         </div>
         <?php

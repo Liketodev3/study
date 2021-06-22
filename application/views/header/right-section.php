@@ -13,7 +13,7 @@
             <svg class="icon icon--globe">
                 <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#globe'; ?>"></use>
             </svg>
-            <span><?php echo $languages[$siteLangId]['language_code'] . ' - ' . $currencies[$siteCurrencyId]; ?></span>
+            <span class="lang"><?php echo $languages[$siteLangId]['language_code'] . ' - ' . $currencies[$siteCurrencyId]; ?></span>
             <svg class="icon icon--arrow">
                 <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#arrow-black' ?>"></use>
             </svg>

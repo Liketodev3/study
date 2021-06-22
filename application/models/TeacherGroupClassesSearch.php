@@ -190,7 +190,8 @@ class TeacherGroupClassesSearch extends SearchBase
             'grpcls_entry_fee',
             'grpcls_start_datetime',
             'grpcls_end_datetime',
-            'grpcls_status'
+            'grpcls_status',
+            'grpcls_tlanguage_id'
         ]);
         $srch->doNotCalculateRecords();
         $srch->addCondition('grpcls_teacher_id', '=', $teacher_id);

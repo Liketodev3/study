@@ -105,8 +105,8 @@ class TeachingLanguage extends MyAppModel
         $teachingLangSrch->addOrder('tlanguage_display_order', 'asc');
         $rs = $teachingLangSrch->getResultSet();
 
-
         $teachingLanguagesArr = FatApp::getDb()->fetchAll($rs);
+        
         return $teachingLanguagesArr;
     }
 

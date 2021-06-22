@@ -103,11 +103,29 @@ class ConfigurationsController extends AdminBaseController
                 }
             }
         }
+        $msg = '';
         $record = new Configurations();
-        if (isset($post["CONF_SEND_SMTP_EMAIL"]) && $post["CONF_SEND_EMAIL"] && $post["CONF_SEND_SMTP_EMAIL"] && (($post["CONF_SEND_SMTP_EMAIL"] != FatApp::getConfig("CONF_SEND_SMTP_EMAIL")) || ($post["CONF_SMTP_HOST"] != FatApp::getConfig("CONF_SMTP_HOST")) || ($post["CONF_SMTP_PORT"] != FatApp::getConfig("CONF_SMTP_PORT")) || ($post["CONF_SMTP_USERNAME"] != FatApp::getConfig("CONF_SMTP_USERNAME")) || ($post["CONF_SMTP_SECURE"] != FatApp::getConfig("CONF_SMTP_SECURE")) || ($post["CONF_SMTP_PASSWORD"] != FatApp::getConfig("CONF_SMTP_PASSWORD")))) {
-            $smtp_arr = ["host" => $post["CONF_SMTP_HOST"], "port" => $post["CONF_SMTP_PORT"], "username" => $post["CONF_SMTP_USERNAME"], "password" => $post["CONF_SMTP_PASSWORD"], "secure" => $post["CONF_SMTP_SECURE"]];
+        if (
+            isset($post["CONF_SEND_SMTP_EMAIL"]) &&
+            $post["CONF_SEND_EMAIL"] &&
+            $post["CONF_SEND_SMTP_EMAIL"] &&
+            (
+                ($post["CONF_SEND_SMTP_EMAIL"] != FatApp::getConfig("CONF_SEND_SMTP_EMAIL")) ||
+                ($post["CONF_SMTP_HOST"] != FatApp::getConfig("CONF_SMTP_HOST")) ||
+                ($post["CONF_SMTP_PORT"] != FatApp::getConfig("CONF_SMTP_PORT")) ||
+                ($post["CONF_SMTP_USERNAME"] != FatApp::getConfig("CONF_SMTP_USERNAME")) ||
+                ($post["CONF_SMTP_SECURE"] != FatApp::getConfig("CONF_SMTP_SECURE")) ||
+                ($post["CONF_SMTP_PASSWORD"] != FatApp::getConfig("CONF_SMTP_PASSWORD")))
+        ) {
+            $smtp_arr = [
+                "host" => $post["CONF_SMTP_HOST"],
+                "port" => $post["CONF_SMTP_PORT"],
+                "username" => $post["CONF_SMTP_USERNAME"],
+                "password" => $post["CONF_SMTP_PASSWORD"],
+                "secure" => $post["CONF_SMTP_SECURE"]
+            ];
             if (EmailHandler::sendSmtpTestEmail($this->adminLangId, $smtp_arr)) {
-                FatUtility::dieJsonSuccess(Label::getLabel('LBL_We_have_sent_a_test_email_to_administrator_account' . FatApp::getConfig("CONF_SITE_OWNER_EMAIL"), $this->adminLangId));
+                $msg = Label::getLabel('LBL_We_have_sent_a_test_email_to_administrator_account' . FatApp::getConfig("CONF_SITE_OWNER_EMAIL"), $this->adminLangId);
             } else {
                 FatUtility::dieJsonError(Label::getLabel("LBL_SMTP_settings_provided_is_invalid_or_unable_to_send_email_so_we_have_not_saved_SMTP_settings", $this->adminLangId));
             }
@@ -146,7 +164,7 @@ class ConfigurationsController extends AdminBaseController
             $teacherStat = new TeacherStat(0);
             $teacherStat->setTeachLangPricesBulk();
         }
-        $this->set('msg', Label::getLabel('MSG_Setup_Successful', $this->adminLangId));
+        $this->set('msg', $msg ?: Label::getLabel('MSG_Setup_Successful', $this->adminLangId));
         $this->set('frmType', $frmType);
         $this->set('langId', 0);
         $this->_template->render(false, false, 'json-success.php');

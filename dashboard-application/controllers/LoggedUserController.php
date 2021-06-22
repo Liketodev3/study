@@ -52,7 +52,7 @@ class LoggedUserController extends MyAppController
                 Message::addErrorMessage(Label::getLabel('MSG_Please_Configure_Your_Email,_try_after_reloading_the_page'));
                 FatUtility::dieWithError(Message::getHtml());
             }
-            FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'configureEmail'));
+            FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'configureEmail',[], CONF_WEBROOT_FRONT_URL));
         }
         return $userRow;
     }
