@@ -1500,8 +1500,7 @@ p {
     .slideshow-content {
       padding: var(--padding-8) var(--padding-10);
       min-width: 450px;
-      max-width: 450px;
-      margin: 0 0 0 -355px; } }
+      max-width: 450px; } }
   @media (max-width: 767px) {
     .slideshow-content {
       position: relative;

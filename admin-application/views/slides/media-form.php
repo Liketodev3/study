@@ -2,7 +2,6 @@
 $slideMediaFrm->setFormTagAttribute('class', 'web_form form_horizontal');
 $slideMediaFrm->developerTags['colClassPrefix'] = 'col-md-';
 $slideMediaFrm->developerTags['fld_default_col'] = 12;
-
 $fld1 = $slideMediaFrm->getField('slide_image');
 $fld1->addFieldTagAttribute('class','btn btn--primary btn--sm');
 $screenFld = $slideMediaFrm->getField('slide_screen');
