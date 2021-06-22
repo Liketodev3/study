@@ -34,5 +34,14 @@
         searchGdprRequests(document.frmSrch);
     };
 
+    goToSearchPage = function(page) {	
+		if(typeof page == undefined || page == null){
+			page = currentPage;
+		}
+		var frm = document.frmSrch;		
+		$(frm.page).val(page);
+		searchGdprRequests(frm);
+	};
+
     searchGdprRequests(document.frmSrch);
 })();
