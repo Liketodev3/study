@@ -18,12 +18,11 @@ class CustomController extends MyAppController
     {
         $textMessage = stripslashes(Label::getLabel('MSG_learner_success_order_{dashboard-url}_{contact-us-page-url}'));
         $arrReplace = [
-            '{dashboard-url}' => CommonHelper::generateUrl('learner'),
+            '{dashboard-url}' => CommonHelper::generateUrl('learner', '', [], CONF_WEBROOT_DASHBOARD),
             '{contact-us-page-url}' => CommonHelper::generateUrl('contact'),
         ];
-        foreach ($arrReplace as $key => $val) {
-            $textMessage = str_replace($key, $val, $textMessage);
-        }
+        $textMessage = str_replace(array_keys($arrReplace), $arrReplace, $textMessage);
+        
         if ($orderId) {
             $orderObj = new Order();
             $order = $orderObj->getOrderById($orderId);
@@ -110,9 +109,8 @@ class CustomController extends MyAppController
             '{dashboard-url}' => CommonHelper::generateUrl('learner', '', [], CONF_WEBROOT_DASHBOARD),
             '{contact-us-page-url}' => CommonHelper::generateUrl('contact'),
         ];
-        foreach ($arrReplace as $key => $val) {
-            $textMessage = str_replace($key, $val, $textMessage);
-        }
+        $textMessage = str_replace(array_keys($arrReplace), $arrReplace, $textMessage);
+       
         if ($orderId) {
             $orderObj = new Order();
             $order = $orderObj->getOrderById($orderId);
