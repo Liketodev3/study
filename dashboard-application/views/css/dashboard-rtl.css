@@ -3345,24 +3345,25 @@ div.tagsinput div {
     .status-bar .status-title h5 {
       font-size: var(--font-size-h5);
       color: var(--color-gray-000); }
-  @media (min-width: 1199px) {
-    .status-bar .status-bar__body {
-      height: calc(100% - 408px);
-      overflow: auto; } }
-  .status-bar .status-bar__body .calendar img {
-    width: 100%; }
-  .status-bar .status-bar__body .listing-window {
-    position: relative;
-    padding: var(--padding-6); }
-    .status-bar .status-bar__body .listing-window .scrollbar {
-      max-height: inherit;
-      height: calc(100% - 1px); }
-    .status-bar .status-bar__body .listing-window .message-display {
-      min-height: 25rem; }
-  @media (max-width: 1299px) {
-    .status-bar .status-bar__body {
-      max-height: 477px;
-      overflow: auto; } }
+  .status-bar .status-bar__body {
+    margin: var(--margin-6); }
+    @media (min-width: 1299px) {
+      .status-bar .status-bar__body {
+        height: calc(100% - 408px);
+        overflow: auto; } }
+    .status-bar .status-bar__body .calendar img {
+      width: 100%; }
+    .status-bar .status-bar__body .listing-window {
+      position: relative; }
+      .status-bar .status-bar__body .listing-window .scrollbar {
+        max-height: inherit;
+        height: calc(100% - 1px); }
+      .status-bar .status-bar__body .listing-window .message-display {
+        min-height: 25rem; }
+    @media (max-width: 1299px) {
+      .status-bar .status-bar__body {
+        max-height: 477px;
+        overflow: auto; } }
 
 .lesson-list-container .date span {
   margin-bottom: 15px; }
