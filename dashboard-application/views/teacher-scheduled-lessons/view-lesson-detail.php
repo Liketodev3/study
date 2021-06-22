@@ -94,7 +94,7 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
                                                     <?php
                                                     if (true == User::isProfilePicUploaded($learner['user_id'])) {
                                                         $lessonStudentImage = CommonHelper::generateFullUrl('Image', 'user', array($learner['user_id']), CONF_WEBROOT_FRONT_URL) . '?' . time();
-                                                        echo '<img src="' . $lessonStudentImage . '" alt="' . $learner['user_first_name'] . ' ' . $learner['user_last_name'] . '" />';
+                                                        echo '<img src="' . $lessonStudentImage . '" />';
                                                     }
                                                     ?>
                                                 </span>

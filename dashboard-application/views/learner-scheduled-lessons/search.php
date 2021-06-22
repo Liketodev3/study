@@ -126,7 +126,7 @@ $referer = preg_replace("(^https?://)", "", $referer);
                                         <?php
                                         if (true == User::isProfilePicUploaded($lesson['teacherId'])) {
                                             $img = CommonHelper::generateUrl('Image', 'user', array($lesson['teacherId'], 'normal', 1), CONF_WEBROOT_FRONT_URL) . '?' . time();
-                                            echo '<img src="' . $img . '" alt="' . $lesson['teacherFname'] . '" />';
+                                            echo '<img src="' . $img . '" />';
                                         }
                                         ?>	
                                     </span>

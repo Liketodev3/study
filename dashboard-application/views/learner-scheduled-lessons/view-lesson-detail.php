@@ -71,7 +71,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                                 <?php
                                 if (true == User::isProfilePicUploaded($lesson['slesson_teacher_id'])) {
                                     $img = CommonHelper::generateUrl('Image', 'user', array($lesson['slesson_teacher_id'], 'normal', 1), CONF_WEBROOT_FRONT_URL) . '?' . time();
-                                    echo '<img src="' . $img . '"  alt="' . $teacherFullName . '" />';
+                                    echo '<img src="' . $img . '" />';
                                 }
                                 ?>
                             </span>
