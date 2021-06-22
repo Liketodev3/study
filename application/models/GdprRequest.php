@@ -22,18 +22,15 @@ class GdprRequest extends MyAppModel
         $srch = new SearchBase(static::DB_TBL);
         $srch->addCondition('gdprdatareq_user_id', '=', $userId);
         $srch->addCondition('gdprdatareq_status', '=', static::STATUS_PENDING);
-        $rs = $srch->getResultSet();
-        $requestData = FatApp::getDb()->fetch($rs);
-        return $requestData;
+        return FatApp::getDb()->fetch($srch->getResultSet());
     }
 
     public static function getGdprRequestTypeArr($langId)
     {
-        $arr = [
+        return [
             static::TRUNCATE_DATA => Label::getLabel('LBL_Erase_Data', $langId),
             static::ANONYMIZE_DATA => Label::getLabel('LBL_Anonymize_Data', $langId)
         ];
-        return $arr;
     }
 
     public static function getStatusArr(int $langId)
@@ -57,35 +54,22 @@ class GdprRequest extends MyAppModel
         ];
     }
 
-    public static function getRequestStatus()
-    {
-        $getReqStatus = new SearchBase(static::DB_TBL);
-        $getReqStatus->addMultipleFields(['gdprdatareq_user_id', 'gdprdatareq_id', 'gdprdatareq_status']);
-        return $getReqStatus;
-    }
-
     public function truncateUserPersonalData(int $userId)
     {
         $attchedFile = new AttachedFile();
-        foreach ($this->attachedFileTypeArr() as $user_file_type_value) {
-            if (!$attchedFile->deleteFile($user_file_type_value, $userId)) {
-                continue;
-            }
+        foreach ($this->attachedFileTypeArr() as $type) {
+            $attchedFile->deleteFile($type, $userId);
         }
         $db = FatApp::getDb();
         $db->startTransaction();
-        $user = new user($userId);
-        if(!$user->truncateUserData() || !$user->truncateUserCredentials() || !$user->truncateUsersLangData() || !$user->deleteUserBankInfoData() || !$user->deleteUserEmailVerificationData() || !$user->truncateUserWithdrawalRequestsData() || !$user->deleteUserSetting() || !$user->deleteUserQualifications() || !$user->deleteUserEmailChangeRequests()){
-            $this->error = $user->getError();
-            $db->rollbackTransaction();
-            return false;
+
+        $user = new User($userId);
+        $user->assignValues(['user_deleted' => applicationConstants::YES]);
+
+        if ($user->truncateUserData() && $user->truncateUserCredentials() && $user->truncateUsersLangData() && $user->deleteUserBankInfoData() && $user->deleteUserEmailVerificationData() && $user->truncateUserWithdrawalRequestsData() && $user->deleteUserSetting() && $user->deleteUserQualifications() && $user->deleteUserEmailChangeRequests() && $user->save()) {
+            return $db->commitTransaction() || true;
         }
-        if(!$db->updateFromArray(User::DB_TBL, ['user_deleted' => applicationConstants::YES], ['smt' => 'user_id=?', 'vals' => [$userId]])){
-            $this->error = $user->getError();
-            $db->rollbackTransaction();
-            return false;
-        }
-        $db->commitTransaction();
-        return true;
+        $this->error = $user->getError();
+        return $db->rollbackTransaction() && false;
     }
 }

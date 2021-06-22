@@ -7,7 +7,7 @@ $header: 'header';
    
     z-index: 11; 
 
-    @media(min-width: theme('breakpoints.xxxl','value')) {
+    @media(min-width: theme('breakpoints.xxxxl','value')) {
         .container{
             max-width: 1800px;
             width: 100%;
@@ -336,7 +336,7 @@ $header-dropdown--arrow: 'header-dropdown--arrow';
   
     @media(min-width: theme('breakpoints.xl','value')){
         &{
-            top: 150%;  padding-top: calc(var(--padding-8) - 2px); 
+            top: 150%;  padding-top: var(--padding-6); 
         }
     }
 }

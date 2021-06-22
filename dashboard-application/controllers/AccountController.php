@@ -407,62 +407,45 @@ class AccountController extends LoggedUserController
 
  
 
-    public function deleteAccountForm(){
-        $userId = UserAuthentication::getLoggedUserId(true);
-        
-        if($userId < 1){
-            Message::addErrorMessage(Label::getLabel('LBL_User_not_logged'));
-            FatUtility::dieWithError(Message::getHtml());
-        }
-    
-        $gdprId = GdprRequest::getRequestFromUserId($userId);
-        if(!empty($gdprId)){
-            Message::addErrorMessage(Label::getLabel('LBL_You_already_requested_erase_date',$this->siteLangId));
+    public function deleteAccountForm()
+    {
+        $reqData = GdprRequest::getRequestFromUserId(UserAuthentication::getLoggedUserId());
+        if(!empty($reqData)){
+            Message::addErrorMessage(Label::getLabel('LBL_You_already_requested_erase_date', $this->siteLangId));
             FatUtility::dieWithError(Message::getHtml());
         
         }
-        $frm =  $this->getDeleteAccountForm($userId);
+        $frm =  $this->getDeleteAccountForm($this->siteLangId);
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
 
-    public function setUpGdprDeleteAcc(){
-
-        $userId = UserAuthentication::getLoggedUserId();
-        if (1 > $userId) {
-            FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
-        }
-        $frm = $this->getDeleteAccountForm();
+    public function setUpGdprDeleteAcc()
+    {
+        $frm = $this->getDeleteAccountForm($this->siteLangId);
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
-        if (!$post) {
-            Message::addErrorMessage($frm->getValidationErrors());
-            FatApp::dieWithError(FatUtility::generateUrl('Gdpr'));
-        }
-
-        $gdpr_request_data = [
-        'gdprdatareq_user_id'=> $userId,
-        'gdprdatareq_reason'=> $post['gdprdatareq_reason'],
-        'gdprdatareq_type'=> GdprRequest::TRUNCATE_DATA,
-        'gdprdatareq_added_on'=>date('Y-m-d H:i:s'),
-        'gdprdatareq_updated_on'=>date('Y-m-d H:i:s'),
-        'gdprdatareq_status'=>GdprRequest::STATUS_PENDING,
+        !$post && FatUtility::dieJsonError(current($frm->getValidationErrors()));
+        $data = [
+            'gdprdatareq_user_id' => UserAuthentication::getLoggedUserId(),
+            'gdprdatareq_reason' => $post['gdprdatareq_reason'],
+            'gdprdatareq_type' => GdprRequest::TRUNCATE_DATA,
+            'gdprdatareq_added_on' => date('Y-m-d H:i:s'),
+            'gdprdatareq_updated_on' => date('Y-m-d H:i:s'),
+            'gdprdatareq_status'=>GdprRequest::STATUS_PENDING,
         ];
-
-        $gdpr = new GdprRequest();
-        $gdpr->assignValues($gdpr_request_data);
-        if (!$gdpr->save()) {
-            FatUtility::dieJsonError($gdpr->getError());
-        }
-        $this->set('msg', Label::getLabel("LBL_GDPR_Request_Added_Successfully!"));
-        $this->_template->render(false, false, 'json-success.php');
+        
+        $gdprRequest = new GdprRequest();
+        $gdprRequest->assignValues($data);
+        $gdprRequest->save() && FatUtility::dieJsonSuccess(Label::getLabel("LBL_GDPR_Request_Added_Successfully!"));
+        FatUtility::dieJsonError($gdprRequest->getError());
     }
 
 
-    private function getDeleteAccountForm() 
+    private function getDeleteAccountForm(int $langId)
     {
         $frm = new Form('gdprRequestForm');
-        $frm->addTextArea(Label::getLabel('LBl_Reason_for_Erasure'), 'gdprdatareq_reason')->requirements()->setRequired(true);
-        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Send', $this->siteLangId), array('class' => 'btn btn--primary block-on-mobile'));
+        $frm->addTextArea(Label::getLabel('LBl_Reason_for_Erasure', $langId), 'gdprdatareq_reason')->requirements()->setRequired(true);
+        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Send', $langId), ['class' => 'btn btn--primary block-on-mobile']);
         return $frm;
     }
 
