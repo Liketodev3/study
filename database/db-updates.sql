@@ -519,10 +519,5 @@ CREATE TABLE `tbl_gdpr_data_requests` (
    PRIMARY KEY (`gdprdatareq_id`)
    ) ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
 
---
--- Indexes for table `tbl_gdpr_data_requests`
---
-ALTER TABLE `tbl_gdpr_data_requests`
-  ADD PRIMARY KEY (`gdprdatareq_id`);
 
   REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Gdpr_Delete_Account_Request_Description', '1', 'This request will delete all your personal data from the platform. After deleting you will have to again signup to use the platform');
