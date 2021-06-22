@@ -4,7 +4,7 @@ class GdprRequestsController extends AdminBaseController
     public function __construct($action)
     {
         parent::__construct($action);
-        $this->objPrivilege->canViewGdprRequests($this->admin_id, true);
+        $this->objPrivilege->canViewGdprRequests();
     }
 
     public function index()
@@ -23,24 +23,21 @@ class GdprRequestsController extends AdminBaseController
             FatUtility::dieJsonError($frmSrch->getValidationErrors());
         }
         $srch = new GdprReqSearch();
-        if (!empty($post['keyword'])) {
-            $srch->addCondition('gdprdatareq_reason', 'LIKE', '%' . $post['keyword'] . '%');
-        }
-
-        if (isset($post['status']) && $post['status'] !== "") {
-            $srch->addCondition('gdprdatareq_status', '=', $post['status']);
-        }
-        if ($post['added_on']) {
-            $srch->addCondition('mysql_func_cast(gdprdatareq_added_on AS DATE)', '=', $post['added_on'], 'AND', true);
-        }
-        $page = max($post['page'], 1);
-        $pageSize = FatApp::getConfig('CONF_FRONTEND_PAGESIZE', FatUtility::VAR_INT, 10);
-        $srch->addOrder('gdprdatareq_added_on', 'DESC');
         $srch->addCondition('gdprdatareq_status', '!=', GdprRequest::STATUS_DELETED_REQUEST);
+
+        !empty($post['keyword']) &&  $srch->addCondition('gdprdatareq_reason', 'LIKE', '%' . $post['keyword'] . '%');
+        ($post['status'] !== "") && $srch->addCondition('gdprdatareq_status', '=', $post['status']);
+        $post['added_on'] && $srch->addCondition('mysql_func_cast(gdprdatareq_added_on AS DATE)', '=', $post['added_on'], 'AND', true);
+        
+        $srch->addOrder('gdprdatareq_added_on', 'DESC');
+        
+        $page = max($post['page'], 1);
+        $pageSize = FatApp::getConfig('CONF_ADMIN_PAGESIZE', FatUtility::VAR_INT, 10);
+        
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
-        $rs = $srch->getResultSet();
-        $gdprRequests = FatApp::getDb()->fetchAll($rs);
+
+        $gdprRequests = FatApp::getDb()->fetchAll($srch->getResultSet());
 
         /* [ */
         $totalRecords = $srch->recordCount();
@@ -93,10 +90,10 @@ class GdprRequestsController extends AdminBaseController
         $frm->addTextBox(Label::getLabel('LBL_Search_By_Keyword', $langId), 'keyword', '', ['placeholder' => Label::getLabel('LBL_Search_By_Keyword', $langId)]);
         $fld = $frm->addHiddenField('', 'page', 1);
         $fld->requirements()->setIntPositive();
-        $frm->addSelectBox(Label::getLabel('LBl_Status', $langId), 'status', GdprRequest::getStatusArr($this->adminLangId));
+        $frm->addSelectBox(Label::getLabel('LBl_Status', $langId), 'status', GdprRequest::getStatusArr($langId));
         $frm->addDateField(Label::getLabel('LBl_Added_On', $langId), 'added_on');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Search', $langId));
-        $frm->addResetButton('', 'btn_reset', Label::getLabel('LBL_Reset', $langId));
+        $frm->addButton('', 'btn_reset', Label::getLabel('LBL_Reset', $langId));
         return $frm;
     }
 
@@ -118,7 +115,7 @@ class GdprRequestsController extends AdminBaseController
             FatUtility::dieJsonError($this->str_invalid_request);
         }
         $gdprRequestDetail = $gdpr->getFlds();
-        if ($status == GdprRequest::STATUS_DELETED_DATA) {
+        if (GdprRequest::STATUS_DELETED_DATA == $status) {
             if (!$gdpr->truncateUserPersonalData($gdprRequestDetail['gdprdatareq_user_id'])) {
                 FatUtility::dieJsonError($gdpr->getError());
             }
