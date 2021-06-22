@@ -61,7 +61,7 @@ class TeacherSearch extends SearchBase
     public function applyPrimaryConditions(int $userId = 0): void
     {
         $this->addCondition('teacher.user_deleted', '=', 0);
-        $this->addCondition('teacher.user_id', '!=', $userId);
+        $this->addCondition('teacher.user_id', '=', 19);
         $this->addCondition('teacher.user_is_teacher', '=', 1);
         $this->addCondition('teacher.user_country_id', '>', 0);
         $this->addCondition('teacher.user_url_name', '!=', "");
@@ -405,13 +405,20 @@ class TeacherSearch extends SearchBase
         $systemTimezone = MyDate::getTimeZone();
         $userTimezone = MyDate::getUserTimeZone($userId);
         $userDate = MyDate::changeDateTimezone($currentDate, $userTimezone, $systemTimezone);
+        $weekStartAndEndDate = MyDate::getWeekStartAndEndDate(new DateTime($userDate));
+        $weekStartDateDB = TeacherGeneralAvailability::DB_WEEK_STARTDATE;
+        $weekDiff = MyDate::week_between_two_dates($weekStartDateDB, $weekStartAndEndDate['weekStart'] . ' 00:00:00');
         $emptySlots = CommonHelper::getEmptyDaySlots();
         foreach ($users as $id => $user) {
             $records = [];
             $teacherTimeZone = (empty($user[0]['user_timezone'])) ? MyDate::getTimeZone() : $user[0]['user_timezone'];
             foreach ($user as $key => $row) {
+                $row['startdate'] = date('Y-m-d H:i:s', strtotime($row['startdate'] . ' + ' . $weekDiff . ' weeks'));
+                $row['enddate'] = date('Y-m-d H:i:s',  strtotime($row['enddate'] . ' + ' . $weekDiff . ' weeks'));
+
                 $removedstTimeFromStartTime = MyDate::isDateWithDST($row['startdate'], $teacherTimeZone);
                 $removedstTimeFromEndTime = MyDate::isDateWithDST($row['enddate'], $teacherTimeZone);
+
                 $startDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $row['startdate'], true, $userTimezone, $removedstTimeFromStartTime);
                 $endDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $row['enddate'], true, $userTimezone, $removedstTimeFromEndTime);
                 $row['tgavl_day'] = $row['tgavl_day'] % 6;
@@ -422,52 +429,31 @@ class TeacherSearch extends SearchBase
                     array_push($records, $tmpRecord);
                 }
             }
+            $userTimeslots[$id] = $emptySlots;
             $timeSlots = [
-                ['2018-01-07 00:00:00', '2018-01-07 04:00:00'], ['2018-01-07 04:00:00', '2018-01-07 08:00:00'],
-                ['2018-01-07 08:00:00', '2018-01-07 12:00:00'], ['2018-01-07 12:00:00', '2018-01-07 16:00:00'],
-                ['2018-01-07 16:00:00', '2018-01-07 20:00:00'], ['2018-01-07 20:00:00', '2018-01-08 00:00:00'],
+                ['00:00:00', '04:00:00'], ['04:00:00', '08:00:00'],
+                ['08:00:00', '12:00:00'], ['12:00:00', '16:00:00'],
+                ['16:00:00', '20:00:00'], ['20:00:00', '00:00:00'],
             ];
-            $daySlots = [];
             foreach ($records as $row) {
-                $daySlot = [];
                 $startdate = strtotime($row['startdate']);
                 $enddate = strtotime($row['enddate']);
-
+                $dateNumber = MyDate::getDayNumber($row['startdate']);
                 foreach ($timeSlots as $index => $slotDates) {
-                    $slotStart = strtotime($slotDates[0] . ' +' . $row['tgavl_day'] . ' day');
-                    $slotEnd = strtotime($slotDates[1] . ' +' . $row['tgavl_day'] . ' day');
-                    if ($startdate >= $slotStart && $enddate >= $slotStart && $startdate <= $slotEnd && $enddate <= $slotEnd) {
-                        $daySlot[$index] = ceil(abs($startdate - $enddate) / 3600);
-                    } elseif ($startdate >= $slotStart && $enddate >= $slotStart && $startdate <= $slotEnd && $enddate >= $slotEnd) {
-                        $daySlot[$index] = ceil(abs($startdate - $slotEnd) / 3600);
-                    } elseif ($startdate <= $slotStart && $enddate >= $slotStart && $enddate <= $slotEnd) {
-                        $daySlot[$index] = ceil(abs($slotStart - $enddate) / 3600);
-                    } elseif ($startdate <= $slotStart && $enddate >= $slotEnd) {
-                        $daySlot[$index] = ceil(abs($slotStart - $slotEnd) / 3600);
-                    } else {
-                        $daySlot[$index] = 0;
+                    $slotStart = strtotime(date('Y-m-d', $startdate) . ' ' . $slotDates[0]);
+                    $slotEnd = strtotime(date('Y-m-d', $startdate) . ' ' . $slotDates[1]);
+                    if ($slotDates[0] == '20:00:00') {
+                        $dateTime = date('Y-m-d', $startdate) . ' ' . $slotDates[1];
+                        $slotEnd = strtotime($dateTime . ' +1 day');
+                    }
+                    if ($slotEnd > $startdate &&  $enddate >  $slotStart) {
+                        $startDateTime = max($slotStart, $startdate);
+                        $endDateTime = min($slotEnd, $enddate);
+                        $diffInSec = ($endDateTime - $startDateTime);
+                        $userTimeslots[$id][$dateNumber][$index] += $diffInSec;
                     }
                 }
-                $daySlots[$row['tgavl_day']][] = $daySlot;
             }
-            $filledSlots = [];
-            foreach ($daySlots as $day => $slots) {
-                $arr = [0, 0, 0, 0, 0, 0];
-                foreach ($slots as $slot) {
-                    $arr[0] += $slot[0];
-                    $arr[1] += $slot[1];
-                    $arr[2] += $slot[2];
-                    $arr[3] += $slot[3];
-                    $arr[4] += $slot[4];
-                    $arr[5] += $slot[5];
-                }
-                $filledSlots['d' . $day] = $arr;
-            }
-            $flvs = [];
-            foreach ($emptySlots as $day => $esv) {
-                $flvs[$day] = $filledSlots[$day] ?? $esv;
-            }
-            $userTimeslots[$id] = $flvs;
         }
         return $userTimeslots;
     }
@@ -475,13 +461,14 @@ class TeacherSearch extends SearchBase
     private static function breakIntoDays(array $row, array $records = []): array
     {
         if (date('Y-m-d', strtotime($row['startdate'])) != date('Y-m-d', strtotime($row['enddate']))) {
+
+            $endDateTime = date('Y-m-d', strtotime($row['startdate'] . ' +1 day')) . ' 00:00:00';
             array_push($records, [
                 'tgavl_day' => MyDate::getDayNumber($row['startdate']),
                 'startdate' => $row['startdate'],
-                'enddate' => date('Y-m-d', strtotime($row['startdate'])) . ' 23:59:59'
+                'enddate' =>  $endDateTime
             ]);
-            $newStartDate = date('Y-m-d', strtotime($row['startdate'] . ' +1 day')) . ' 00:00:00';
-            $newRow = ['tgavl_day' => MyDate::getDayNumber($newStartDate), 'startdate' => $newStartDate, 'enddate' => $row['enddate']];
+            $newRow = ['tgavl_day' => MyDate::getDayNumber($endDateTime), 'startdate' => $endDateTime, 'enddate' => $row['enddate']];
             return static::breakIntoDays($newRow, $records);
         } else {
             array_push($records, $row);
@@ -542,5 +529,4 @@ class TeacherSearch extends SearchBase
     {
         $this->joinTable(UserSetting::DB_TBL, 'INNER JOIN', 'us.us_user_id = teacher.user_id', 'us');
     }
-
 }
