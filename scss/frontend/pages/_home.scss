@@ -70,7 +70,7 @@ $slideshow: "slideshow";
         padding: var(--padding-8) var(--padding-10);
         min-width: 450px;
         max-width: 450px;
-        margin: 0 0 0 -355px;
+        // margin: 0 0 0 -355px;
     }
 
     @media(max-width: theme('breakpoints.md','value')) {
