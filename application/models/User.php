@@ -226,7 +226,7 @@ class User extends MyAppModel
             'if(sum(IFNULL(ustelgpr_utl_id,0)),1,0) as teachLangCount',
         ]);
         $srch->joinTable(UserQualification::DB_TBL, 'LEFT JOIN', 'user_id = uqualification_user_id and uqualification_active = ' . applicationConstants::YES, 'utqual');
-       
+
         $spokenSrch = new searchBase(UserToLanguage::DB_TBL);
         $spokenSrch->doNotCalculateRecords();
         $spokenSrch->doNotLimitRecords();
@@ -241,7 +241,7 @@ class User extends MyAppModel
         $skillSrch->addMultipleFields(['utpref_user_id', 'utpref_preference_id']);
         $srch->joinTable("(" . $skillSrch->getQuery() . ")", 'LEFT JOIN', 'user_id = utpref.utpref_user_id', 'utpref');
         /* ] */
-         /* teachLanguage[ */
+        /* teachLanguage[ */
         $tlangSrch = new SearchBase(UserTeachLanguage::DB_TBL, 'utl');
         $skillSrch->joinTable(Preference::DB_TBL, 'INNER JOIN', 'preference_id = utpref_preference_id');
         $skillSrch->addMultipleFields(['utpref_user_id', 'utpref_preference_id']);
@@ -258,7 +258,7 @@ class User extends MyAppModel
         $tlangSrch->addCondition('tlanguage_active', '=', applicationConstants::YES);
         $srch->joinTable("(" . $tlangSrch->getQuery() . ")", 'LEFT JOIN', 'user_id = utl_user_id', 'utls');
         /* ] */
-        
+
         $srch->joinTable(TeacherGeneralAvailability::DB_TBL, 'LEFT JOIN', 'user_id = tgavl_user_id', 'tga');
         $srch->addGroupBy('user_id');
         $srch->addGroupBy('uqualification_user_id');
@@ -414,10 +414,13 @@ class User extends MyAppModel
             return false;
         }
         $db = FatApp::getDb();
-        if (!$db->updateFromArray(static::DB_TBL_CRED,
-                        [static::DB_TBL_CRED_PREFIX . 'verified' => $v],
-                        ['smt' => static::DB_TBL_CRED_PREFIX . 'user_id = ?', 'vals' => [$this->getMainTableRecordId()]
-                ])) {
+        if (!$db->updateFromArray(
+            static::DB_TBL_CRED,
+            [static::DB_TBL_CRED_PREFIX . 'verified' => $v],
+            [
+                'smt' => static::DB_TBL_CRED_PREFIX . 'user_id = ?', 'vals' => [$this->getMainTableRecordId()]
+            ]
+        )) {
             $this->error = $db->getError();
             return false;
         }
@@ -432,10 +435,13 @@ class User extends MyAppModel
             return false;
         }
         $db = FatApp::getDb();
-        if (!$db->updateFromArray(static::DB_TBL_CRED,
-                        [static::DB_TBL_CRED_PREFIX . 'active' => $v],
-                        ['smt' => static::DB_TBL_CRED_PREFIX . 'user_id = ?', 'vals' => [$this->getMainTableRecordId()]
-                ])) {
+        if (!$db->updateFromArray(
+            static::DB_TBL_CRED,
+            [static::DB_TBL_CRED_PREFIX . 'active' => $v],
+            [
+                'smt' => static::DB_TBL_CRED_PREFIX . 'user_id = ?', 'vals' => [$this->getMainTableRecordId()]
+            ]
+        )) {
             $this->error = $db->getError();
             return false;
         }
@@ -510,10 +516,13 @@ class User extends MyAppModel
             return false;
         }
         $db = FatApp::getDb();
-        if (!$db->updateFromArray(static::DB_TBL_CRED,
-                        [static::DB_TBL_CRED_PREFIX . 'password' => $pwd],
-                        ['smt' => static::DB_TBL_CRED_PREFIX . 'user_id = ?', 'vals' => [$this->getMainTableRecordId()]
-                ])) {
+        if (!$db->updateFromArray(
+            static::DB_TBL_CRED,
+            [static::DB_TBL_CRED_PREFIX . 'password' => $pwd],
+            [
+                'smt' => static::DB_TBL_CRED_PREFIX . 'user_id = ?', 'vals' => [$this->getMainTableRecordId()]
+            ]
+        )) {
             $this->error = $db->getError();
             return false;
         }
@@ -789,7 +798,6 @@ class User extends MyAppModel
             $txnArray['utxn_type'] = Transaction::TYPE_MONEY_WITHDRAWN;
             $transObj = new Transaction($userId);
             if ($txnId = $transObj->addTransaction($txnArray)) {
-                
             } else {
                 $this->error = $transObj->getError();
                 $broken = true;
@@ -835,7 +843,7 @@ class User extends MyAppModel
             'user_first_name',
             'user_last_name',
             'user_country_id',
-            
+
         ]);
         $srch->setPageNumber($page);
         $srch->setPageSize($pageSize);
@@ -856,4 +864,76 @@ class User extends MyAppModel
         return (bool) self::getAttributesById($userId, 'user_is_teacher');
     }
 
+    public function truncateUserData($langId = 1)
+    {
+        $db = FatApp::getDb();
+
+        $tblUsersData = [
+            'user_url_name' => '',
+            'user_first_name' => Label::getLabel('LBL_Deleted', $langId),
+            'user_last_name' => Label::getLabel('LBL_User', $langId),
+            'user_phone' => '',
+            'user_gender' => NULL,
+            'user_dob' => NULL,
+            'user_profile_info' => '',
+            'user_address1' => '',
+            'user_address2' => '',
+            'user_facebook_id' => '',
+            'user_googleplus_id' => '',
+            'user_fb_access_token' => '',
+            'user_zip' => '',
+            'user_country_id' => NULL,
+            'user_state_id' => NULL,
+            'user_city' => '',
+        ];
+        return $db->updateFromArray(static::DB_TBL, $tblUsersData, ['smt' => 'user_id=?', 'vals' => [$this->mainTableRecordId]]);
+    }
+
+    public  function truncateUserCredentials()
+    {
+        $db = FatApp::getDb();
+        $tbl_user_credentials_data = ['credential_username' => NULL, 'credential_email' => NULL];        
+        return $db->updateFromArray(static::DB_TBL_CRED, $tbl_user_credentials_data, ['smt' => 'credential_user_id=?', 'vals' => [$this->mainTableRecordId]]);
+    }
+
+    public function truncateUsersLangData()
+    {
+        return FatApp::getDb()->deleteRecords(static::DB_TBL_LANG, array('smt' => 'userlang_user_id = ?', 'vals' => [$this->mainTableRecordId]));
+    }
+
+    public function deleteUserBankInfoData()
+    {
+        return FatApp::getDb()->deleteRecords(static::DB_TBL_USR_BANK_INFO, array('smt' => 'ub_user_id = ?', 'vals' => [$this->mainTableRecordId]));
+    }
+
+    public function deleteUserEmailVerificationData()
+    {
+        return FatApp::getDb()->deleteRecords(static::DB_TBL_USER_EMAIL_VER, array('smt' => 'uev_user_id = ?', 'vals' => [$this->mainTableRecordId]));
+    }
+
+    public function truncateUserWithdrawalRequestsData()
+    {
+        $db = FatApp::getDb();
+        $tbl_user_withdrawal_requests_data = [
+            'withdrawal_bank' => '',
+            'withdrawal_account_holder_name' => '',
+            'withdrawal_account_number' => '',
+            'withdrawal_ifc_swift_code' => '',
+            'withdrawal_bank_address' => '',
+            'withdrawal_paypal_email_id' => ''
+        ];
+        return $db->updateFromArray(static::DB_TBL_USR_WITHDRAWAL_REQ, $tbl_user_withdrawal_requests_data, ['smt' => 'withdrawal_user_id=?', 'vals' => [$this->mainTableRecordId]]);
+    }
+    public function deleteUserSetting()
+    {
+        return FatApp::getDb()->deleteRecords(UserSetting::DB_TBL, array('smt' => 'us_user_id  = ?', 'vals' => [$this->mainTableRecordId]));
+    }
+    public function deleteUserQualifications()
+    {
+        return FatApp::getDb()->deleteRecords(UserQualification::DB_TBL, ['smt' => 'uqualification_user_id = ?', 'vals' => [$this->mainTableRecordId]]);
+    }
+    public  function deleteUserEmailChangeRequests()
+    {
+        return FatApp::getDb()->deleteRecords(UserEmailChangeRequest::DB_TBL, ['smt' => 'uecreq_user_id = ?', 'vals' => [$this->mainTableRecordId]]);
+    }
 }

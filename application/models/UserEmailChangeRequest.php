@@ -69,4 +69,9 @@ class UserEmailChangeRequest extends MyAppModel
         return true;
     }
 
+    public static function deleteUserEmailChangeRequestDataByUserId($userId)
+    {
+        FatApp::getDb()->deleteRecords(static::DB_TBL, array('smt' => 'uecreq_user_id = ?', 'vals' => array($userId)));
+        return true;
+    }
 }
