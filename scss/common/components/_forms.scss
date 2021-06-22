@@ -512,3 +512,7 @@ textarea[disabled] {
         }
     }
 }
+
+.form__body{
+    min-height: unset !important;
+}

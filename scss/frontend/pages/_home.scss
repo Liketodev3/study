@@ -42,22 +42,29 @@ $slideshow: "slideshow";
 
 }
 
+.section--slideshow{padding: 0; max-width: 2000px; position: relative; margin: 0 auto;}
 
 
 .slideshow-content{
     position: absolute;
-    left: 50%;
+    #{theme('direction.left','value')}:5%;
     top: 50%;
     min-width: 520px;
     max-width: 520px;
     color: #111;
-    margin-left:-650px;
-    transform: translate(0, -50%);
+    
+    transform: translateY(-50%);
     z-index: 2;
     padding: var(--padding-14) var(--padding-18);
     text-align: center;
     backdrop-filter: saturate(180%) blur(20px);
     background: rgba(255,255,255,0.7);
+
+    // @media(min-width: theme('breakpoints.xxxxl','value')) {
+    //     #{theme('direction.left','value')}: 50%;
+    //     margin-#{theme('direction.left','value')}:-390px;
+    //     transform: translate(#{theme('direction.left', -50%)}, -50%);
+    // }
 
     @media(max-width: theme('breakpoints.xl','value')) {
         padding: var(--padding-8) var(--padding-10);

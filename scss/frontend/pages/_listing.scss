@@ -63,8 +63,8 @@
         width: 20%;
     }
     .filter__head{
-        min-width: 200px;
-        max-width: 200px;
+        min-width: 220px;
+        max-width: 220px;
         height: 60px;
         background-color: #fff;
         border: 1px solid var(--color-gray-200);
@@ -111,9 +111,9 @@
             background: transparent;
             border-right: 2px solid var(--color-gray-500);
             border-bottom: 2px solid var(--color-gray-500);
-            transform: rotate(45deg);
+            transform: translateY(-50%) rotate(45deg);
             #{theme('direction.right','value')}: 24px;
-            top: 24px;
+            top: 50%;
             transition: all 0.3s;
         }
         input{
@@ -187,8 +187,8 @@
         }
 
         @media(min-width: theme('breakpoints.xxxl','value')){
-            max-width: 590px;
-            min-width: 590px;
+            max-width: 530px;
+            min-width: 530px;
             width: 100%;
         }
     
@@ -231,7 +231,6 @@
       
         & .is-active{
             &::before{
-                top: 20px;
                 opacity: 1;
             }
         }
@@ -287,7 +286,7 @@
             position: relative;
             text-align: left;
             padding-#{theme('direction.right','value')}: var(--margin-6);
-            margin-#{theme('direction.right','value')}: var(--margin-8);
+            margin-#{theme('direction.right','value')}: var(--margin-6);
             &::before{
                 content: "";
                 position: absolute;
@@ -296,9 +295,9 @@
                 background: transparent;
                 border-right: 2px solid var(--color-dark);
                 border-bottom: 2px solid var(--color-dark);
-                transform: rotate(45deg);
+                transform:translateY(-60%) rotate(45deg);
                 #{theme('direction.right','value')}: 5px;
-                top: 15px;
+                top: 50%;
                 opacity: 0.3;
                 transition: all 0.3s;
             }
@@ -1242,9 +1241,9 @@ $box__primary: "box__primary";
             background: transparent;
             border-right: 2px solid var(--color-gray-500);
             border-bottom: 2px solid var(--color-gray-500);
-            transform: rotate(45deg);
+            transform:translate(0, -50%) rotate(45deg);
             #{theme('direction.right','value')}: 24px;
-            top: 17px;
+            top: 50%;
             transition: all 0.3s;
         }
         h6{
@@ -1253,10 +1252,10 @@ $box__primary: "box__primary";
         }
     }
     &.is-active{
-        &:before{border-color: theme('color.primary');transform: rotate(226deg) !important;top: 27px;}
-        h6{font-weight: 600; color: theme('color.primary');}
+        &:before{border-color: theme('color.primary');transform:translateY(-30%) rotate(-135deg); }
+        h6{ color: theme('color.primary');}
         .icon{fill: theme('color.primary');opacity: 1;}
-        input[type="text"]{color: theme('color.primary');font-weight: 600;}
+        input[type="text"]{color: theme('color.primary');}
     }
 }
 
