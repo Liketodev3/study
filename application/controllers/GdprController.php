@@ -12,7 +12,7 @@ class GdprController extends LoggedUserController
     {
         $userId = UserAuthentication::getLoggedUserId();
         $frmRequest = $this->getGdprRequestForm();
-        $gdpr_request_sent = Gdpr::getGdprReqSentOrNot($userId);
+        $gdpr_request_sent = GdprRequest::getGdprReqSentOrNot($userId);
         $this->set('gdpr_request_sent', $gdpr_request_sent);
         $this->set('frmRequest', $frmRequest);
         $this->_template->render();
@@ -24,7 +24,6 @@ class GdprController extends LoggedUserController
         $frm->addFormTagAttribute('class', 'form');
         $frm->addFormTagAttribute('onsubmit', 'gdprApprovalReuest(this); return(false);');
         $frm->addTextArea(Label::getLabel('LBl_Reason_for_Erasure'), 'gdprdatareq_reason')->requirements()->setRequired(true);
-        // $frm->addSelectBox(Label::getLabel('LBL_Data_Erasure_Type'), 'gdprdatareq_type', Gdpr::getGdprRequestTypeArr($this->siteLangId), -1, array(), '');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Send', $this->siteLangId), array('class' => 'btn btn--primary block-on-mobile'));
         return $frm;
     }
@@ -46,11 +45,11 @@ class GdprController extends LoggedUserController
 
         $gdpr_request_data['gdprdatareq_user_id']   = $userId;
         $gdpr_request_data['gdprdatareq_reason']    = $post['gdprdatareq_reason'];
-        $gdpr_request_data['gdprdatareq_type']      = Gdpr::TRUNCATE_DATA;
+        $gdpr_request_data['gdprdatareq_type']      = GdprRequest::TRUNCATE_DATA;
         $gdpr_request_data['gdprdatareq_added_on']  = date('Y-m-d H:i:s');
         $gdpr_request_data['gdprdatareq_updated_on'] = date('Y-m-d H:i:s');
         $gdpr_request_data['gdprdatareq_request_sent'] = applicationConstants::YES;
-        $gdprObj = new Gdpr();
+        $gdprObj = new GdprRequest();
         $gdprObj->assignValues($gdpr_request_data);
         if (!$gdprObj->save()) {
             FatUtility::dieJsonError($gdprObj->getError());
