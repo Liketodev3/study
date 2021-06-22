@@ -22,7 +22,7 @@ class EmailTemplates extends MyAppModel
     public static function getEtpl($etpl_code = '', $langId = 0, $fields = null)
     {
         if (empty($etpl_code)) {
-            return;
+            return [];
         }
         $db = FatApp::getDb();
         $srch = static::getSearchObject($langId);
@@ -37,7 +37,7 @@ class EmailTemplates extends MyAppModel
         if ($data = $db->fetch($srch->getResultSet())) {
             return $data;
         }
-        return false;
+        return [];
     }
 
     public static function getSearchObject($langId = 0)

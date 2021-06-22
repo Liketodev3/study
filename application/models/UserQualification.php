@@ -27,4 +27,9 @@ class UserQualification extends MyAppModel
         ];
     }
 
+    public static function deleteUserQualificationsDataByUserId($userId)
+    {
+        FatApp::getDb()->deleteRecords(static::DB_TBL, array('smt' => 'uqualification_user_id = ?', 'vals' => array($userId)));
+        return true;
+    }
 }
