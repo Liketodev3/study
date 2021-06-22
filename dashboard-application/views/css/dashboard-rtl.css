@@ -3538,8 +3538,7 @@ div.tagsinput div {
 .select2-container .select2-selection--single {
   height: 2.8rem !important;
   border: 1px solid var(--color-gray-300) !important;
-  position: relative;
-  border-radius: var(--radius-1) !important; }
+  position: relative; }
   .select2-container .select2-selection--single .select2-selection__rendered {
     line-height: 38px !important;
     padding: 0 var(--padding-4) !important;

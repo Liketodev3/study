@@ -616,13 +616,31 @@ $header-dropdown--arrow: 'header-dropdown--arrow';
         }
         
         .header-controls__action{
-            padding: theme('padding.5') theme('padding.5');
+            @media(min-width: theme('breakpoints.md','value')){
+                padding: theme('padding.5') theme('padding.5');
+            }
             display: block;
             position: relative;
-            svg{
-                fill: var(--color-white);
-            }
+        }
+        
+    }
 
+    div{
+        &:not(.header-dropwown--profile){
+           
+            @media(max-width: theme('breakpoints.md','value')){
+                a{
+                    padding: theme('padding.5') theme('padding.4');
+                    svg{
+                        fill: theme('color.white');
+                        width: 17px;
+                        height: 17px;
+                    }
+                    .lang{
+                        display: none;
+                    }
+                }
+            }
            
         }
     }
