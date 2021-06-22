@@ -30,7 +30,7 @@
                                             <?php
                                             if (true == User::isProfilePicUploaded($upcomingLesson['learnerId'])) {
                                                 $img = CommonHelper::generateUrl('Image', 'user', array($upcomingLesson['learnerId']), CONF_WEBROOT_FRONT_URL) . '?' . time();
-                                                echo '<img src="' . $img . '" alt="' . $upcomingLesson['learnerFullName'] . '" />';
+                                                echo '<img src="' . $img . '" />';
                                             }
                                             ?>
                                         </span>

@@ -195,7 +195,7 @@ class TeacherWeeklySchedule extends MyAppModel
 
     public function checkCalendarTimeSlotAvailability($userId, $startTime, $endTime)
     {
-        $this->error = '';
+
         $userId = FatUtility::int($userId);
         if ($userId < 1) {
             $this->error = Label::getLabel('LBL_Invalid_Request');
@@ -245,24 +245,44 @@ class TeacherWeeklySchedule extends MyAppModel
             return false;
         }
         $gaSrch = new TeacherGeneralAvailabilitySearch();
+        $gaSrch->joinUser();
+        $gaSrch->addMultipleFields(['tga.*', 'user_timezone']);
         $gaSrch->addCondition('tgavl_user_id', '=', $userId);
         $gaSrch->addOrder('tgavl_date', 'ASC');
         $gaRs = $gaSrch->getResultSet();
         $gARows = $db->fetchAll($gaRs);
         $gaCount = $gaRs->totalRecords();
+
         $generalAvail = 0;
         if ($gaCount > 0) {
-            $weekStartDateDB = '2018-01-07';
+            $weekStartDateDB = TeacherGeneralAvailability::DB_WEEK_STARTDATE;
             $weekDiff = MyDate::week_between_two_dates($weekStartDateDB, $weekStart);
+
+            $userTimezone = MyDate::getUserTimeZone();
+            $systemTimeZone = MyDate::getTimeZone();
+
+            $startTime = MyDate::changeDateTimezone($startTime, $systemTimeZone, $userTimezone);
+            $endTime = MyDate::changeDateTimezone($endTime, $systemTimeZone, $userTimezone);
+
+            $teacherTimeZone =  (empty($gARows[0]['user_timezone'])) ? MyDate::getTimeZone() : $gARows[0]['user_timezone'];
+
             foreach ($gARows as $row) {
-                $date = date('Y-m-d H:i:s', strtotime($row['tgavl_date'] . ' ' . $row['tgavl_start_time']));
-                $endDate = date('Y-m-d H:i:s', strtotime($row['tgavl_end_date'] . ' ' . $row['tgavl_end_time']));
 
-                $_startDate = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', strtotime($date)));
-                $_endDate = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', strtotime($endDate)));
+                $dateUnixTime = strtotime($row['tgavl_date'] . ' ' . $row['tgavl_start_time']);
+                $endDateUnixTime = strtotime($row['tgavl_end_date'] . ' ' . $row['tgavl_end_time']);
 
-                if (strtotime($_startDate) <= strtotime($startTime) && strtotime($_endDate) >= strtotime($endTime)) {
+                $date = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', $dateUnixTime));
+                $endDate = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', $endDateUnixTime));
+
+                $removedstTimeFromStartTime =  MyDate::isDateWithDST($date, $teacherTimeZone);
+                $removedstTimeFromEndTime =  MyDate::isDateWithDST($endDate, $teacherTimeZone);
+
+                $startDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $date, true, $userTimezone, $removedstTimeFromStartTime);
+                $endDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $endDate, true, $userTimezone, $removedstTimeFromEndTime);
+
+                if (strtotime($startDateTime) <= strtotime($startTime) && strtotime($endDateTime) >= strtotime($endTime)) {
                     $generalAvail++;
+                    break;
                 }
             }
         }
@@ -323,23 +343,43 @@ class TeacherWeeklySchedule extends MyAppModel
         }
         /* Now, start checking in general Availablity[ */
         $gaSrch = new TeacherGeneralAvailabilitySearch();
-        $gaSrch->addCondition('tgavl_user_id', '=', $teacherId);
+        $gaSrch->joinUser();
+        $gaSrch->addMultipleFields(['tga.*', 'user_timezone']);
+        $gaSrch->addCondition('tgavl_user_id', '=', $userId);
         $gaRs = $gaSrch->getResultSet();
         $gARows = FatApp::getDb()->fetchAll($gaRs);
         $gaCount = $gaRs->totalRecords();
         $generalAvail = 0;
         if ($gaCount > 0) {
-            $weekStartDateDB = '2018-01-07';
+            $weekStartDateDB = TeacherGeneralAvailability::DB_WEEK_STARTDATE;
             $weekDiff = MyDate::week_between_two_dates($weekStartDateDB, $weekStart);
+
+            $userTimezone = MyDate::getUserTimeZone();
+            $systemTimeZone = MyDate::getTimeZone();
+
+            $postStartDateTime = MyDate::changeDateTimezone($startDateTime, $systemTimeZone, $userTimezone);
+            $postEndDateTime = MyDate::changeDateTimezone($endDateTime, $systemTimeZone, $userTimezone);
+
+            $teacherTimeZone =  (empty($gARows[0]['user_timezone'])) ? MyDate::getTimeZone() : $gARows[0]['user_timezone'];
+
+
             foreach ($gARows as $row) {
-                $date = date('Y-m-d H:i:s', strtotime($row['tgavl_date'] . ' ' . $row['tgavl_start_time']));
-                $endDate = date('Y-m-d H:i:s', strtotime($row['tgavl_end_date'] . ' ' . $row['tgavl_end_time']));
+                $dateUnixTime = strtotime($row['tgavl_date'] . ' ' . $row['tgavl_start_time']);
+                $endDateUnixTime = strtotime($row['tgavl_end_date'] . ' ' . $row['tgavl_end_time']);
 
-                $_startDate = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', strtotime($date)));
-                $_endDate = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', strtotime($endDate)));
+                $date = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', $dateUnixTime));
+                $endDate = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', $endDateUnixTime));
 
-                if (strtotime($_startDate) <= strtotime($startDateTime) && strtotime($_endDate) >= strtotime($endDateTime)) {
+                $removedstTimeFromStartTime =  MyDate::isDateWithDST($date, $teacherTimeZone);
+                $removedstTimeFromEndTime =  MyDate::isDateWithDST($endDate, $teacherTimeZone);
+
+                $startDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $date, true, $userTimezone, $removedstTimeFromStartTime);
+                $endDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $endDate, true, $userTimezone, $removedstTimeFromEndTime);
+
+
+                if (strtotime($startDateTime) <= strtotime($postStartDateTime) && strtotime($endDateTime) >= strtotime($postEndDateTime)) {
                     $generalAvail++;
+                    break;
                 }
             }
         }

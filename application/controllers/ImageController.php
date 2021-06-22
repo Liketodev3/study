@@ -114,7 +114,7 @@ class ImageController extends FatController
             default:
                 $w = 30;
                 $h = 30;
-                AttachedFile::displayImage($image_name, $w, $h, $default_image,'',ImageResize::IMG_RESIZE_EXTRA_CROP);
+                AttachedFile::displayImage($image_name, $w, $h, $default_image, '', ImageResize::IMG_RESIZE_EXTRA_CROP);
                 break;
         }
     }
@@ -198,7 +198,7 @@ class ImageController extends FatController
                 break;
             default:
                 $h = 480;
-                $w = 1600;
+                $w = 1900;
                 AttachedFile::displayImage($image_name, $w, $h, $default_image);
                 break;
         }
@@ -342,6 +342,16 @@ class ImageController extends FatController
         }
     }
 
+    public function userFull($userId)
+    {
+        $userId = FatUtility::int($userId);
+        $fileRow = AttachedFile::getAttachment(AttachedFile::FILETYPE_USER_PROFILE_IMAGE, $userId);
+        if (false == $fileRow || $fileRow['afile_physical_path'] == "") {
+            AttachedFile::displayImage('', '', '', 'no_image.jpg');
+        }
+        AttachedFile::displayOriginalImage($fileRow['afile_physical_path'], '', '', true);
+    }
+
     public function countryFlag($countryId, $sizeType = 'default')
     {
         $countryId = FatUtility::int($countryId);
@@ -404,7 +414,7 @@ class ImageController extends FatController
                 break;
             case 'BANNER':
                 $w = 945;
-                $h = 535;
+                $h = 710;
                 AttachedFile::displayImage($image_name, $w, $h, $default_image);
                 break;
             default:

@@ -38,8 +38,8 @@ $canEnd = ($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) && ($
 $lessonsStatus = $statusArr[$lesson['sldetail_learner_status']];
 $lesson['lesreschlog_id'] = FatUtility::int($lesson['lesreschlog_id']);
 if (
-        $lesson['lesreschlog_id'] > 0 &&
-        ($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING ||
+    $lesson['lesreschlog_id'] > 0 &&
+    ($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING ||
         $lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED)
 ) {
     $lessonsStatus = Label::getLabel('LBL_Rescheduled');
@@ -62,9 +62,9 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
                         <?php
                         echo $lessonTitle;
                         if ($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) {
-                            ?>
-                            <span class="color-primary"><?php echo $lessonsStatus; ?></span> 
-                            <?php
+                        ?>
+                            <span class="color-primary"><?php echo $lessonsStatus; ?></span>
+                        <?php
                         }
                         echo ' ' . Label::getLabel('LBL_with');
                         ?>
@@ -86,7 +86,7 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
                                     if ($learner['user_id'] == $lesson['sldetail_learner_id']) {
                                         continue;
                                     }
-                                    ?>
+                                ?>
                                     <li>
                                         <div class="profile-meta">
                                             <div class="profile-meta__media">
@@ -94,7 +94,7 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
                                                     <?php
                                                     if (true == User::isProfilePicUploaded($learner['user_id'])) {
                                                         $lessonStudentImage = CommonHelper::generateFullUrl('Image', 'user', array($learner['user_id']), CONF_WEBROOT_FRONT_URL) . '?' . time();
-                                                        echo '<img src="' . $lessonStudentImage . '" alt="' . $learner['user_first_name'] . ' ' . $learner['user_last_name'] . '" />';
+                                                        echo '<img src="' . $lessonStudentImage . '" />';
                                                     }
                                                     ?>
                                                 </span>
@@ -113,7 +113,7 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
                     <?php if ($lesson['slesson_date'] != '0000-00-00') { ?>
                         <div class="session-time">
                             <p>
-                                <span><?php echo date('h:i A', $startDateTimeUnixtime) . ' - ' . date('h:i A', $endDateTimeUnixtime); ?>,</span> 
+                                <span><?php echo date('h:i A', $startDateTimeUnixtime) . ' - ' . date('h:i A', $endDateTimeUnixtime); ?>,</span>
                                 <?php echo date('l, F d, Y', $startDateTimeUnixtime); ?>
                             </p>
                         </div>
@@ -123,7 +123,9 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
                             <?php if ($lesson['tlpn_id'] > 0) { ?>
                                 <div class="d-flex align-items-center">
                                     <a href="javascript:void(0);" onclick="viewAssignedLessonPlan('<?php echo $lesson['slesson_id']; ?>');" class="attachment-file">
-                                        <svg class="icon icon--issue icon--attachement icon--xsmall color-black"><use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#attach'; ?>"></use></svg>
+                                        <svg class="icon icon--issue icon--attachement icon--xsmall color-black">
+                                            <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#attach'; ?>"></use>
+                                        </svg>
                                         <?php echo $lesson['tlpn_title']; ?>
                                     </a>
                                     <a href="javascript:void(0);" onclick="changeLessonPlan('<?php echo $lesson['slesson_id']; ?>');" class="underline color-primary  btn btn--transparent btn--small"><?php echo Label::getLabel('LBL_Change'); ?></a>
@@ -138,7 +140,7 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
             </div>
             <div class="col-xl-4 col-lg-4 col-sm-12">
                 <div class="session-infobar__action">
-                    <span class="btn btn--live" id="end_lesson_timer"  style="display:none;"> </span>
+                    <span class="btn btn--live" id="end_lesson_timer" style="display:none;"> </span>
                     <button class="btn bg-red" <?php echo !$canEnd || !$isJoined ? 'style="display:none;"' : '' ?> id="endL" onclick="endLesson(<?php echo $lesson['slesson_id']; ?>);">
                         <?php echo Label::getLabel('LBL_End_Lesson'); ?>
                     </button>
@@ -157,31 +159,34 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
                     <?php } ?>
                     <?php
                     if (
-                            $lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING ||
-                            ( $lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && $curDateTimeunix < $startDateTimeUnixtime)
+                        $lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING ||
+                        ($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && $curDateTimeunix < $startDateTimeUnixtime)
                     ) {
-                        ?>
+                    ?>
                         <button onclick="cancelLesson('<?php echo $lesson['slesson_id']; ?>');" class="btn btn--bordered color-third"><?php echo Label::getLabel('LBL_Cancel'); ?></button>
                     <?php } ?>
-                </div> 
+                </div>
             </div>
-        </div>  
+        </div>
     </div>
 </div>
 <div class="session__body">
     <div class="sesson-window" style="background-image: url(<?php echo CommonHelper::generateUrl('Image', 'lesson', array($siteLangId), CONF_WEBROOT_FRONTEND) ?>);">
-        <div class="sesson-window__content lessonBox" id="lessonBox"> <!-- session-window__frame -->
+        <div class="sesson-window__content lessonBox" id="lessonBox">
+            <!-- session-window__frame -->
             <div class="session-status">
                 <?php
                 $showGoToDashboardBtn = true;
                 $statusInfoLabel = '';
                 if ($curDateTimeunix > $endDateTimeUnixtime && $lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) {
                     $statusInfoLabel = Label::getLabel('LBL_Note_End_time_for_this_lesson_is_passed._Schedule_more_lessons.');
-                    ?>
+                ?>
                     <div class="status_media">
-                        <svg class="icon"><use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#clock'; ?>"></use></svg>
-                    </div> 
-                    <?php
+                        <svg class="icon">
+                            <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#clock'; ?>"></use>
+                        </svg>
+                    </div>
+                <?php
                 }
                 switch ($lesson['slesson_status']) {
                     case ScheduledLesson::STATUS_NEED_SCHEDULING:
@@ -207,7 +212,7 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
                     echo "<p>" . $statusInfoLabel . "</p>";
                 }
                 if ($showGoToDashboardBtn) {
-                    ?>
+                ?>
                     <a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons'); ?>" class="btn bg-primary"><?php echo Label::getLabel('LBL_Go_to_Dashboard.'); ?></a>
                 <?php } ?>
                 <?php ?>
@@ -257,19 +262,19 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
     var lessonspaceMeetingTool = '<?php echo FatApp::getConfig('CONF_MEETING_TOOL_LESSONSPACE', FatUtility::VAR_INT, 2); ?>';
     var canEnd = '<?php echo $canEnd ?>';
     var CometJsonTeacherData = [{
-            "userId": "<?php echo $chatId; ?>",
-            "fname": "<?php echo $lesson['teacherFname']; ?>",
-            "avatarURL": "<?php echo $teacherImage; ?>",
-            "profileURL": "<?php echo $baseSeoUrl . $lesson['teacherUrlName']; ?>",
-            "role": "<?php echo User::getUserTypesArr()[User::USER_TYPE_TEACHER]; ?>"
-        }];
+        "userId": "<?php echo $chatId; ?>",
+        "fname": "<?php echo $lesson['teacherFname']; ?>",
+        "avatarURL": "<?php echo $teacherImage; ?>",
+        "profileURL": "<?php echo $baseSeoUrl . $lesson['teacherUrlName']; ?>",
+        "role": "<?php echo User::getUserTypesArr()[User::USER_TYPE_TEACHER]; ?>"
+    }];
     var CometJsonLearnerData = [{
-            "userId": "<?php echo $lesson['sldetail_learner_id']; ?>",
-            "fname": "<?php echo $lesson['learnerFname']; ?>",
-            "avatarURL": "<?php echo $studentImage; ?>",
-            "profileURL": "<?php echo $baseSeoUrl . $lesson['learnerUrlName']; ?>",
-            "role": "<?php echo User::getUserTypesArr()[User::USER_TYPE_LEANER]; ?>"
-        }];
+        "userId": "<?php echo $lesson['sldetail_learner_id']; ?>",
+        "fname": "<?php echo $lesson['learnerFname']; ?>",
+        "avatarURL": "<?php echo $studentImage; ?>",
+        "profileURL": "<?php echo $baseSeoUrl . $lesson['learnerUrlName']; ?>",
+        "role": "<?php echo User::getUserTypesArr()[User::USER_TYPE_LEANER]; ?>"
+    }];
     var CometJsonData = CometJsonTeacherData.concat(CometJsonLearnerData);
     var CometJsonFriendData = {
         "lessonId": "<?php echo $lesson['slesson_id'] ?>",
@@ -284,7 +289,8 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
     if (!isZoomMettingToolActive && !is_time_up && lesson_joined && !lesson_status_completed && lessonStatus != '<?php echo ScheduledLesson::STATUS_CANCELLED ?>') {
         joinLesson(CometJsonData, CometJsonFriendData);
     }
-    var worker = new Worker(siteConstants.webroot + 'js/worker-time-interval.js?');
+    var worker = new Worker(siteConstants.webroot + 'js/worker-time-interval.js');
+
     function joinLessonButtonAction() {
         $("#joinL, .reschedule-lesson--js, .cancel-lesson--js").hide();
         $("#endL").show();
@@ -294,6 +300,7 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
         searchFlashCards(document.frmFlashCardSrch);
         checkNewFlashCards();
     }
+
     function endLessonButtonAction() {
         $("#joinL, .reschedule-lesson--js, .cancel-lesson--js").hide();
         $("#end_lesson_time_div, #endL, .screen-chat-js").hide();
@@ -307,9 +314,10 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
         }
         worker.terminate();
     }
+
     function checkEveryMinuteStatus() {
-        checkEveryMinuteStatusVar = setInterval(function () {
-            fcom.ajax(fcom.makeUrl('TeacherScheduledLessons', 'checkEveryMinuteStatus', [slesson_id]), '', function (t) {
+        checkEveryMinuteStatusVar = setInterval(function() {
+            fcom.ajax(fcom.makeUrl('TeacherScheduledLessons', 'checkEveryMinuteStatus', [slesson_id]), '', function(t) {
                 var t = JSON.parse(t);
                 if (t.slesson_status == '<?php echo ScheduledLesson::STATUS_CANCELLED ?>') {
                     location.reload();
@@ -321,12 +329,12 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
                         useBootstrap: false,
                         boxWidth: '20%',
                         escapeKey: false,
-                        onClose: function () {
+                        onClose: function() {
                             $.mbsmessage.close();
                             location.reload();
                         },
                     });
-                    setTimeout(function () {
+                    setTimeout(function() {
                         $.mbsmessage.close();
                         location.reload();
                     }, 1500);
@@ -334,14 +342,16 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
             });
         }, 60000);
     }
+
     function checkNewFlashCards() {
         if ((typeof flashCardEnabled !== typeof undefined) && !flashCardEnabled) {
             return;
         }
-        checkNewFlashCardsVar = setInterval(function () {
+        checkNewFlashCardsVar = setInterval(function() {
             searchFlashCards(document.frmFlashCardSrch);
         }, 30000)
     }
+
     function countDownTimer(start, end, func) {
         var countDownDate = new Date(end).getTime();
         var now = new Date(start).getTime();
@@ -351,12 +361,13 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
                 end: end
             });
         }
-        worker.onmessage = function (e) {
+        worker.onmessage = function(e) {
             func(e.data);
         };
     }
+
     function endLessonCountDownTimer(curDate, endTime) {
-        countDownTimer(curDate, endTime, function (w_res_data) {
+        countDownTimer(curDate, endTime, function(w_res_data) {
             if (w_res_data) {
                 $('#end_lesson_timer').show();
                 if (lesson_joined) {
@@ -368,6 +379,7 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
             $('#end_lesson_timer').html(w_res_data);
         });
     }
+
     function endLessonConfirm() {
         $.confirm({
             closeIcon: true,
@@ -379,7 +391,7 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
                     text: '<?php echo Label::getLabel('LBL_End_Lesson'); ?>',
                     btnClass: 'btn btn--primary',
                     keys: ['enter', 'shift'],
-                    action: function () {
+                    action: function() {
                         endLessonSetup('<?php echo $lesson['slesson_id']; ?>');
                     }
                 },
@@ -387,22 +399,21 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
                     text: '<?php echo Label::getLabel('LBL_Continue'); ?>',
                     btnClass: 'btn btn--secondary',
                     keys: ['enter', 'shift'],
-                    action: function () {
-                    }
+                    action: function() {}
                 }
             }
         });
     }
-    $(function () {
-<?php if ($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) { ?>
+    $(function() {
+        <?php if ($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) { ?>
             if (curDate < startTime) {
-                countDownTimer(curDate, startTime, function (w_res_data) {
+                countDownTimer(curDate, startTime, function(w_res_data) {
                     $('#start_lesson_timer').html(w_res_data);
                     if (w_res_data) {
                         $('.timer.start-lesson-timer').show();
                     } else {
                         $('.timer.start-lesson-timer,.reschedule-lesson--js,.cancel-lesson--js').hide();
-                        fcom.ajax(fcom.makeUrl('TeacherScheduledLessons', 'startLessonAuthentication', [CometJsonFriendData.lessonId]), '', function (t) {
+                        fcom.ajax(fcom.makeUrl('TeacherScheduledLessons', 'startLessonAuthentication', [CometJsonFriendData.lessonId]), '', function(t) {
                             if (t != 0) {
                                 $(".join_lesson_now").show();
                                 endLessonCountDownTimer(startTime, endTime);
@@ -414,7 +425,7 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
             } else if (endTime && curDate < endTime && canEnd && !lesson_completed) {
                 endLessonCountDownTimer(curDate, endTime)
             }
-<?php } ?>
+        <?php } ?>
         if (is_time_up == '1' && canEnd && lesson_joined && !lesson_completed) {
             endLessonConfirm();
         }
@@ -422,7 +433,7 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
         $(".tabs-content-js").hide();
         $(".tabs-js li:first").addClass("is-active").show();
         $(".tabs-content-js:first").show();
-        $(".tabs-js li").click(function () {
+        $(".tabs-js li").click(function() {
             $(".tabs-js li").removeClass("is-active");
             $(this).addClass("is-active");
             $(".tabs-content-js").hide();

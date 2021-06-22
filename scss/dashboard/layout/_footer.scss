@@ -1,4 +1,7 @@
 .footer-nav{
+    @media(max-width: theme('breakpoints.sm','value')){
+        margin-bottom: theme('margin.2');
+    }
     ul{
         display: flex;
         flex-wrap: wrap;
@@ -7,7 +10,11 @@
         li{
             margin-#{theme('direction.right','value')}: theme('margin.3');
             padding-#{theme('direction.right','value')}: theme('padding.3');
-            @media(max-width: theme('breakpoints.md','value')){
+            &:last-child{
+                margin-#{theme('direction.right','value')}: theme('margin.0');
+                padding-#{theme('direction.right','value')}: theme('padding.0');
+            }
+            @media(max-width: theme('breakpoints.sm','value')){
                 margin-#{theme('direction.right','value')}: theme('margin.2');
                 padding-#{theme('direction.right','value')}: theme('padding.2');
             }
@@ -37,6 +44,9 @@
 .page__footer{
     display: flex;
     align-items: center;
+    @media(max-width: theme('breakpoints.sm','value')){
+        flex-direction: column;
+    }
     p{
         margin-bottom: 0;
         margin-#{theme('direction.left','value')}: auto;
@@ -44,6 +54,10 @@
         color: var(--color-gray-800);
         a{
             color: var(--color-gray-800);
+        }
+
+        @media(max-width: theme('breakpoints.sm','value')){
+            margin-#{theme('direction.left','value')}: unset;
         }
     }
 }

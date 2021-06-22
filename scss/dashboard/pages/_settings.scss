@@ -19,7 +19,7 @@ $infobar: "infobar";
                 background: rgba(255, 255, 255, 1);
                 border-radius: 50%;
                 #{theme('direction.left','value')}: 15px;
-                animation: live 1.5s ease-in-out infinite;
+                animation: live 1s ease-in-out infinite;
                 pointer-events: none;
             }
             .icon--vcamera{
@@ -29,11 +29,11 @@ $infobar: "infobar";
 
             @keyframes live {
                 0% {
-                transform: scale(1,1);
+                transform: scale(2,2);
                 }
                 100% {
                 transform: scale(3.5,3.5);
-                background: rgba(255, 1, 0, 0);
+                background: rgba(255, 3, 0, 0);
             }
         }
         }
@@ -125,7 +125,7 @@ $colum-layout: "colum-layout";
 
 .#{$colum-layout}{
     @media(min-width:theme('breakpoints.md','value')){
-        &{display:grid; grid-gap:20px; grid-template-columns: auto auto;}
+        &{display:grid; grid-gap:20px; grid-template-columns: 49% 49%;}
     }
     @media(max-width:theme('breakpoints.md','value')){
         &__cell{margin-bottom: theme('margin.6');}
@@ -237,7 +237,7 @@ $selection-tabs: "selection-tabs";
 .#{$selection-tabs}{display:flex; align-items: center; justify-content: center; flex-wrap: wrap;overflow: auto;
 
     @media(max-width:theme('breakpoints.md','value')){
-        &{justify-content: flex-start;}
+        &{justify-content: flex-start;flex-wrap: nowrap;}
     }
     
     &__label{ position: relative; cursor: pointer;}
@@ -396,10 +396,7 @@ $sale-stat__count: "sale-stat__count";
     }
 }
 
-.menu-offset{
-    height: 100%;
-    position: relative;
-}
+
 
 .infobar--primary {
     background: var(--color-primary);
@@ -534,20 +531,22 @@ $slab-wrapper: "slab-wrapper";
             font-weight: 600;
         }
     }
-    .field-wrapper{
-        position: relative;
-        .errorlist{
-            position: absolute;
-            bottom: -21px;
-            left: 0;
-            width: 100%;
+}
+
+.slab-wrapper{
+    .field_label{
+        width: 70%;
+        line-height: 28px;
+    }
+    input[type="text"]{
+        float: right;
+        width: calc(100% - 70%);
+        &:focus{
+            box-shadow: none;
         }
     }
 }
-
 .field-wrapper{
-    display: flex;
-    align-items: center;
     padding: 0 6px;
     border: 1px solid var(--color-gray-300);
     margin-bottom: 10px;

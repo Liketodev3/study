@@ -399,7 +399,50 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (6454, 'LBL_Languages_section_Title', 1, 'Add Languages as you teach and as you speak');
 
 
-INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Languages_section_Desc', '1', 'Lorem Ipsum is not simply random text.Ipsum to popular belief, Lorem Ipsum is simply dummy text of the printing Contrary to popular belief,');
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES 
+('LBL_PHONE_NO_VALIDATION_MSG', 1, 'Please add vaild phone no and length between 4 to 16'),
+('LBL_Note:_Enter_Number_of_lessons_in_a_package', 1, 'Note: Enter Number Of Lessons In A Package'),
+('LBL_Note:_Enter_Number_of_lessons_in_a_package', 2, 'ملاحظة: أدخل عدد من الدروس في حزمة)');
+
+DELETE FROM `tbl_language_labels` WHERE  `label_key` = "LBL_You_are_not_cancelled_the_order";
+DELETE FROM `tbl_language_labels` WHERE  `label_key` = "LBL_You_are_not_cancelled_the_order_because_some_lesson_are_scheduled";
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.6.20210405' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+UPDATE `tbl_configurations` SET `conf_val` = 'RV-2.2' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.7.20210408' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.8.20210409' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+UPDATE `tbl_configurations` SET `conf_val` = 'RV-2.2' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.9.20210414' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+UPDATE `tbl_configurations` SET `conf_val` = 'RV-2.2' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+
+
+-- Table structure for table `tbl_gdpr_data_requests`
+
+CREATE TABLE `tbl_gdpr_data_requests` (
+  `gdprdatareq_id` int(11) NOT NULL,
+  `gdprdatareq_user_id` int(11) NOT NULL,
+  `gdprdatareq_type` tinyint(1) NOT NULL DEFAULT '0',
+  `gdprdatareq_reason` text NOT NULL,
+  `gdprdatareq_status` tinyint(1) NOT NULL DEFAULT '0',
+  `gdprdatareq_added_on` datetime NOT NULL,
+  `gdprdatareq_updated_on` datetime NOT NULL,
+  `gdprdatareq_request_sent` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for table `tbl_gdpr_data_requests`
+--
+ALTER TABLE `tbl_gdpr_data_requests`
+  ADD PRIMARY KEY (`gdprdatareq_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `tbl_gdpr_data_requests`
+--
+ALTER TABLE `tbl_gdpr_data_requests`
+  MODIFY `gdprdatareq_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Resume_Section_Title', '1', 'Add your resumes & eperiences');
 
@@ -423,12 +466,6 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.18.0.20210616' WHERE `conf_na
 
 -- -------------------------------------------------- --
 
-REPLACE INTO `tbl_extra_pages` (`epage_id`, `epage_identifier`, `epage_type`, `epage_active`, `epage_default_content`) VALUES(3, 'Browse tutor section', 3, 1, '<section class=\"section section--cta\" style=\"background-image:url(images/cta.png);\">\n	<div class=\"container container--narrow\">\n		<div class=\"cta-content\">\n			<h2>Speak any language fluently with the help of professional tutors</h2><a class=\"btn btn--secondary btn--large\" href=\"/teachers\">Browse Tutors</a></div></div></section>');
-
-REPLACE INTO `tbl_extra_pages_lang` (`epagelang_epage_id`, `epagelang_lang_id`, `epage_label`, `epage_content`) VALUES
-(3, 1, 'Browse Tutor', '\r\n<section class=\"section section--cta\" style=\"background-image:url(images/cta.png);\">\r\n	<div class=\"container container--narrow\">\r\n		<div class=\"cta-content\">\r\n			<h2>Speak any language fluently with the help of professional tutors</h2><a class=\"btn btn--secondary btn--large\" href=\"/teachers\">Browse Tutors</a></div></div></section>');
-
-
 ALTER TABLE `tbl_url_rewrites` DROP INDEX IF EXISTS `url_rewrite_original`;
 ALTER TABLE `tbl_url_rewrites` DROP INDEX IF EXISTS `url_rewrite_custom`;
 ALTER TABLE `tbl_url_rewrites` ADD UNIQUE(`urlrewrite_original`, `urlrewrite_lang_id`);
@@ -437,3 +474,84 @@ ALTER TABLE `tbl_url_rewrites` ADD UNIQUE(`urlrewrite_custom`);
 ALTER TABLE `tbl_teacher_stats` CHANGE `testat_timeslots` `testat_timeslots`  JSON CHECK (JSON_VALID(testat_timeslots));
 
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_EXPLORE_SUBJECTS', '1', 'Explore Languages'), ('LBL_EXPLORE_SUBJECTS', '2', 'Explore Languages');
+
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES
+('LBL_EXPLORE_SUBJECTS', '1', 'Explore Languages'), ('LBL_EXPLORE_SUBJECTS', '2', 'Explore Languages')
+, ('LBL_Search_for_teachers', '1', 'FIND A TEACHER')
+, ('Lbl_What_Language_You_want_to_learn?', '1', 'What language do you want to learn?')
+, ('Lbl_Top_Rated_Teachers', '1', 'Get to know some of our popular tutors')
+;
+
+REPLACE INTO `tbl_extra_pages` (`epage_id`, `epage_identifier`, `epage_type`, `epage_active`, `epage_default_content`) VALUES ('3', 'Browse tutor section', '3', '1', '    <section class=\"section section--cta\" style=\"background-image:url(images/cta.png);\">\r\n        <div class=\"container container--narrow\">\r\n            <div class=\"cta-content\">\r\n                <h2>Speak any language fluently with the help of professional tutors</h2>\r\n                <a class=\"btn btn--secondary btn--large\" href=\"teachers\">Browse Tutors</a>\r\n            </div>\r\n        </div>\r\n    </section>');
+REPLACE INTO `tbl_extra_pages_lang` (`epagelang_epage_id`, `epagelang_lang_id`, `epage_label`, `epage_content`) VALUES ('3', '1', 'Browse Tutor', '    <section class=\"section section--cta\" style=\"background-image:url(images/cta.png);\">\r\n        <div class=\"container container--narrow\">\r\n            <div class=\"cta-content\">\r\n                <h2>Speak any language fluently with the help of professional tutors</h2>\r\n                <a class=\"btn btn--secondary btn--large\" href=\"teachers\">Browse Tutors</a>\r\n            </div>\r\n        </div>\r\n    </section>');
+
+REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Accept_Description', '1', ' By signing up with Yo!Coach, you agree to');
+
+
+
+
+
+
+-- task_86496_apply_to_teach
+
+DROP TABLE `tbl_user_teacher_requests`;
+CREATE TABLE `tbl_user_teacher_requests` (
+  `utrequest_id` bigint NOT NULL,
+  `utrequest_user_id` bigint NOT NULL,
+  `utrequest_reference` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `utrequest_language_id` int NOT NULL,
+  `utrequest_date` datetime NOT NULL,
+  `utrequest_status` tinyint(1) NOT NULL,
+  `utrequest_status_change_date` datetime NOT NULL,
+  `utrequest_comments` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `utrequest_attempts` int NOT NULL,
+  `utrequest_step` int NOT NULL DEFAULT '1',
+  `utrequest_terms` tinyint NOT NULL,
+  `utrequest_first_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `utrequest_last_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `utrequest_gender` int NOT NULL,
+  `utrequest_phone_code` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `utrequest_phone_number` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `utrequest_video_link` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `utrequest_profile_info` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `utrequest_teach_slanguage_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `utrequest_language_speak` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `utrequest_language_speak_proficiency` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE `tbl_user_teacher_requests`   ADD PRIMARY KEY (`utrequest_id`);
+ALTER TABLE `tbl_user_teacher_requests`   MODIFY `utrequest_id` bigint NOT NULL AUTO_INCREMENT;
+
+REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Accept_Description', '1', 'By signing up with Yo!Coach, you agree to %s and %s');
+
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_COUPON_APPLIED', '1', 'Applied');
+
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES
+('MSG_learner_success_order_{dashboard-url}_{contact-us-page-url}', 1, '<p>Your order has been successfully processed!</p><p>You can view your order history by going to the <a class=\"color-secondary\" href=\"{dashboard-url}\">my account</a> page .</p><p>Please direct any questions you have to the <a class=\"color-secondary\" href=\"{contact-us-page-url}\">web portal owner</a>.</p><p>Thanks for choosing us online!'),
+('MSG_learner_success_order_{dashboard-url}_{contact-us-page-url}', 2, '<p> تم تجهيز طلبك بنجاح! </ P> <p> ويمكنك عرض التاريخ طلبك عن طريق الذهاب إلى <a class=\"color-secondary\" href=\"{dashboard-url}\"> صفحتي حساب </A>. </ P > <p> يرجى توجيه أي أسئلة لديك إلى <a class=\"color-secondary\" href=\"{contact-us-page-url}\"> البوابة الإلكترونية مالك </A>. </ P> <p> وشكرا لاختيارك لنا على الانترنت!');
+
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.19.0.20210618' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+
+
+REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_REGISTER_WITH_EMAIL', 1, 'REGISTER WITH EMAIL')
+REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_BY_SIGNING_UP_YOU_AGREE_TO_TERMS', 1, 'By signing up with Yo!Coach, you agree to %s and %s');
+
+CREATE TABLE `tbl_gdpr_data_requests` (
+   `gdprdatareq_id` INT(11) NOT NULL AUTO_INCREMENT ,
+   `gdprdatareq_user_id` INT(11) NOT NULL ,
+   `gdprdatareq_type` TINYINT(1) NOT NULL , 
+   `gdprdatareq_reason` TEXT NOT NULL , 
+   `gdprdatareq_status` TINYINT(1) NOT NULL , 
+   `gdprdatareq_added_on` DATETIME NOT NULL , 
+   `gdprdatareq_updated_on` DATETIME NOT NULL , 
+   `gdprdatareq_request_sent` TINYINT(1) NOT NULL , 
+   PRIMARY KEY (`gdprdatareq_id`)
+   ) ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
+
+--
+-- Indexes for table `tbl_gdpr_data_requests`
+--
+ALTER TABLE `tbl_gdpr_data_requests`
+  ADD PRIMARY KEY (`gdprdatareq_id`);
+
+  INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Gdpr_Delete_Account_Request_Description', '1', 'There shall be a popup saying “This request will delete all your personal data from the platform. After deleting you will have to again signup to use the platform');

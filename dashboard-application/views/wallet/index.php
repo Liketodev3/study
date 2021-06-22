@@ -103,7 +103,7 @@ $btnReset->addFieldTagAttribute('onclick', 'clearSearch()');
                         </div>
                     </div>
                 </div>
-                <div id="creditListing">
+                <div id="creditListing" class="table-scroll">
                 </div>
             </div>
             <!-- ] -->

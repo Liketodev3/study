@@ -11,9 +11,12 @@
 /library/core
 /fatlib
 /robots.txt
-/node_modules
 /public/config.js
 /vendor/
 /nbproject
 /node_modules
 /.vscode
+.sass-cache/
+*.css.map
+*.sass.map
+*.scss.map

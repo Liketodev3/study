@@ -652,12 +652,12 @@ $note: "note";
     position: relative; 
     padding: theme('padding.2');
     display: flex;
-    align-items: center;
     justify-content: center;
     .icon{
-        width: 14px;
+        min-width: 14px;
         height: 14px;
         margin-#{theme('direction.right','value')}: theme('margin.2');
+        margin-top: theme('margin.2');
     }
     &::before{
         content: "";

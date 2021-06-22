@@ -118,11 +118,10 @@ $placeHolder  =  CommonHelper::getPlaceholderForAmtField();
                                                         $priceField->addFieldTagAttribute('class', 'slab-price-js');
                                                         $priceField->addFieldTagAttribute('placeholder', $placeHolder);
                                                     ?>
-                                                        <div class="col-6 col-md-3 col-sm-3 col-lg-3 col-xl-3">
+                                                        <div class="col-12 col-md-3 col-sm-12 col-lg-3 col-xl-4">
                                                             <div class="field-wrapper">
                                                                 <label class="field_label"><?php echo $uTeachLang; ?></label>
-                                                                <?php
-                                                                echo $priceField->getHTML(); ?>
+                                                                <?php echo $priceField->getHTML(); ?>
                                                             </div>
                                                         </div>
                                                     <?php

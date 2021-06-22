@@ -138,7 +138,7 @@ $curDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', date('
                                             <?php
                                             if (true == User::isProfilePicUploaded($lesson['learnerId'])) {
                                                 $img = CommonHelper::generateUrl('Image', 'user', array($lesson['learnerId']), CONF_WEBROOT_FRONT_URL) . '?' . time();
-                                                echo '<img src="' . $img . '" alt="' . $lesson['learnerFname'] . '" />';
+                                                echo '<img src="' . $img . '" />';
                                             }
                                             ?>
                                         </span>

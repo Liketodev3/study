@@ -1,9 +1,21 @@
 var searchArr = [];
 $("document").ready(function () {
-    $('.btn--filters-js').click(function () {
+    $(document).on('click','.btn--filters-js',function () {
         $(this).toggleClass("is-active");
         $('html').toggleClass("show-filters-js");
     });
+
+
+    $('.close--filters-js').click(function() {
+        $(this).removeClass("is-active");
+        $('html').removeClass("show-filters-js");
+    });
+
+    $('input[name="teach_language_name"]').keyup(function(){
+        var text = $(this).val();
+        $('.select-teach-lang-js').parent().hide();
+        $('.select-teach-lang-js:contains("'+text+'")').parent().show();      
+        });
 
     var frm = document.frmTeacherSrch;
 
@@ -184,10 +196,7 @@ $("document").ready(function () {
         e.stopPropagation();
     });
     /* FOR NAV TOGGLES */
-    $('.btn--filters-js').click(function () {
-        $(this).toggleClass("is-active");
-        $('html').toggleClass("show-filters-js");
-    });
+
 
     /* FUNCTION FOR COLLAPSEABLE LINKS */
     $('.filter-trigger-js').click(function () {

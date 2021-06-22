@@ -7,6 +7,7 @@ $endDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $class
 $startDateTimeUnix = strtotime($startDateTime);
 $endDateTimeUnix = strtotime($endDateTime);
 $seatsLeft = $class['grpcls_max_learner'] - $class['total_learners'];
+$loggedUserId = UserAuthentication::getLoggedUserId()
 ?>
 <title><?php echo Label::getLabel('LBL_Group_Class') . $class['grpcls_title'] . " " . Label::getLabel('LBL_on') . " " . $websiteName; ?></title>
 <!-- [ MAIN BODY ========= -->
@@ -31,25 +32,25 @@ $seatsLeft = $class['grpcls_max_learner'] - $class['total_learners'];
                             <ul>
                                 <li>
                                     <svg class="icon icon--globe">
-                                        <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#globe'; ?>"></use>
+                                        <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#globe'; ?>"></use>
                                     </svg>
                                     <p><b><?php echo Label::getLabel('LBL_LANGUAGE'); ?></b> - <?php echo $class['teacher_language'];  ?></p>
                                 </li>
                                 <li>
                                     <svg class="icon icon--clock">
-                                        <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#clock'; ?>"></use>
+                                        <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#clock'; ?>"></use>
                                     </svg>
-                                    <p><b><?php echo Label::getLabel("LBL_Time") ?> </b> - <?php echo date('h:i A', $startDateTimeUnix).' - '.date('h:i A', $endDateTimeUnix) ?></p>
+                                    <p><b><?php echo Label::getLabel("LBL_Time") ?> </b> - <?php echo date('h:i A', $startDateTimeUnix) . ' - ' . date('h:i A', $endDateTimeUnix) ?></p>
                                 </li>
                                 <li>
                                     <svg class="icon icon--seat">
-                                        <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#seat'; ?>"></use>
+                                        <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#seat'; ?>"></use>
                                     </svg>
                                     <p><b><?php echo Label::getLabel('LBL_TOTAL_SEATS'); ?> </b> - <?php echo $class['grpcls_max_learner']; ?></p>
                                 </li>
                                 <li>
                                     <svg class="icon icon--tag">
-                                        <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#tag'; ?>"></use>
+                                        <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#tag'; ?>"></use>
                                     </svg>
                                     <p><b><?php echo Label::getLabel("LBL_Price") ?> </b> - <?php echo CommonHelper::displayMoneyFormat($class['grpcls_entry_fee']); ?></p>
                                 </li>
@@ -57,19 +58,19 @@ $seatsLeft = $class['grpcls_max_learner'] - $class['total_learners'];
                         </div>
 
                         <div class="group-actions">
-                        <?php if ($class['is_in_class']) : ?>
-                                        <a href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_ALREADY_IN_CLASS') ?>" class="btn btn--primary btn--large color-white btn--disabled"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
-                                    <?php elseif ($class['total_learners'] >= $class['grpcls_max_learner']) : ?>
-                                        <a href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_CLASS_FULL') ?>" class="btn btn--primary btn--large color-white btn--disabled"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
-                                    <?php elseif ($class['grpcls_start_datetime'] < date('Y-m-d H:i:s', strtotime('+' . $min_booking_time . ' minutes'))) : ?>
-                                        <a href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_Booking_Close_For_This_Class') ?>" class="btn btn--primary btn--large color-white btn--disabled"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
-                                    <?php elseif (UserAuthentication::isUserLogged() && $class['grpcls_teacher_id'] == UserAuthentication::getLoggedUserId()) : ?>
-                                        <a href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_Can_not_join_own_classes') ?>" class="btn btn--primary btn--large color-white btn--disabled"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
-                                    <?php elseif ($class['grpcls_status'] != TeacherGroupClasses::STATUS_ACTIVE) : ?>
-                                        <a href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_Class_Not_active') ?>" class="btn btn--primary btn--large color-white btn--disabled"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
-                                    <?php else : ?>
-                                        <a href="javascript:void(0);" onclick="cart.proceedToStep({teacherId:<?php echo $class['grpcls_teacher_id']; ?>,grpclsId:<?php echo $class['grpcls_id'] ?>, languageId : <?php echo $class['grpcls_tlanguage_id'] ?>},'getPaymentSummary');"  class="btn btn--primary btn--large color-white"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
-                                    <?php endif; ?>
+                            <?php if ($class['is_in_class']) : ?>
+                                <a href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_ALREADY_IN_CLASS') ?>" class="btn btn--primary btn--large color-white btn--disabled"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
+                            <?php elseif ($class['total_learners'] >= $class['grpcls_max_learner']) : ?>
+                                <a href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_CLASS_FULL') ?>" class="btn btn--primary btn--large color-white btn--disabled"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
+                            <?php elseif ($class['grpcls_start_datetime'] < date('Y-m-d H:i:s', strtotime('+' . $min_booking_time . ' minutes'))) : ?>
+                                <a href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_Booking_Close_For_This_Class') ?>" class="btn btn--primary btn--large color-white btn--disabled"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
+                            <?php elseif (UserAuthentication::isUserLogged() && $class['grpcls_teacher_id'] == $loggedUserId) : ?>
+                                <a href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_Can_not_join_own_classes') ?>" class="btn btn--primary btn--large color-white btn--disabled"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
+                            <?php elseif ($class['grpcls_status'] != TeacherGroupClasses::STATUS_ACTIVE) : ?>
+                                <a href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_Class_Not_active') ?>" class="btn btn--primary btn--large color-white btn--disabled"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
+                            <?php else : ?>
+                                <a href="javascript:void(0);" onclick="cart.proceedToStep({teacherId:<?php echo $class['grpcls_teacher_id']; ?>,grpclsId:<?php echo $class['grpcls_id'] ?>, languageId : <?php echo $class['grpcls_tlanguage_id'] ?>},'getPaymentSummary');" class="btn btn--primary btn--large color-white"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
+                            <?php endif; ?>
                             <a href="javascript:void(0);" class="seat-left"><?php echo sprintf(Label::getLabel('LBL_Only_%s_Seats_Left'), $seatsLeft); ?></a>
                         </div>
                     </div>
@@ -89,43 +90,50 @@ $seatsLeft = $class['grpcls_max_learner'] - $class['total_learners'];
                                 <div class="tile">
                                     <div class="tile__head">
                                         <div class="tile__media ratio ratio--1by1">
-                                        <?php if (true == User::isProfilePicUploaded($class['user_id'])) { ?>
-                                            <img src="<?php echo CommonHelper::generateUrl('Image', 'User', array($class['user_id'], 'ORIGINAL')) ?>" alt="">
-                                        <?php } ?>
-                                           
+                                            <?php if (true == User::isProfilePicUploaded($class['user_id'])) { ?>
+                                                <img src="<?php echo CommonHelper::generateUrl('Image', 'User', array($class['user_id'], 'ORIGINAL')) ?>" alt="">
+                                            <?php } ?>
+
                                         </div>
                                     </div>
                                     <div class="tile__body">
                                         <a class="tile__title" href="<?php echo CommonHelper::generateUrl('Teachers', 'view', array($class['user_url_name'])); ?>">
-                                            <h4><?php echo $class['user_first_name'].' '.$class['user_last_name']; ?></h4>
+                                            <h4><?php echo $class['user_first_name'] . ' ' . $class['user_last_name']; ?></h4>
                                         </a>
                                         <div class="info-wrapper">
                                             <div class="info-tag location">
                                                 <svg class="icon icon--location">
-                                                    <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#location'; ?>"></use>
+                                                    <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#location'; ?>"></use>
                                                 </svg>
                                                 <span class="lacation__name"><?php echo $class['country_name']; ?></span>
                                             </div>
-                                            <?php 
-                                            if($class['testat_ratings'] > 0){ ?>
-                                            <div class="info-tag ratings">
-                                                <svg class="icon icon--rating">
-                                                    <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#rating'; ?>"></use>
-                                                </svg>
-                                                <span class="value"><?php echo $class['testat_ratings']; ?></span>
-                                                <span class="count">(<?php echo $class['testat_reviewes']; ?>)</span>
-                                            </div>
+                                            <?php
+                                            if ($class['testat_ratings'] > 0) { ?>
+                                                <div class="info-tag ratings">
+                                                    <svg class="icon icon--rating">
+                                                        <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#rating'; ?>"></use>
+                                                    </svg>
+                                                    <span class="value"><?php echo $class['testat_ratings']; ?></span>
+                                                    <span class="count">(<?php echo $class['testat_reviewes']; ?>)</span>
+                                                </div>
                                             <?php } ?>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
+                        <?php
+                        $contactClick = 'onclick="generateThread(' . $class['user_id'] . ');"';
+                        $disabledClass = '';;
+                        if ($loggedUserId == $class['user_id']) {
+                            $disabledClass = 'disabled';
+                            $contactClick = '';
+                        }
+                        ?>
                         <div class="box-actions">
-                            <a href="javascript:void(0);" onclick="generateThread(<?php echo $class['user_id']; ?>);" class="btn color-primary">
+                            <a href="javascript:void(0);" <?php echo  $contactClick; ?> class="btn color-primary <?php echo $disabledClass; ?>">
                                 <svg class="icon icon--email_1">
-                                    <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#email_1'; ?>"></use>
+                                    <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#email_1'; ?>"></use>
                                 </svg>
                                 <?php echo Label::getLabel('LBL_CONTACT'); ?>
                             </a>

@@ -1,9 +1,9 @@
 <?php 
 defined('SYSTEM_INIT') or die('Invalid Usage.'); 
-$reportSearchForm->addFormTagAttribute('onsubmit', "getStatisticalData1(this); return (false);");;
+$reportSearchForm->addFormTagAttribute('onsubmit', "getStatisticalData(this); return (false);");;
 
 $durationType = $reportSearchForm->getField('duration_type');
-$durationType->addFieldTagAttribute('onChange','getStatisticalData1(this.form); return (false);');
+$durationType->addFieldTagAttribute('onChange','getStatisticalData(this.form); return (false);');
 
 $reportType = $reportSearchForm->getField('report_type[]');
 $reportType->addFieldTagAttribute('class','d-none');
@@ -149,10 +149,13 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 						<a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons')."#".ScheduledLesson::STATUS_UPCOMING; ?>" class="color-secondary underline padding-top-3 padding-bottom-3"><?php echo Label::getLabel('LBL_View_All'); ?></a>
 					</div>
 					
-					<div class="status-bar__body">
+					<div class="status-bar__body padding-0">
 						<div class="calendar">
 								<div id='d_calendar' class="dashboard-calendar calendar-view"></div>
 						</div>
+					</div>
+
+					<div class="status-bar__body">
 						<?php echo $frmSrch->getFormHtml(); ?>
 						<div class="listing-window" id="listItemsLessons">
 						</div>

@@ -32,13 +32,16 @@ class MyDate extends FatDate
         return parent::changeDateTimezone($date, $fromTimezone, $toTimezone);
     }
 
-    public static function convertTimeFromSystemToUserTimezone($format, $dateTime, $showtime, $timeZone)
+    public static function convertTimeFromSystemToUserTimezone($format, $dateTime, $showtime, $timeZone, $removeDstTime = false)
     {
         if (substr($dateTime, 0, 10) === '0000-00-00') {
             return $dateTime;
         }
         if ($timeZone == '') {
             $timeZone = self::getTimeZone();
+        }
+        if ($removeDstTime) {
+            $dateTime = date($format, strtotime('-1 hours', strtotime($dateTime)));
         }
         $changedDate = self::format(date('Y-m-d H:i:s', strtotime($dateTime)), $showtime, true, $timeZone);
         return date($format, strtotime($changedDate));
@@ -241,4 +244,50 @@ class MyDate extends FatDate
         return $minutes;
     }
 
+    public static function isDateWithDST(string $dateTime = '', string $timeZone = '')
+    {
+
+        $dateTime = (empty($dateTime)) ? date('Y-m-d H:i:s') : $dateTime;
+        $timeZone = (empty($timeZone)) ? self::getUserTimeZone() : $timeZone;
+
+        $tz = new DateTimeZone($timeZone);
+        $theTime = strtotime($dateTime);
+        $transition = $tz->getTransitions($theTime, $theTime);
+        $transition = current($transition);
+        return $transition['isdst'];
+    }
+
+    public static function changeSystemDateWithDST($date, $timeZone)
+    {
+        $tz = new DateTimeZone($timeZone);
+        $theTime = strtotime($date);
+        $transition = $tz->getTransitions($theTime, $theTime);
+        $transition = current($transition);
+        if (!$transition['isdst']) {
+            return date('Y-m-d H:i:s', strtotime($date));
+        }
+        return date('Y-m-d H:i:s', strtotime('+1 hours', strtotime($date)));
+    }
+
+    /**
+     * Get hours and minuties formatted string.
+     *
+     * @param integer $seconds
+     * @param string  $format
+     *
+     * @return string
+     */
+    public static function  getHoursMinutes(int $seconds, string $format = '%02d:%02d') : string
+    {
+
+        if (empty($seconds) || !is_numeric($seconds)) {
+            return false;
+        }
+
+        $minutes = round($seconds / 60);
+        $hours = floor($minutes / 60);
+        $remainMinutes = ($minutes % 60);
+
+        return sprintf($format, $hours, $remainMinutes);
+    }
 }

@@ -7,7 +7,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 
 
 	<div id='calendar-container'>
-		<div id='d_calendar'></div>
+		<div id='d_calendar' class="calendar-view"></div>
 	</div>
 </div>
 <script>

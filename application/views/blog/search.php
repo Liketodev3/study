@@ -9,7 +9,7 @@
 				<div class="row justify-content-center align-items-center">
 
 					<div class="col-xl-6 col-lg-6 col-md-6 col-sm-5">
-						<div class="blog__media"><a href="<?php echo CommonHelper::generateUrl('Blog', 'postDetail', array($blogPost['post_id'])); ?>"><img src="<?php echo CommonHelper::generateUrl('image', 'blogPostFront', array($blogPost['post_id'], 0), CONF_WEBROOT_URL); ?>" alt="<?php echo $blogPost['post_title'] ?>"></a></div>
+						<div class="blog__media ratio ratio--4by3"><a href="<?php echo CommonHelper::generateUrl('Blog', 'postDetail', array($blogPost['post_id'])); ?>"><img src="<?php echo CommonHelper::generateUrl('image', 'blogPostFront', array($blogPost['post_id'], $siteLangId,'MEDIUM'), CONF_WEBROOT_URL); ?>" alt="<?php echo $blogPost['post_title'] ?>"></a></div>
 					</div>
 
 					<div class="col-xl-6 col-lg-6 col-md-6 col-sm-7">
@@ -25,10 +25,7 @@
 							$categoryNames = !empty($blogPost['categoryNames']) ? explode('~', $blogPost['categoryNames']) : array();
 							$categoryCodes = !empty($blogPost['categoryCodes']) ? explode(',', $blogPost['categoryCodes']) : array();
 							$categories = array_combine($categoryIds, $categoryNames);
-							//print_r($categories);
-							//$categoryCodes = array_combine($categoryIds,$categoryCodes);
-							//$activeCategories = BlogPostCategory::getActiveCategoriesFromCodes($categoryCodes);
-							//$categories = array_intersect_key($categories ,array_flip($activeCategories));
+							
 							?>
 							<?php if (!empty($categories)) {
 								foreach ($categories as $id => $name) {

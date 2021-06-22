@@ -29,10 +29,9 @@
                                                 <span><?php echo FatDate::format($postDetail['post_published_on']); ?> </span>
                                             </div>
                                             <a href="<?php echo CommonHelper::generateUrl('Blog','PostDetail',[ $postDetail['post_id']]); ?>" class="btn btn--secondary color-white">View blog</a>
-                                        </div>
+                                        </div>                                
                                     </div>
-                                    <!-- <a href=""  class="blog__action"></a> -->
-                                </div>
+                                    <a href="<?php echo CommonHelper::generateUrl('Blog','PostDetail',[$postDetail['post_id']]); ?>" class="blog__action"></a>                                </div>
                             </div>
                         </div>
                     <?php }?>

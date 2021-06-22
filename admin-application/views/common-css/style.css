@@ -11204,4 +11204,8 @@ body.page--front .page__cell #footer {
     right: 30px;
     border-right: 2px solid #fff; 
 }
+
+.sectionhead .label--note{
+    margin-right: 45px;
+}
 /*  custom loader css end */

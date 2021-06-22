@@ -31,11 +31,11 @@ $slideshow: "slideshow";
 
 .slick-dots {
     position: absolute;
-   left: 50%;
+    left: 50%;
     transform: translateX(-50%);
     button{
         width: 30px;
-      background: rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.4);
         
     }    
 }
@@ -46,12 +46,12 @@ $slideshow: "slideshow";
 
 .slideshow-content{
     position: absolute;
-    #{theme('direction.left','value')}: 50%;
+    left: 50%;
     top: 50%;
     min-width: 520px;
     max-width: 520px;
     color: #111;
-    margin: 0 0 0 -600px;
+    margin-left:-650px;
     transform: translate(0, -50%);
     z-index: 2;
     padding: var(--padding-14) var(--padding-18);
@@ -59,9 +59,6 @@ $slideshow: "slideshow";
     backdrop-filter: saturate(180%) blur(20px);
     background: rgba(255,255,255,0.7);
 
-    @media(max-width: theme('breakpoints.xxl','value')) {
-        margin: 0 0 0 -560px;
-    }
     @media(max-width: theme('breakpoints.xl','value')) {
         padding: var(--padding-8) var(--padding-10);
         min-width: 450px;
@@ -137,7 +134,7 @@ $slideshow: "slideshow";
             height: 8px;
             width: 8px;
             background: transparent;
-            border-#{theme('direction.right','value')}: 2px solid;
+            border-right: 2px solid;
             border-bottom: 2px solid;
             transform: rotate(45deg);
             #{theme('direction.right','value')}: 24px;
@@ -226,7 +223,7 @@ $slideshow: "slideshow";
 .section__head{
     padding: var(--padding-0) !important;
     text-align: center;
-    margin-bottom: var(--margin-20);
+    margin-bottom: theme('margin.14');
     
     @media (max-width:theme('breakpoints.lg','value')){
         & {
@@ -275,7 +272,7 @@ $service: 'service';
     color: theme('color.dark');
     
     
-    @media (min-width:theme('breakpoints.lg','value')){
+    @media (min-width:theme('breakpoints.md','value')){
         &{
             padding: var(--padding-12) var(--padding-10);
         }
@@ -294,9 +291,10 @@ $service: 'service';
         }
     }
 
+
     .service__media{
         min-width: 100px;
-        height: 100px;
+        min-height: 100px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -317,10 +315,11 @@ $service: 'service';
         @media (max-width:theme('breakpoints.lg','value')){
             &{
                 min-width: 56px;
-                height: 56px;
+                min-height: 56px;
                 margin: 0 auto theme('margin.6');
                 img{
                     max-width: 30px;
+                    max-height: 30px;
                 }
             }
         }
@@ -331,7 +330,7 @@ $service: 'service';
             margin-#{theme('direction.left','value')}: var(--margin-6);
         }
         h3{
-            font-size: calc(var(--font-size-h4) - 1px);
+            font-size: theme('font.size.h5');;
             margin-bottom: var(--margin-4);
             line-height: 20px;
             @media (max-width:theme('breakpoints.md','value')){
@@ -340,7 +339,6 @@ $service: 'service';
             }
         }
         p{
-            font-size: 1.1rem;
             margin-bottom: 0;
         }
     }
@@ -559,19 +557,22 @@ $tile: 'tile';
 }
 
 .teacher-wrapper{
-    .row{
-        flex-wrap: nowrap;
-        overflow: auto;
-    }
-    [class*="col-"]{
-        padding-#{theme('direction.right','value')}: 0;
-        &:last-child{
-            margin-#{theme('direction.right','value')}: theme('margin.5');
+    @media(max-width: theme('breakpoints.md','value')){
+        .row{
+            flex-wrap: nowrap;
+            overflow: auto;
+        }
+        [class*="col-"]{
+            padding-#{theme('direction.right','value')}: 0;
+            &:last-child{
+                margin-#{theme('direction.right','value')}: theme('margin.5');
+            }
         }
     }
+    
 }
 
-@media(min-width: theme('breakpoints.md','value')){
+@media(min-width: theme('breakpoints.xl','value')){
     .tile:hover{
         box-shadow: var(--boxShadow-vertical);
         .card__row--action{
@@ -869,6 +870,10 @@ $card: 'card';
             fill: var(--color-secondary);
         }
     }
+
+    .timer__controls {
+        font-weight: 600;
+    }
 }
 
 .section--quote{
@@ -949,6 +954,14 @@ $card: 'card';
 
         .slider__item{
             padding: 0 var(--padding-4);
+        }
+
+        .slick-dots{
+            .slick-active{
+                button{
+                    background-color: theme('color.white');
+                }
+            }
         }
     }
 
@@ -1144,9 +1157,9 @@ $card: 'card';
 
     @media(min-width: theme('breakpoints.xl','value')){
         .slick-next{
-            #{theme('direction.right','value')}: -5%;
+            right: -5%;
         }.slick-prev{
-            #{theme('direction.left','value')}: -5%;
+            left: -5%;
         }
         .slick-arrow{
             &::before{
@@ -1302,235 +1315,19 @@ $card: 'card';
     }
 }
 
-
-.section--footer{
-    background: theme('color.dark-blue');
-    color: var(--color-white);
-    @media(max-width: theme('breakpoints.md','value')) {
-        padding: 0 !important;
+@media(min-width: theme('breakpoints.xl','value')){
+    .slick-arrow.slick-prev:before{
+        top: 22px;
     }
-}
-
-.footer{
-    @media(max-width: theme('breakpoints.md','value')) {
-        padding-bottom: 50px;
+    .slick-arrow.slick-next:before{
+        left: 18px;
+        top: 22px;
     }
-    .footer--row{
-        margin-bottom: calc(var(--margin-20) + 10px);
-        padding-bottom: calc(var(--margin-20) + 10px);
-        border-bottom: 2px solid rgba(255,255,255,0.1);
-
-        @media(max-width: theme('breakpoints.xl','value')) {
-            margin-bottom: calc(var(--margin-10) + 10px);
-            padding-bottom: calc(var(--margin-10) + 10px);
-        }
-
-        @media(max-width: theme('breakpoints.md','value')) {
-            margin-bottom: 0;
-            padding-bottom: 0;
-            border: none;
-        }
-
-        @media(max-width: theme('breakpoints.md','value')) {
-            & [class*="col-"]{
-                padding-#{theme('direction.left','value')}: 0;
-                padding-#{theme('direction.right','value')}: 0; 
-            }
-        }
-
-        &:last-child{
-            margin-bottom: 0;
-            padding-bottom: 0;
-            border-bottom: none;
-        }
-        .footer__group-title{
-            line-height: 30px;
-            text-transform: uppercase;
-            @media(max-width: theme('breakpoints.md','value')) {
-                margin: 0;
-                padding: var(--padding-5) var(--padding-5);
-                border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-                cursor: pointer;
-                position: relative;
-                
-                &::before{
-                    position: absolute;
-                    right: 19px;
-                    top: 19px;
-                    width: 10px;
-                    height: 10px;
-                    content: "";
-                    border-#{theme('direction.left','value')}: 2px solid rgba(255, 255, 255, 1);
-                    border-bottom: 2px solid rgba(255, 255, 255, 1);
-                    transform: rotate( -45deg);
-                    transition: 0.3s all ease-in-out;
-                }
-              
-            }
-
-            
-            h5{
-                @media(min-width: theme('breakpoints.md','value')){
-                    margin-bottom: 10px;
-                }
-            }
-
-            @media(max-width: theme('breakpoints.lg','value')) {
-                font-size: 0.96rem;
-            }
-
-            
-        }
-        @media(max-width: theme('breakpoints.xl','value')) {
-            h5{
-                margin: 0;
-                font-size: 0.96rem;
-            }
-        }
-        p{
-            color: #fff;
-            opacity: 0.7;
-            @media(max-width: theme('breakpoints.xl','value')) {
-                margin-bottom: 12px;
-            }
-        }
-        .email-field{
-            position: relative;
-            input[type="text"]{
-                border-radius: 0;
-                height: 50px;
-                padding: 0 var(--padding-8);
-                background-color: rgba(255,255,255,0.12);
-                border:transparent;
-                padding-#{theme('direction.right','value')}: var(--padding-12);
-            }
-            .icon{
-                position: absolute;
-                right: 18px;
-                top: 12px;
-                opacity: 0.7;
-            }
-        }
-
-        .footer__group-tag{
-            margin: 1.2rem 0 1.4rem;
-            .tags-inline__item{
-                display: inline-block;
-                padding: var(--padding-1) var(--padding-3);
-                font-size: 13px;
-                background: #FFFFFF1A;
-                margin-bottom: calc(var(--padding-4) - 2px);
-                color: rgba(255,255,255,0.7);
-                line-height: 18px;
-                margin-#{theme('direction.right','value')}: var(--margin-3);
-                &:first-child{
-                    margin-#{theme('direction.left','value')}: 0;
-                }
-            }
-        }
+    
     }
 
-    .section-copyright{
-        padding: var(--padding-8) 0;
-        @media(max-width: theme('breakpoints.md','value')) {
-            padding: var(--padding-3) 0;
-        }
-        .copyright{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            @media(max-width: theme('breakpoints.md','value')) {
-                flex-direction: column;
-                text-align: center;
-                .footer__logo{
-                    margin-bottom: var(--margin-3);
-                    img{
-                        max-width: 120px;
-                    }
-                }
-            }
-            p{
-                margin-bottom: 0;
-                .copyright-action{
-                    text-decoration: underline;
-                }
-            }
-        }
-    }
-}
-
-.bullet-list {
-    margin: 1.2rem 0 1.4rem;
-    li{
-        margin: 0.8rem 0;
-        font-weight: 300;
-        display: flex;
-        align-items: flex-start;
-        line-height: 1.6;
-        font-size: 15px;
-        @media(min-width: theme('breakpoints.xl','value')) {
-            font-size: 14px;
-        }
-    }
-}
-
-.footer__group-content{
-    @media(max-width: theme('breakpoints.md','value')) {
-        padding: 1rem;
-        display: none;
-
-        *{
-            margin: 0;
-        }
-    }
-}
-
-.footer-group {
-    width: 100%;
-}
-.bullet-list{
-            
-    li{
-        display: flex;
-        align-items: flex-start;
-        opacity: 0.7;
-        position: relative;
-        &:hover{
-            opacity: 1;
-        }
-        .icon{
-            min-width: 17px;
-            max-width: 17px;
-            height: 16px;
-            margin-#{theme('direction.right','value')}: calc(var(--margin-3) + 2px);
-            opacity: 0.7;
-            vertical-align: sub;
-        }
-        span{
-            line-height: 24px;
-        }
-        
-    }
 
     
-}
-
-.footer_contact_details{
-    li{
-        margin-bottom: var(--margin-4);
-        padding: 0;
-        .icon{
-            margin-top: 4px;
-        }
-        @media(min-width: theme('breakpoints.md','value')) and (max-width: theme('breakpoints.lg','value')){
-            flex-direction: column;
-            .icon{
-                margin-bottom: var(--margin-3);
-            }
-        }
-    }
-}
-
 
 .step-tabs{
     margin: 0 auto calc(var(--margin-24) - 4px);
@@ -1645,141 +1442,5 @@ $card: 'card';
         transform: translate(-50%, -50%) rotate(135deg);
         
     }
-
-}
-
-
-
-.settings{
-    margin-bottom: var(--margin-4);
-    position: relative;
-    &:last-child{
-        margin-bottom: var(--margin-0);
-    }
-    .btn{
-        justify-content: flex-start;
-        padding: 0 calc(var(--padding-6) - 1px);
-        border-color: var(--color-gray-300);
-        &::before{
-            content: "";
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            border-#{theme('direction.left','value')}: 2px solid var(--color-gray-500);
-            border-bottom: 2px solid var(--color-gray-500);
-            #{theme('direction.right','value')}: 18px;
-            top: 14px;
-            transform: rotate(-45deg);
-        }
-    }
-
-    .dropdaown__title{
-        margin-bottom: var(--margin-2);
-    }
-
-    .settings__target {
-
-        position: absolute;
-        width: 100%;
-        background: #fff;
-        z-index: 1;
-        box-shadow: 0 0 5px rgba(0,0,0,0.10);
-        top: 100%;
-        transition: 0.3s all ease-in-out;
-        max-height: 235px;
-        overflow: auto;
-        @media(max-width: theme('breakpoints.md','value')){
-            top: unset;
-            bottom: 80%;
-        }
-        ul{
-            li{
-                transition: 0.3s all ease-in-out;
-                &:hover{
-                    background-color: var(--color-gray-100);
-                }
-                a{
-                    padding: var(--padding-3);
-                    display: block;
-                    color: var(--color-dark);
-                    width: 100%;
-                }
-            }
-            .is--active{
-                background-color: var(--color-gray-100);
-                color: var(--color-primary);
-                a{
-                    color: var(--color-primary);
-                    font-weight: 600;
-                    position: relative;
-                    &::before{
-                        position: absolute;
-                        #{theme('direction.left','value')}: 0;
-                        #{theme('direction.right','value')}: 0;
-                        bottom: 0;
-                        top: 0;
-                        content: "";
-                        pointer-events: none;
-                        background-color: currentColor;
-                        opacity: 0.04;
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-.footer-group{
-    .settings{
-        .btn{
-            color: var(--color-white);
-            opacity: 0.5;
-        }
-        .settings__target {
-            .is--active{
-                a{
-                    color: var(--color-secondary) !important;
-                }
-            }
-        }
-    }
-}
-
-.form__element{
-    margin-bottom: var(--margin-6);
-    
-    input[type="text"]{
-        border-radius: 0;
-        background-color: transparent;
-        padding: 0 var(--padding-8);
-        padding-#{theme('direction.right','value')}: var(--padding-12);
-    }
-}
-
-.section--cta {
-    background-position: center top;
-    background-repeat: no-repeat;
-    background-size: cover;
-
-    @media(min-width: theme('breakpoints.xxl','value')){
-        &{
-            padding: calc(4rem + 60px) 0;
-        }
-    }
-
-    @media(min-width: theme('breakpoints.md','value')) and (max-width: theme('breakpoints.xxxl','value')){
-        background-position: center -16px;
-    }
-}
-
-@media(min-width: theme('breakpoints.xl','value')){
-.slick-arrow.slick-prev:before{
-    top: 22px;
-}
-.slick-arrow.slick-next:before{
-    left: 18px;
-    top: 22px;
-}
 
 }

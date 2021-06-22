@@ -26,6 +26,9 @@
                                     <a href="<?php echo CommonHelper::generateUrl('learnerScheduledLessons', 'index', [applicationConstants::CLASS_TYPE_GROUP], CONF_WEBROOT_DASHBOARD).'#' . ScheduledLesson::STATUS_SCHEDULED; ?>" class="btn btn--secondary"><?php echo Label::getLabel('MSG_Navigate_to_classes'); ?></a>
                                 <?php } elseif (!empty($lessonInfo) && ($lessonInfo['op_lpackage_is_free_trial'] == 1)) { ?>
                                     <a href="<?php echo CommonHelper::generateUrl('learnerScheduledLessons', '', [], CONF_WEBROOT_DASHBOARD) . '#' . ScheduledLesson::STATUS_SCHEDULED; ?>" class="btn btn--secondary"><?php echo Label::getLabel('MSG_Go_to_my_Lessons'); ?></a>
+                                <?php }elseif (!empty($lessonInfo) && $lessonInfo['op_qty'] > 0) { ?>
+                                    <h5><?php echo Label::getLabel('MSG_You_can_view_classes_here'); ?></h5>
+                                    <a href="<?php echo CommonHelper::generateUrl('learnerScheduledLessons', 'index', [], CONF_WEBROOT_DASHBOARD).'#' . ScheduledLesson::STATUS_NEED_SCHEDULING; ?>" class="btn btn--secondary"><?php echo Label::getLabel('MSG_Go_to_my_Lessons'); ?></a>
                                 <?php } else { ?>
                                     <h5><?php echo Label::getLabel('MSG_VIEW_YOUR_ORDER'); ?></h5>
                                     <a href="<?php echo CommonHelper::generateUrl('Learner', 'orders', [], CONF_WEBROOT_DASHBOARD); ?>" class="btn btn--secondary"><?php echo Label::getLabel('MSG_GO_TO_MY_ORDERS'); ?></a>

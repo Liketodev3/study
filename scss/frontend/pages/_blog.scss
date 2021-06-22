@@ -929,4 +929,20 @@
             }
         }
     }
+    .box__body{
+        .svg-icon{
+            fill: theme('color.primary');
+        }
+    }
+}
+
+.banner__media{
+    img{
+        margin: 0 auto;
+    }
+}
+
+.blog-sidebar{
+    position: sticky;
+    top: 138px;
 }

@@ -31,6 +31,17 @@ foreach ($userTeachLangs as $key => $value) {
         'top_percentage' => $value['top_percentage'],
     ];
 }
+
+
+$disabledClass = '';
+$bookNowOnClickClick = 'onclick="cart.proceedToStep({teacherId: ' . $teacher['user_id'] . '}, \'getUserTeachLangues\');"';
+$contactClick = 'onclick="generateThread(' . $teacher['user_id'] . ');"';
+if ($loggedUserId == $teacher['user_id']) {
+    $disabledClass = 'disabled';
+    $bookNowOnClickClick = '';
+    $contactClick = '';
+}
+
 ?>
 <section class="section section--profile">
     <div class="container container--fixed">
@@ -110,7 +121,7 @@ foreach ($userTeachLangs as $key => $value) {
                     <div class="panel-cover__head panel__head-trigger panel__head-trigger-js">
                         <h3><?php echo Label::getLabel('LBL_About', $siteLangId); ?> <?php echo $teacher['user_full_name']; ?></h3>
                     </div>
-                    <div class="panel-cover__body panel__body-target panel__body-target-js">
+                    <div class="panel-cover__body panel__body-target panel__body-target-js" style="display:block;">
                         <div class="content__row">
                             <p><?php echo nl2br($teacher['user_profile_info']); ?></p>
                         </div>
@@ -180,13 +191,12 @@ foreach ($userTeachLangs as $key => $value) {
                     </div>
                 </div>
                 <div class="panel-cover panel--calendar">
-                    <div class="panel-cover__head panel__head-trigger panel__head-trigger-js">
+                    <div class="panel-cover__head panel__head-trigger panel__head-trigger-js calendar--trigger-js">
                         <h3><?php echo Label::getLabel('LBL_Schedule', $siteLangId) ?></h3>
                     </div>
                     <div class="panel-cover__body panel__body-target panel__body-target-js">
                         <div class="calendar-wrapper">
                             <div id="availbility" class="calendar-wrapper__body">
-
                             </div>
                         </div>
                         <div class="-gap"></div>
@@ -194,7 +204,7 @@ foreach ($userTeachLangs as $key => $value) {
                             <svg class="icon icon--sound">
                                 <use xlink:href="/YoCoach/images/sprite.yo-coach.svg#sound"></use>
                             </svg>
-                            <p><b>Note:</b> Not finding your ideal time? <a class="bold-600" href="#">Contact</a> this teacher to request a slot outside of their current schedule</p>
+                            <p><b><?php echo Label::getLabel('LBL_Note:') ?></b><?php echo Label::getLabel('LBL_Not_finding_your_ideal_time?'); ?><a class="bold-600" href="javascript:void(0)" <?php echo $contactClick; ?>><?php echo Label::getLabel('LBL_Contact'); ?></a> <?php echo Label::getLabel('LBL_this_teacher_to_request_a_slot_outside_of_their_current_schedule'); ?></p>
                         </div>
                     </div>
                 </div>
@@ -355,17 +365,8 @@ foreach ($userTeachLangs as $key => $value) {
                     ?>
                     <div class="box box--book">
                         <div class="book__actions">
-                            <?php
-                            $disabledClass = '';
-                            $bookNowClick = 'onclick="cart.proceedToStep({teacherId: ' . $teacher['user_id'] . '}, \'getUserTeachLangues\');"';
-                            $contactClick = 'onclick="generateThread(' . $teacher['user_id'] . ');"';
-                            if ($loggedUserId == $teacher['user_id']) {
-                                $disabledClass = 'disabled';
-                                $bookNowClick = '';
-                                $contactClick = '';
-                            }
-                            ?>
-                            <a href="javascript:void(0);" class="btn btn--primary btn--xlarge btn--block color-white <?php echo $disabledClass; ?>" <?php echo $bookNowClick; ?>><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
+                      
+                            <a href="javascript:void(0);" class="btn btn--primary btn--xlarge btn--block color-white <?php echo $disabledClass; ?>" <?php echo $bookNowOnClickClick; ?>><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
                             <a href="javascript:void(0);" <?php echo $contactClick; ?> class="btn btn--bordered btn--xlarge btn--block btn--contact color-primary <?php echo $disabledClass; ?>">
                                 <svg class="icon icon--envelope">
                                     <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#envelope'; ?>"></use>
@@ -408,6 +409,22 @@ foreach ($userTeachLangs as $key => $value) {
     $(document).ready(function() {
         searchQualifications(<?php echo $teacher['user_id']; ?>);
         viewCalendar(<?php echo $teacher['user_id'] . ',' . $teacherLanguage . ', "paid"'; ?>);
+        $('.panel__head-trigger-js').click(function () {
+            if ($(this).hasClass('is-active')) {
+                $(this).removeClass('is-active');
+                $(this).siblings('.panel__body-target-js').slideUp(); 
+                return false;
+            }
+            $('.panel__head-trigger-js').removeClass('is-active');
+            $(this).addClass("is-active");
+            $('.panel__body-target-js').slideUp();
+            $(this).siblings('.panel__body-target-js').slideDown();
+            $('.slider-onethird-js').slick('reinit');
+            if($(this).hasClass('calendar--trigger-js'))
+            {
+                window.viewOnlyCal.render();
+            }
+        });
     });
 </script>
 <?php echo $this->includeTemplate('_partial/shareThisScript.php'); ?>

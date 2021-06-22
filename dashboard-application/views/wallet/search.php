@@ -21,7 +21,7 @@ foreach ($arrListing as $sn => $row){
 	
 	foreach ($arr_flds as $key => $val){
 
-		$div = $tr->appendElement('td')->appendElement('div', array('flex-cell'));
+		$div = $tr->appendElement('td')->appendElement('div', array('class'=>'flex-cell'));
 		$div->appendElement('div', array('class'=>'flex-cell__label'), $val, true);
 		
 		switch ($key){
@@ -29,7 +29,7 @@ foreach ($arrListing as $sn => $row){
 				$div->appendElement('div', array('class'=>'flex-cell__content'), Transaction::formatTransactionNumber($row[$key]), true);
 			break;
 			case 'utxn_date':
-				$utxn_date = MyDate::convertTimeFromSystemToUserTimezone( 'Y-m-d', $row[$key], true , $user_timezone );
+				$utxn_date = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d', $row[$key], true , $user_timezone);
 				$div->appendElement('div', array('class'=>'flex-cell__content'), $utxn_date, true);
 				
 			break;
