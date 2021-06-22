@@ -868,7 +868,7 @@ class User extends MyAppModel
     {
         $db = FatApp::getDb();
 
-        $tbl_users_data = [
+        $tblUsersData = [
             'user_url_name' => '',
             'user_first_name' => Label::getLabel('LBL_Deleted', $langId),
             'user_last_name' => Label::getLabel('LBL_User', $langId),
@@ -886,7 +886,7 @@ class User extends MyAppModel
             'user_state_id' => NULL,
             'user_city' => '',
         ];
-        return $db->updateFromArray(static::DB_TBL, $tbl_users_data, ['smt' => 'user_id=?', 'vals' => [$this->mainTableRecordId]]);
+        return $db->updateFromArray(static::DB_TBL, $tblUsersData, ['smt' => 'user_id=?', 'vals' => [$this->mainTableRecordId]]);
     }
 
     public  function truncateUserCredentials()
@@ -934,6 +934,6 @@ class User extends MyAppModel
     }
     public  function deleteUserEmailChangeRequests()
     {
-        return FatApp::getDb()->deleteRecords(static::DB_TBL, ['smt' => 'uecreq_user_id = ?', 'vals' => [$this->mainTableRecordId]]);
+        return FatApp::getDb()->deleteRecords(UserEmailChangeRequest::DB_TBL, ['smt' => 'uecreq_user_id = ?', 'vals' => [$this->mainTableRecordId]]);
     }
 }

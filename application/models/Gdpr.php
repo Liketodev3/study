@@ -75,15 +75,16 @@ class Gdpr extends MyAppModel
                 continue;
             }
         }
+        
         $db = FatApp::getDb();
         $db->startTransaction();
         $user = new user($userId);
         if(!$user->truncateUserData() || !$user->truncateUserCredentials() || !$user->truncateUsersLangData() || !$user->deleteUserBankInfoData() || !$user->deleteUserEmailVerificationData() || !$user->truncateUserWithdrawalRequestsData() || !$user->deleteUserSetting() || !$user->deleteUserQualifications() || !$user->deleteUserEmailChangeRequests()){
+            echo 'Hello world';
             $db->rollbackTransaction();
             return false;
         }
-
-        if($db->updateFromArray(User::DB_TBL, ['user_deleted' => applicationConstants::YES], ['smt' => 'user_id=?', 'vals' => [$userId]])){
+        if(!$db->updateFromArray(User::DB_TBL, ['user_deleted' => applicationConstants::YES], ['smt' => 'user_id=?', 'vals' => [$userId]])){
             $db->rollbackTransaction();
             return false;
         }

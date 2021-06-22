@@ -120,7 +120,7 @@ class GdprRequestsController extends AdminBaseController
         $gdprRequestDetail = $gdpr->getFlds();
         if ($status == Gdpr::STATUS_DELETED_DATA) {
             if (!$gdpr->truncateUserPersonalData($gdprRequestDetail['gdprdatareq_user_id'])) {
-                FatUtility::dieJsonError($gdpr->getError());
+                FatUtility::dieJsonError($this->str_invalid_request);
             }
         }
         $assignValues = ['gdprdatareq_status' => $status];
