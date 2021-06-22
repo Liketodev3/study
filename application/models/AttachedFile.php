@@ -552,15 +552,22 @@ class AttachedFile extends MyAppModel
             return false;
         }
 
+   
+
         $fileRow = AttachedFile::getAttachment($fileType, $recordId, $recordSubId, $langId);
     
         if (!$fileRow) {
-         
             $this->error = Label::getLabel('MSG_INVALID_REQUEST', $this->commonLangId);
             return false;
         }
 
-        $uploadedFilePath = CONF_UPLOADS_PATH . $fileRow['afile_physical_path'];
+        $fileRow = AttachedFile::getAttachment($fileType, $recordId, $recordSubId,$langId);
+        if(!$fileRow){
+            $this->error = Label::getLabel('MSG_INVALID_REQUEST', $this->commonLangId);
+            return false;
+        }
+
+        $uploadedFilePath = CONF_UPLOADS_PATH.$fileRow['afile_physical_path'];
         if (file_exists($uploadedFilePath) && !unlink($uploadedFilePath)) {
             $this->error = Label::getLabel('MSG_INVALID_REQUEST', $this->commonLangId);
             return false;

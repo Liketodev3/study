@@ -109,6 +109,7 @@ class MyAppController extends FatController
             'timezoneString' => Label::getLabel('LBL_TIMEZONE_STRING'),
             'lessonMints' => Label::getLabel('LBL_%s_Mins/Lesson'),
             'confirmDeleteLessonPlanText' => Label::getLabel('LBL_DELETE_LESSON_PLAN_CONFIRM_TEXT'),
+            'gdprDeleteAccDesc' => Label::getLabel('LBL_Gdpr_Delete_Account_Request_Description'),
             'disableSlot' => Label::getLabel('LBL_Do_you_want_to_disable_the_slot'),
             'enableSlot' => Label::getLabel('LBL_Do_you_want_to_enable_the_slot_again')
         ];

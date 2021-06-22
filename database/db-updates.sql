@@ -399,7 +399,50 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (6454, 'LBL_Languages_section_Title', 1, 'Add Languages as you teach and as you speak');
 
 
-INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Languages_section_Desc', '1', 'Lorem Ipsum is not simply random text.Ipsum to popular belief, Lorem Ipsum is simply dummy text of the printing Contrary to popular belief,');
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES 
+('LBL_PHONE_NO_VALIDATION_MSG', 1, 'Please add vaild phone no and length between 4 to 16'),
+('LBL_Note:_Enter_Number_of_lessons_in_a_package', 1, 'Note: Enter Number Of Lessons In A Package'),
+('LBL_Note:_Enter_Number_of_lessons_in_a_package', 2, 'ملاحظة: أدخل عدد من الدروس في حزمة)');
+
+DELETE FROM `tbl_language_labels` WHERE  `label_key` = "LBL_You_are_not_cancelled_the_order";
+DELETE FROM `tbl_language_labels` WHERE  `label_key` = "LBL_You_are_not_cancelled_the_order_because_some_lesson_are_scheduled";
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.6.20210405' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+UPDATE `tbl_configurations` SET `conf_val` = 'RV-2.2' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.7.20210408' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.8.20210409' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+UPDATE `tbl_configurations` SET `conf_val` = 'RV-2.2' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.11.9.20210414' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+UPDATE `tbl_configurations` SET `conf_val` = 'RV-2.2' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+
+
+-- Table structure for table `tbl_gdpr_data_requests`
+
+CREATE TABLE `tbl_gdpr_data_requests` (
+  `gdprdatareq_id` int(11) NOT NULL,
+  `gdprdatareq_user_id` int(11) NOT NULL,
+  `gdprdatareq_type` tinyint(1) NOT NULL DEFAULT '0',
+  `gdprdatareq_reason` text NOT NULL,
+  `gdprdatareq_status` tinyint(1) NOT NULL DEFAULT '0',
+  `gdprdatareq_added_on` datetime NOT NULL,
+  `gdprdatareq_updated_on` datetime NOT NULL,
+  `gdprdatareq_request_sent` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for table `tbl_gdpr_data_requests`
+--
+ALTER TABLE `tbl_gdpr_data_requests`
+  ADD PRIMARY KEY (`gdprdatareq_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `tbl_gdpr_data_requests`
+--
+ALTER TABLE `tbl_gdpr_data_requests`
+  MODIFY `gdprdatareq_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Resume_Section_Title', '1', 'Add your resumes & eperiences');
 
@@ -489,4 +532,22 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 
 UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.19.0.20210618' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
 
-------------------
+CREATE TABLE `tbl_gdpr_data_requests` (
+   `gdprdatareq_id` INT(11) NOT NULL AUTO_INCREMENT ,
+   `gdprdatareq_user_id` INT(11) NOT NULL ,
+   `gdprdatareq_type` TINYINT(1) NOT NULL , 
+   `gdprdatareq_reason` TEXT NOT NULL , 
+   `gdprdatareq_status` TINYINT(1) NOT NULL , 
+   `gdprdatareq_added_on` DATETIME NOT NULL , 
+   `gdprdatareq_updated_on` DATETIME NOT NULL , 
+   `gdprdatareq_request_sent` TINYINT(1) NOT NULL , 
+   PRIMARY KEY (`gdprdatareq_id`)
+   ) ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
+
+--
+-- Indexes for table `tbl_gdpr_data_requests`
+--
+ALTER TABLE `tbl_gdpr_data_requests`
+  ADD PRIMARY KEY (`gdprdatareq_id`);
+
+  REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Gdpr_Delete_Account_Request_Description', '1', 'There shall be a popup saying “This request will delete all your personal data from the platform. After deleting you will have to again signup to use the platform');

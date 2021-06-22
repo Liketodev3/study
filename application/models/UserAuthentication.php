@@ -227,10 +227,13 @@ class UserAuthentication extends FatModel
             $userObj = new User($_SESSION [static::SESSION_ELEMENT_NAME] ['user_id']);
             $srch = $userObj->getUserSearchObj(['credential_email']);
             $userRow = FatApp::getDb()->fetch($srch->getResultSet());
+            if(empty($userRow)){
+                return false;
+            }
             $credential_email = $userRow['credential_email'];
             return ($_SESSION [static::SESSION_ELEMENT_NAME]['user_email'] == $credential_email) ? true : false;
         }
-        if ($token != '' && static::doAppLogin($token)) {
+        if ($token != '') {
             return true;
         }
         if (static::doCookieLogin(false)) {

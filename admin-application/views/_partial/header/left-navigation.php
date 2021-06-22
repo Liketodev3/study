@@ -85,6 +85,7 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
                     </ul>
                 </li>
             <?php } ?>
+            
 
             <?php if ($objPrivilege->canViewPreferences($adminLoggedId, true)) { ?>
                 <li class="haschild"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_Teacher_Preferences', $adminLangId); ?></a>
@@ -324,6 +325,9 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
                     <li><a href="<?php echo CONF_WEBROOT_FRONT_URL ?>sitemap.xml" target="_blank"><?php echo Label::getLabel('LBL_View_XML', $adminLangId); ?></a></li>
                 </ul>
             </li>
+            <?php if($objPrivilege->canViewGdprRequests(AdminAuthentication::getLoggedAdminId(), true)){ ?>
+        <li><a href="<?php echo CommonHelper::generateUrl('GdprRequests')?>"><?php echo Label::getLabel('LBL_User_Gdpr_Requests',$adminLangId);?></a></li>
+		<?php } ?>
         </ul>
     </div>
 </aside>

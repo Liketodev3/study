@@ -237,16 +237,41 @@ class AccountController extends LoggedUserController
         $this->_template->render(false, false);
     }
 
-    private function getUserLangForm($lang_id = 0)
-    {
-        $frm = new Form('frmUserLang');
-        $frm->addHiddenField('', 'userlang_lang_id', $lang_id);
-        $fld = $frm->addTextArea(Label::getLabel('LBL_Biography', $lang_id), 'userlang_user_profile_Info');
-        $fld->requirements()->setLength(1, 500);
-        $fld->requirements()->setRequired();
-        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $lang_id));
-        $frm->addButton('', 'btn_next', Label::getLabel('LBL_Next', $lang_id));
-        return $frm;
+    public function GoogleCalendarAuthorize()
+    {   
+     
+        require_once CONF_INSTALLATION_PATH . 'library/third-party/GoogleAPI/vendor/autoload.php'; // include the required calss files for google login
+        $client = new Google_Client();
+        $client->setApplicationName(FatApp::getConfig('CONF_WEBSITE_NAME_' . $this->siteLangId)); // Set your applicatio name
+        $client->setScopes(['email', 'profile', 'https://www.googleapis.com/auth/calendar', 'https://www.googleapis.com/auth/calendar.events']); // set scope during user login
+        $client->setClientId(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_ID")); // paste the client id which you get from google API Console
+        $client->setClientSecret(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_SECRET")); // set the client secret
+        $currentPageUri = CommonHelper::generateFullUrl('Account', 'GoogleCalendarAuthorize', [], '', false);
+        $client->setRedirectUri($currentPageUri);
+        $client->setAccessType("offline");
+        $client->setApprovalPrompt("force");
+        $client->setDeveloperKey(FatApp::getConfig("CONF_GOOGLEPLUS_DEVELOPER_KEY")); // Developer key
+        $oauth2 = new Google_Service_Oauth2($client); // Call the OAuth2 class for get email address
+        if (isset($_GET['code'])) {
+            $client->authenticate($_GET['code']); // Authenticate
+            $_SESSION['access_token'] = $client->getAccessToken(); // get the access token here
+            FatApp::redirectUser($currentPageUri);
+        }
+        if (isset($_SESSION['access_token'])) {
+            $client->setAccessToken($_SESSION['access_token']);
+        }
+        if (!$client->getAccessToken()) {
+            $authUrl = $client->createAuthUrl();
+            FatApp::redirectUser($authUrl);
+        }
+        $data = [
+            'us_google_access_token' => $client->getRefreshToken(),
+            'us_google_access_token_expiry' => date('Y-m-d H:i:s', strtotime('+60 days'))
+        ];
+        $usrStngObj = new UserSetting(UserAuthentication::getLoggedUserId());
+        $usrStngObj->saveData($data);
+        unset($_SESSION['access_token']);
+        FatApp::redirectUser(CommonHelper::generateUrl('Account', 'ProfileInfo'));
     }
 
     public function setUpProfileLangInfo()
@@ -380,6 +405,79 @@ class AccountController extends LoggedUserController
         $this->_template->render(false, false, 'json-success.php');
     }
 
+ 
+
+    public function deleteAccountForm(){
+        $userId = UserAuthentication::getLoggedUserId(true);
+        
+        if($userId < 1){
+            Message::addErrorMessage(Label::getLabel('LBL_User_not_logged'));
+            FatUtility::dieWithError(Message::getHtml());
+        }
+    
+        $gdprId = Gdpr::getRequestFromUserId($userId);
+        if(!empty($gdprId)){
+            Message::addErrorMessage(Label::getLabel('LBL_You_already_requested_erase_date',$this->siteLangId));
+            FatUtility::dieWithError(Message::getHtml());
+        
+        }
+        $frm =  $this->getDeleteAccountForm($userId);
+        $this->set('frm', $frm);
+        $this->_template->render(false, false);
+    }
+
+    public function setUpGdprDeleteAcc(){
+
+        $userId = UserAuthentication::getLoggedUserId();
+        if (1 > $userId) {
+            FatUtility::dieWithError(Label::getLabel('LBL_Invalid_Request'));
+        }
+        $frm = $this->getDeleteAccountForm();
+        $post = $frm->getFormDataFromArray(FatApp::getPostedData());
+        if (!$post) {
+            Message::addErrorMessage($frm->getValidationErrors());
+            FatApp::dieWithError(FatUtility::generateUrl('Gdpr'));
+        }
+
+        $gdpr_request_data = [
+        'gdprdatareq_user_id'=> $userId,
+        'gdprdatareq_reason'=> $post['gdprdatareq_reason'],
+        'gdprdatareq_type'=> Gdpr::TRUNCATE_DATA,
+        'gdprdatareq_added_on'=>date('Y-m-d H:i:s'),
+        'gdprdatareq_updated_on'=>date('Y-m-d H:i:s'),
+        'gdprdatareq_status'=>Gdpr::STATUS_PENDING,
+        ];
+
+        $gdpr = new Gdpr();
+        $gdpr->assignValues($gdpr_request_data);
+        if (!$gdpr->save()) {
+            FatUtility::dieJsonError($gdpr->getError());
+        }
+        $this->set('msg', Label::getLabel("LBL_GDPR_Request_Added_Successfully!"));
+        $this->_template->render(false, false, 'json-success.php');
+    }
+
+
+    private function getDeleteAccountForm() 
+    {
+        $frm = new Form('gdprRequestForm');
+        $frm->addTextArea(Label::getLabel('LBl_Reason_for_Erasure'), 'gdprdatareq_reason')->requirements()->setRequired(true);
+        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Send', $this->siteLangId), array('class' => 'btn btn--primary block-on-mobile'));
+        return $frm;
+    }
+
+    private function getUserLangForm($lang_id = 0)
+    {
+        $frm = new Form('frmUserLang');
+        $frm->addHiddenField('', 'userlang_lang_id', $lang_id);
+        $fld = $frm->addTextArea(Label::getLabel('LBL_Biography', $lang_id), 'userlang_user_profile_Info');
+        $fld->requirements()->setLength(1, 500);
+        $fld->requirements()->setRequired();
+        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $lang_id));
+        $frm->addButton('', 'btn_next', Label::getLabel('LBL_Next', $lang_id));
+        return $frm;
+    }
+
     private function getProfileInfoForm($teacher = false)
     {
         $frm = new Form('frmProfileInfo');
@@ -424,6 +522,7 @@ class AccountController extends LoggedUserController
         $frm->addButton('', 'btn_next', Label::getLabel('LBL_Next'));
         return $frm;
     }
+
 
     public function profileImageForm()
     {
@@ -501,41 +600,6 @@ class AccountController extends LoggedUserController
         return true;
     }
 
-    public function GoogleCalendarAuthorize()
-    {
 
-        require_once CONF_INSTALLATION_PATH . 'library/third-party/GoogleAPI/vendor/autoload.php'; // include the required calss files for google login
-        $client = new Google_Client();
-        $client->setApplicationName(FatApp::getConfig('CONF_WEBSITE_NAME_' . $this->siteLangId)); // Set your applicatio name
-        $client->setScopes(['email', 'profile', 'https://www.googleapis.com/auth/calendar', 'https://www.googleapis.com/auth/calendar.events']); // set scope during user login
-        $client->setClientId(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_ID")); // paste the client id which you get from google API Console
-        $client->setClientSecret(FatApp::getConfig("CONF_GOOGLEPLUS_CLIENT_SECRET")); // set the client secret
-        $currentPageUri = CommonHelper::generateFullUrl('Account', 'GoogleCalendarAuthorize', [], '', false);
-        $client->setRedirectUri($currentPageUri);
-        $client->setAccessType("offline");
-        $client->setApprovalPrompt("force");
-        $client->setDeveloperKey(FatApp::getConfig("CONF_GOOGLEPLUS_DEVELOPER_KEY")); // Developer key
-        $oauth2 = new Google_Service_Oauth2($client); // Call the OAuth2 class for get email address
-        if (isset($_GET['code'])) {
-            $client->authenticate($_GET['code']); // Authenticate
-            $_SESSION['access_token'] = $client->getAccessToken(); // get the access token here
-            FatApp::redirectUser($currentPageUri);
-        }
-        if (isset($_SESSION['access_token'])) {
-            $client->setAccessToken($_SESSION['access_token']);
-        }
-        if (!$client->getAccessToken()) {
-            $authUrl = $client->createAuthUrl();
-            FatApp::redirectUser($authUrl);
-        }
-        $data = [
-            'us_google_access_token' => $client->getRefreshToken(),
-            'us_google_access_token_expiry' => date('Y-m-d H:i:s', strtotime('+60 days'))
-        ];
-        $usrStngObj = new UserSetting(UserAuthentication::getLoggedUserId());
-        $usrStngObj->saveData($data);
-        unset($_SESSION['access_token']);
-        FatApp::redirectUser(CommonHelper::generateUrl('Account', 'ProfileInfo'));
-    }
 
 }
