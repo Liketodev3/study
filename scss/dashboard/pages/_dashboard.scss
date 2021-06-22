@@ -76,19 +76,23 @@ $status-bar: "status-bar";
 
 .#{&status-bar} {
     border-radius: theme('radius.0');
-    display: flex;
-    flex-direction: column;
     height: 100%;
-    padding-top: var(--padding-4);
+
+    @media (min-width:theme('breakpoints.xl','value')){
+        flex-direction: column;
+        display: flex;
+    }
 
     @media (min-width:theme('breakpoints.lg','value')) and (max-width:theme('breakpoints.xxl','value')) {
         &{
             padding: var(--padding-8) var(--padding-4);
             max-height: 558px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
         }
     }
-    .status-bar__head{
-        padding: 0 var(--padding-6) var(--padding-5);  
+    .status-title{
+        padding: var(--padding-5);  
         position: relative;
         display: flex;
         justify-content: space-between;
@@ -100,12 +104,12 @@ $status-bar: "status-bar";
         }
     }
     .status-bar__body{
-        padding: var(--padding-6); 
-        height: calc(100% - 56px);
-        overflow: auto;
-
+        
+        @media (min-width:theme('breakpoints.xl','value')) {
+            height: calc(100% - 408px);
+            overflow: auto;
+        }
         .calendar{
-            padding-bottom: var(--padding-6); 
             img{
                 width: 100%;
             }
@@ -113,7 +117,7 @@ $status-bar: "status-bar";
         
         .listing-window{
             position: relative;
-            
+            padding: theme('padding.6');
             .scrollbar{
                 max-height: inherit;
                 height: calc(100% - 1px);
@@ -122,29 +126,11 @@ $status-bar: "status-bar";
             .message-display{
                 min-height: 25rem;
             }
-            // @media(min-width: theme('breakpoints.lg','value')) and (max-width: theme('breakpoints.xxl','value')){
-            //     &{
-            //         height: calc(100% - 218px);
-            //     }
-            // }
-            // @media(min-width:theme('breakpoints.xxxl','value')){
-            //     &{
-            //         height: calc(100% - 393px);
-            //     }
-            // }
-            // @media(max-width:theme('breakpoints.md','value')){
-            //     &{
-            //         height: 300px;
-            //     }
-            // }
         }
 
-        @media(min-width: theme('breakpoints.lg','value')) and (max-width: theme('breakpoints.xxl','value')){
-            &{
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                grid-column-gap: 30px;
-            }
+        @media(max-width: theme('breakpoints.xxl','value')){
+            max-height: 477px;
+            overflow: auto;
         }
     }
 }

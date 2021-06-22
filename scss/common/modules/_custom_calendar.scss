@@ -70,83 +70,6 @@ $dashboard: "dashboard";
     
 }
 
-$status-bar: "status-bar";
-
-.#{&status-bar} {
-    border-radius: theme('radius.0');
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    padding-top: calc(1rem + 26px);
-
-    @media (min-width:theme('breakpoints.lg','value')) and (max-width:theme('breakpoints.xxl','value')) {
-        &{
-            padding: var(--padding-8) var(--padding-4);
-            max-height: 558px;
-        }
-    }
-    .status-bar__head{
-        padding: 0 var(--padding-6) var(--padding-5);  
-        position: relative;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 2px solid theme('color.gray.200');
-        h5{
-            font-size: var(--font-size-h5);
-            color: var(--color-gray-000);
-        }
-        .underline{
-            
-        }
-    }
-    .status-bar__body{
-        padding: var(--padding-6); 
-        height: calc(100% - 56px);
-        overflow: auto;
-
-        .calendar{
-            padding-bottom: var(--padding-6); 
-            img{
-                width: 100%;
-            }
-        }
-        
-        .listing-window{
-            height: calc(100% - 297px);
-            position: relative;
-            
-            .scrollbar{
-                max-height: inherit;
-                height: calc(100% - 1px);
-            }
-
-            @media(min-width: theme('breakpoints.lg','value')) and (max-width: theme('breakpoints.xxl','value')){
-                &{
-                    height: calc(100% - 218px);
-                }
-            }
-            @media(min-width:theme('breakpoints.xxxl','value')){
-                &{
-                    height: calc(100% - 393px);
-                }
-            }
-            @media(max-width:theme('breakpoints.md','value')){
-                &{
-                    height: 300px;
-                }
-            }
-        }
-
-        @media(min-width: theme('breakpoints.lg','value')) and (max-width: theme('breakpoints.xxl','value')){
-            &{
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                grid-column-gap: 30px;
-            }
-        }
-    }
-}
 
 .lesson-list-container{
     .date{
@@ -264,12 +187,6 @@ $lesson-list: "lesson-list";
     }
 }
 
-.lesson-list-container{
-    margin-bottom: var(--margin-12);
-    &:last-child{
-        margin-bottom: var(--margin-0);
-    }
-}
 
 $stats-row: "stats-row";
 
@@ -600,7 +517,6 @@ $dashboard-calendar: "dashboard-calendar";
     & .fc-daygrid-event{
         background: no-repeat !important;
         padding: 0 !important;
-        height: 50px !important;
         border-left: none !important;
         display: flex;
         justify-content: center;
@@ -615,6 +531,27 @@ $dashboard-calendar: "dashboard-calendar";
 
     & .fc-daygrid-day-bottom{
         display: none;
+    }
+
+    .fc-header-toolbar{
+        .fc-toolbar-chunk{
+            h2{
+                font-size: theme('font.size.md');
+            }
+        }
+    }
+
+    .fc-day{
+        a{
+            font-size: theme('font.size.sm');
+        }
+    }
+
+    .fc-daygrid-day-events{
+        min-height: 1em !important;
+        .fc-daygrid-event{
+            height: 18px !important;
+        }
     }
 }
 
@@ -659,9 +596,6 @@ $dashboard-calendar: "dashboard-calendar";
     text-align: center;
 }
 
-.dashboard-calendar .fc-view-harness{
-    height: 300px !important;
-}
 
 .scheduled-lesson-popup .box {
     margin-bottom: 30px;

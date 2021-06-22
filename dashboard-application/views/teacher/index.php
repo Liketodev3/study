@@ -145,17 +145,17 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 			<div class="dashboard__secondary">
 				<div class="status-bar">
 					<div class="status-bar__head">
-						<h5><?php echo Label::getLabel('LBL_Upcoming_Lessons'); ?></h5>
-						<a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons')."#".ScheduledLesson::STATUS_UPCOMING; ?>" class="color-secondary underline padding-top-3 padding-bottom-3"><?php echo Label::getLabel('LBL_View_All'); ?></a>
-					</div>
-					
-					<div class="status-bar__body padding-0">
+						<div class="status-title">
+							<h5><?php echo Label::getLabel('LBL_Upcoming_Lessons'); ?></h5>
+							<a href="<?php echo CommonHelper::generateUrl('TeacherScheduledLessons')."#".ScheduledLesson::STATUS_UPCOMING; ?>" class="color-secondary underline padding-top-3 padding-bottom-3"><?php echo Label::getLabel('LBL_View_All'); ?></a>
+						</div>
 						<div class="calendar">
-								<div id='d_calendar' class="dashboard-calendar calendar-view"></div>
+							<div id='d_calendar' class="dashboard-calendar calendar-view"></div>
 						</div>
 					</div>
-
+					
 					<div class="status-bar__body">
+						
 						<?php echo $frmSrch->getFormHtml(); ?>
 						<div class="listing-window" id="listItemsLessons">
 						</div>
