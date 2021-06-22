@@ -443,12 +443,12 @@ class ImageController extends FatController
                     $h = 100;
                     break;
                 case 'MOBILE':
-                    $w = 500;
-                    $h = 208;
+                    $w = 800;
+                    $h = 600;
                     break;
                 case 'TABLET':
-                    $w = 1000;
-                    $h = 416;
+                    $w = 1200;
+                    $h = 800;
                     break;
                 case 'DESKTOP':
                     $w = 2000;
