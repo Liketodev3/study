@@ -128,7 +128,7 @@
     top: 50%;
     margin: -7px 0 0 0; margin-#{theme('direction.left','value')}: -7px;
     content: "";
-    border-#{theme('direction.left','value')}: 2px solid #333;
+    border-left: 2px solid #333;
     border-bottom: 2px solid #333;
 }
 
@@ -140,7 +140,7 @@
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
-    margin-#{theme('direction.left','value')}: -6px;
+    margin-left: -6px;
 }
 
 .slick-arrow.slick-next {

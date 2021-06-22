@@ -21,7 +21,7 @@ $colorClass = [
                 <?php } ?>
             </select>
             <div class="btn--filter">
-                <a href="javascript:void(0)" class="btn btn--primary btn--block btn--filters-js">
+                <a href="javascript:void(0)" class="btn btn--primary btn--filters-js">
                     <span class="svg-icon"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="15px" height="15px" viewBox="0 0 402.577 402.577" style="enable-background:new 0 0 402.577 402.577;" xml:space="preserve">
                             <g>
                                 <path d="M400.858,11.427c-3.241-7.421-8.85-11.132-16.854-11.136H18.564c-7.993,0-13.61,3.715-16.846,11.136

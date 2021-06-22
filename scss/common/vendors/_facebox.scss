@@ -31,6 +31,7 @@
     @media  (max-width: theme('breakpoints.md','value')) {
         max-height: 100% !important;
         height: 100%; 
+        overflow: auto;
     }
 }
 
@@ -172,9 +173,11 @@
     }
 }
 
-.show-facebox{
-    position: fixed;
-    width: 100%;
+@media(max-width:theme('breakpoints.md','value')){
+    .show-facebox{
+        position: fixed;
+        width: 100%;
+    }
 }
 
 #facebox{
@@ -189,8 +192,8 @@
 
         .fc-header-toolbar{
             @media(max-width:theme('breakpoints.md','value')){
-                border-left: transparent;
-                border-right: transparent;
+                border:none;
+                padding: 0;
                 flex-direction: column;
             }
         }

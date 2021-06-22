@@ -35,7 +35,7 @@ class CustomController extends MyAppController
                 }
             }
             $orderObj = $orderObj->getLessonsByOrderId($orderId);
-            $orderObj->addFld('slesson_grpcls_id');
+            $orderObj->addFld(['slesson_grpcls_id','op_qty']);
             $orderObj->doNotCalculateRecords(true);
             $orderObj->doNotLimitRecords(true);
             $lessonInfo = FatApp::getDb()->fetch($orderObj->getResultSet());
@@ -135,5 +135,4 @@ class CustomController extends MyAppController
     {
         $this->_template->render();
     }
-
 }

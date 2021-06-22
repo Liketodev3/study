@@ -5,6 +5,12 @@ $("document").ready(function () {
         $('html').toggleClass("show-filters-js");
     });
 
+
+    $('.close--filters-js').click(function() {
+        $(this).removeClass("is-active");
+        $('html').removeClass("show-filters-js");
+    });
+
     $('input[name="teach_language_name"]').keyup(function(){
         var text = $(this).val();
         $('.select-teach-lang-js').parent().hide();

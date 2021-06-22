@@ -122,5 +122,7 @@
         $(this).toggleClass("is-active");
         $('html').toggleClass("show-filters-js");
     });
+    
+  
 </script>
 </div>

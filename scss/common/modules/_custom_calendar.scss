@@ -581,8 +581,8 @@ $fc-scroller-harness: "fc-scroller-harness";
 
             .fc-daygrid-event {
                 background: var(--color-gray-100);
-                padding: var(--padding-4) var(--padding-3);
-                height: 50px;
+                padding: var(--padding-2) var(--padding-3);
+                height: 35px;
                 border-#{theme('direction.left','value')}: 2px solid var(--color-primary);
                 border-radius: 0;
                 margin-#{theme('direction.left','value')}: var(--margin-2) ;
