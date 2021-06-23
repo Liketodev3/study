@@ -121,7 +121,7 @@ class Navigation
         $siteLangId = CommonHelper::getLangId();
         $footerSignUpNavigationCache = FatCache::get('footerSignUPNavigation', CONF_HOME_PAGE_CACHE_TIME, '.txt');
         if ($footerSignUpNavigationCache) {
-            $footerSignUpNavigation = unserialize($footerBottomNavigationCache);
+            $footerSignUpNavigation = unserialize($footerSignUpNavigationCache);
         } else {
             $footerSignUpNavigation = self::getNavigation(Navigations::NAVTYPE_FOOTER_SIGNUP);
             FatCache::set('footerSignUPNavigation', serialize( $footerSignUpNavigation), '.txt');
