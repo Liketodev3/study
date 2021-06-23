@@ -2,7 +2,7 @@
 
 <section class="section">
     <div class="sectionhead">
-        <h4><?php echo Label::getLabel('LBL_View_GDPR_Detail', $adminLangId); ?></h4>
+        <h4><?php echo Label::getLabel('LBL_View_GDPR_Request_Detail', $adminLangId); ?></h4>
     </div>
     <div class="sectionbody">
         <table class="table table--details">

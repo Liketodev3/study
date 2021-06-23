@@ -523,3 +523,10 @@ REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption
 
 
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_You_already_Requested_Delete_Account', '1', 'You Already Requested For Delete Account ?');
+
+REPLACE INTO `tbl_language_labels` ( `label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_delete_Account_confirmation', '1', 'Are you sure want to Delete Your Account?');
+
+REPLACE INTO `tbl_language_labels` ( `label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_Delete_Account_Description', '1', 'We are sorry to see you go. After you Delete your Yo!Coach account, you will no longer receive emails from Yo!Coach, <br>your profile will not be viewable, and you will not be appear in searches.');
+
+
+REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Before_You_Go', '1', 'Before You Go ...');
