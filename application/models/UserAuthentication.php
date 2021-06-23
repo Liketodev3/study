@@ -214,7 +214,7 @@ class UserAuthentication extends FatModel
                 'vals' => [$_COOKIE[static::YOCOACHUSER_COOKIE_NAME]]
             ]);
         }
-        CommonHelper::setCookie($_COOKIE[static::YOCOACHUSER_COOKIE_NAME], '', time() - 3600, CONF_WEBROOT_FRONTEND, '', true);
+        CommonHelper::setCookie(static::YOCOACHUSER_COOKIE_NAME, '', time() - 3600, CONF_WEBROOT_FRONTEND, '', true);
         return true;
     }
 
@@ -223,15 +223,15 @@ class UserAuthentication extends FatModel
         if ($ip == '') {
             $ip = CommonHelper::getClientIp();
         }
-        if (isset($_SESSION [static::SESSION_ELEMENT_NAME]) && is_numeric($_SESSION [static::SESSION_ELEMENT_NAME] ['user_id']) && 0 < $_SESSION [static::SESSION_ELEMENT_NAME] ['user_id']) {
-            $userObj = new User($_SESSION [static::SESSION_ELEMENT_NAME] ['user_id']);
+        if (isset($_SESSION[static::SESSION_ELEMENT_NAME]) && is_numeric($_SESSION[static::SESSION_ELEMENT_NAME]['user_id']) && 0 < $_SESSION[static::SESSION_ELEMENT_NAME]['user_id']) {
+            $userObj = new User($_SESSION[static::SESSION_ELEMENT_NAME]['user_id']);
             $srch = $userObj->getUserSearchObj(['credential_email']);
             $userRow = FatApp::getDb()->fetch($srch->getResultSet());
-            if(empty($userRow)){
+            if (empty($userRow)) {
                 return false;
             }
             $credential_email = $userRow['credential_email'];
-            return ($_SESSION [static::SESSION_ELEMENT_NAME]['user_email'] == $credential_email) ? true : false;
+            return ($_SESSION[static::SESSION_ELEMENT_NAME]['user_email'] == $credential_email) ? true : false;
         }
         if ($token != '') {
             return true;
@@ -251,8 +251,8 @@ class UserAuthentication extends FatModel
             Message::addErrorMessage(Label::getLabel('MSG_USER_NOT_LOGGED', CommonHelper::getLangId()));
             FatUtility::dieWithError(Message::getHtml());
         }
-        if (array_key_exists($attr, $_SESSION [static::SESSION_ELEMENT_NAME])) {
-            return $_SESSION [static::SESSION_ELEMENT_NAME][$attr];
+        if (array_key_exists($attr, $_SESSION[static::SESSION_ELEMENT_NAME])) {
+            return $_SESSION[static::SESSION_ELEMENT_NAME][$attr];
         }
         return User::getAttributesById($_SESSION[static::SESSION_ELEMENT_NAME]['user_id'], $attr);
     }
@@ -264,7 +264,7 @@ class UserAuthentication extends FatModel
 
     public static function getGuestTeacherUserId()
     {
-        return (isset($_SESSION[static::SESSION_GUEST_USER_ELEMENT_NAME]) && $_SESSION[static::SESSION_GUEST_USER_ELEMENT_NAME]) ? FatUtility::int($_SESSION[static::SESSION_GUEST_USER_ELEMENT_NAME]):0;
+        return (isset($_SESSION[static::SESSION_GUEST_USER_ELEMENT_NAME]) && $_SESSION[static::SESSION_GUEST_USER_ELEMENT_NAME]) ? FatUtility::int($_SESSION[static::SESSION_GUEST_USER_ELEMENT_NAME]) : 0;
     }
 
     public static function logoutGuestTeacher()
@@ -374,13 +374,13 @@ class UserAuthentication extends FatModel
         }
         $db = FatApp::getDb();
         if ($db->insertFromArray(
-                        static::DB_TBL_USER_PRR,
-                        [
-                            static::DB_TBL_UPR_PREFIX . 'user_id' => intval($data['user_id']),
-                            static::DB_TBL_UPR_PREFIX . 'token' => $data['token'],
-                            static::DB_TBL_UPR_PREFIX . 'expiry' => date('Y-m-d H:i:s', strtotime("+1 DAY"))
-                        ]
-                )) {
+            static::DB_TBL_USER_PRR,
+            [
+                static::DB_TBL_UPR_PREFIX . 'user_id' => intval($data['user_id']),
+                static::DB_TBL_UPR_PREFIX . 'token' => $data['token'],
+                static::DB_TBL_UPR_PREFIX . 'expiry' => date('Y-m-d H:i:s', strtotime("+1 DAY"))
+            ]
+        )) {
             $db->deleteRecords(static::DB_TBL_USER_AUTH, [
                 'smt' => static::DB_TBL_UAUTH_PREFIX . 'user_id = ?',
                 'vals' => [$data['user_id']]
@@ -461,5 +461,4 @@ class UserAuthentication extends FatModel
             $_SESSION[UserAuthentication::SESSION_ELEMENT_NAME]['user_last_name'] = $post['user_last_name'];
         }
     }
-
 }

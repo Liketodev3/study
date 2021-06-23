@@ -165,7 +165,7 @@ $curDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y/m/d H:i:s', date('
                                             <div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel('LBL_Cancel'); ?></div>
                                         </a>
                                     <?php } ?>
-                                    <?php if ($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && strtotime($curDateTime) < $startUnixTime) { ?>
+                                    <?php if ($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && strtotime($curDateTime) < $startUnixTime && (MyDate::hoursDiff($lessonsStartTime) >= FatApp::getConfig('LESSON_STATUS_UPDATE_WINDOW', FatUtility::VAR_FLOAT, 24))) { ?>
                                         <a href="javascript:void(0);" onclick="requestReschedule('<?php echo $lesson['slesson_id']; ?>');" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
                                             <svg class="icon icon--reschedule icon--small">
                                             <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#reschedule'; ?>"></use>
