@@ -19,7 +19,7 @@
                     </div>
                     <div class="sectionbody space togglewrap" style="display:none;">
                         <?php
-                        $frmSrch->setFormTagAttribute('onsubmit', 'searchGdprRequests(this); return(false);');
+                        $frmSrch->setFormTagAttribute('onsubmit', 'searchGdprRequests(this); return false;');
                         $frmSrch->setFormTagAttribute('class', 'web_form');
 
                         $frmSrch->developerTags['colClassPrefix'] = 'col-md-';
@@ -30,7 +30,7 @@
                         $submitBtnFld->developerTags['col'] = 4;
 
                         $btnReset = $frmSrch->getField('btn_reset');
-                        $btnReset->setFieldTagAttribute('onclick', 'clearSearch()');
+                        $btnReset->setFieldTagAttribute('onclick', 'clearSearch();');
                         $submitBtnFld->attachField($btnReset);
                         echo $frmSrch->getFormHtml(); ?>
                     </div>

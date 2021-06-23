@@ -507,6 +507,7 @@ UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.19.0.20210618' WHERE `conf_na
 REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_REGISTER_WITH_EMAIL', 1, 'REGISTER WITH EMAIL');
 REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_BY_SIGNING_UP_YOU_AGREE_TO_TERMS', 1, 'By signing up with Yo!Coach, you agree to %s and %s');
 
+DROP TABLE IF EXISTS `tbl_gdpr_data_requests`;
 CREATE TABLE `tbl_gdpr_data_requests` (
    `gdprdatareq_id` INT(11) NOT NULL AUTO_INCREMENT ,
    `gdprdatareq_user_id` INT(11) NOT NULL ,
@@ -515,14 +516,16 @@ CREATE TABLE `tbl_gdpr_data_requests` (
    `gdprdatareq_status` TINYINT(1) NOT NULL , 
    `gdprdatareq_added_on` DATETIME NOT NULL , 
    `gdprdatareq_updated_on` DATETIME NOT NULL , 
-   `gdprdatareq_request_sent` TINYINT(1) NOT NULL , 
    PRIMARY KEY (`gdprdatareq_id`)
-   ) ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
+) ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
 
---
--- Indexes for table `tbl_gdpr_data_requests`
---
-ALTER TABLE `tbl_gdpr_data_requests`
-  ADD PRIMARY KEY (`gdprdatareq_id`);
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES
+('LBL_Gdpr_Delete_Account_Request_Description', '1', 'This request will delete all your personal data from the platform. After deleting you will have to again signup to use the platform'),
+('LBL_Delete_Account_Form', '1', 'Delete Account');
 
-  REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Gdpr_Delete_Account_Request_Description', '1', 'This request will delete all your personal data from the platform. After deleting you will have to again signup to use the platform');
+
+REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES ('LBL_You_already_Requested_Delete_Account', '1', 'You Already Requested For Delete Account');
+
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.20.0.20210622' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
+
+-- -------------------------------------------------- --

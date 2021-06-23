@@ -211,7 +211,7 @@ class ReportedIssue extends MyAppModel
             return true;
         }
         if ($percent == 50) {
-            /* 50% Refund to student */
+            /* 50% Refund to Student */
             $txn = new Transaction($issue['sldetail_learner_id']);
             $data = [
                 'utxn_date' => date('Y-m-d H:i:s'),
@@ -226,14 +226,14 @@ class ReportedIssue extends MyAppModel
                 $this->error = $txn->getError();
                 return false;
             }
-            /* 50% Payment to student */
-            $refundPercent = (100 - $issue['op_commission_percentage']) / 2;
-            $refundAmount = ( $refundPercent * $issue['op_unit_price']) / 100;
+            /* 50% Payment to Teaher */
+            $teacherPercent = (100 - $issue['op_commission_percentage']) / 2;
+            $teacherPayment = ( $teacherPercent * $issue['op_unit_price']) / 100;
             $txn = new Transaction($issue['slesson_teacher_id']);
             $data = [
                 'utxn_date' => date('Y-m-d H:i:s'),
                 'utxn_slesson_id' => $issue['slesson_id'],
-                'utxn_credit' => $refundAmount,
+                'utxn_credit' => $teacherPayment,
                 'utxn_user_id' => $issue['slesson_teacher_id'],
                 'utxn_comments' => 'Payment of Lesson ' . $issue['slesson_id'],
                 'utxn_status' => Transaction::STATUS_COMPLETED,
@@ -244,7 +244,7 @@ class ReportedIssue extends MyAppModel
                 return false;
             }
             $oprod = new OrderProduct($issue['op_id']);
-            if (!$oprod->refund(1, $refundAmount)) {
+            if (!$oprod->refund(1, $issue['op_unit_price'] / 2)) {
                 $this->error = $oprod->getError();
                 return false;
             }

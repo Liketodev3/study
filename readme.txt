@@ -1,5 +1,34 @@
 This file shares the details of the Yo!Coach version and change log.
 
+
+Release Number: TV-2.20.0.20210622
+
+Release Date: 2021-06-22
+
+Updates:
+
+    *Task-84921: Delete User Personal Details under GDPR
+
+Fixes:
+
+    #052237
+    #054100
+    #055306
+    #055282
+    #055191
+    #055184
+    #051047
+    #055150
+    #053426
+    #054722
+    #053859
+    #053864
+    #054596
+    #051713
+    #055299
+
+-------------------------------------------------------------------
+
 Release Number: TV-2.19.0.20210618
 
 Release Date: 2021-06-18
