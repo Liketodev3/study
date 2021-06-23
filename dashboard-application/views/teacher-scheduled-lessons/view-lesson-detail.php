@@ -119,8 +119,9 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
                         </div>
                     <?php } ?>
                     <?php if ($lesson['slesson_status'] != ScheduledLesson::STATUS_CANCELLED) { ?>
-                        <div class="session-resource">
+                        
                             <?php if ($lesson['tlpn_id'] > 0) { ?>
+                                <div class="session-resource">
                                 <div class="d-flex align-items-center">
                                     <a href="javascript:void(0);" onclick="viewAssignedLessonPlan('<?php echo $lesson['slesson_id']; ?>');" class="attachment-file">
                                         <svg class="icon icon--issue icon--attachement icon--xsmall color-black">
@@ -131,8 +132,11 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
                                     <a href="javascript:void(0);" onclick="changeLessonPlan('<?php echo $lesson['slesson_id']; ?>');" class="underline color-primary  btn btn--transparent btn--small"><?php echo Label::getLabel('LBL_Change'); ?></a>
                                     <a href="javascript:void(0);" onclick="removeAssignedLessonPlan('<?php echo $lesson['slesson_id']; ?>');" class="underline color-primary  btn btn--transparent btn--small"><?php echo Label::getLabel('LBL_Remove'); ?></a>
                                 </div>
+                                </div>
                             <?php } else if ($canEdit) { ?>
+                                <div class="session-resource">
                                 <a a href="javascript:void(0);" onclick="listLessonPlans('<?php echo $lesson['slesson_id']; ?>');" class="btn btn--transparent btn--addition color-primary btn--small"><?php echo Label::getLabel('LBL_Add_Lesson_Plan'); ?></a>
+                                </div>
                             <?php } ?>
                         </div>
                     <?php } ?>
