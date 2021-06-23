@@ -38,8 +38,8 @@ class GdprRequest extends MyAppModel
         return [
             static::STATUS_PENDING => Label::getLabel('LBL_PENDING', $langId),
             static::STATUS_COMPLETED => Label::getLabel('LBL_COMPLETED', $langId),
-            static::STATUS_DELETED_DATA => Label::getLabel('LBL_DELETED_DATA', $langId),
-            static::STATUS_DELETED_REQUEST => Label::getLabel('LBL_DELETED_REQUESTED', $langId),
+            static::STATUS_DELETED_DATA => Label::getLabel('LBL_DELETE_DATA', $langId),
+            static::STATUS_DELETED_REQUEST => Label::getLabel('LBL_DELETE_REQUEST', $langId),
         ];
     }
 

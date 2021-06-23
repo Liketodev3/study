@@ -36,6 +36,10 @@ class AccountController extends LoggedUserController
         $this->_template->render(false, false);
     }
 
+    public function deleteAccount(){
+        $this->_template->render(false, false);
+    }
+
     public function changeEmailForm()
     {
         $emailChangeReqObj = new UserEmailChangeRequest();
