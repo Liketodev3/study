@@ -30,6 +30,13 @@ $(document).ready(function () {
 		});
 	};
 
+	DeleteAccountForm = function () {
+		$(dv).html(fcom.getLoader());
+		fcom.ajax(fcom.makeUrl('Account', 'deleteAccount'), '', function (t) {
+			$(dv).html(t);
+		});
+	};
+
 	getTeacherProfileProgress = function (showMessage) {
 		showMessage = (showMessage) ? showMessage : true;
 		if (!userIsTeacher || !isTeacherDashboardTabActive) {
@@ -498,6 +505,8 @@ $(document).ready(function () {
 			}
 		});
 	};
+
+
 
 	setUpGdprDelAcc = function(frm){
 
