@@ -411,7 +411,7 @@ class AccountController extends LoggedUserController
     {
         $reqData = GdprRequest::getRequestFromUserId(UserAuthentication::getLoggedUserId());
         if(!empty($reqData)){
-            Message::addErrorMessage(Label::getLabel('LBL_You_already_requested_erase_date', $this->siteLangId));
+            Message::addErrorMessage(Label::getLabel('LBL_You_already_Requested_Delete_Account', $this->siteLangId));
             FatUtility::dieWithError(Message::getHtml());
         
         }
