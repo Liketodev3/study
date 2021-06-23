@@ -545,11 +545,11 @@ class TeachersController extends MyAppController
                 $endDateTime = $row['twsch_end_date'] . ' ' . $row['twsch_end_time'];
                 $startDateTime = $row['twsch_date'] . ' ' . $row['twsch_start_time'];
 
-                if ($validStartDateTime > strtotime($endDateTime)) {
-                    continue;
-                }
-                if ($validStartDateTime > strtotime($startDateTime)) {
-
+                // if ($validStartDateTime > strtotime($endDateTime)) {
+                //     continue;
+                // }
+                
+                if ($validStartDateTime > strtotime($startDateTime) &&  strtotime($endDateTime) > $validStartDateTime) {
                     $startDateTime = date('Y-m-d H:i:s', $validStartDateTime);
                 }
                 $twsch_end_time = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $endDateTime, true, $userTimezone);
@@ -582,7 +582,7 @@ class TeachersController extends MyAppController
         
         $twsch_weekyear = date('W-Y', strtotime($weekRange['weekStart']));
 
-        if (empty($jsonArr) || end($jsonArr)['weekyear'] != $twsch_weekyear) {
+        if ( (empty($jsonArr) || end($jsonArr)['weekyear'] != $twsch_weekyear)) {
             $weekData = ['WeekStart' => $weekRange['weekStart'], 'WeekEnd' => $weekRange['weekEnd']];
             $jsonArr2 = TeacherGeneralAvailability::getGenaralAvailabilityJsonArr($userId, $weekData, $teacherBookingBefore);
             $jsonArr = array_merge($jsonArr, $jsonArr2);

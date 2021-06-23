@@ -154,8 +154,8 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
                             <?php } ?>
                         <?php } ?>
                     <?php } ?>
-                    <?php if ($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && $curDateTimeunix < $startDateTimeUnixtime) { ?>
-                        <button class="btn btn--third" onclick="requestReschedule('<?php echo $lesson['slesson_id']; ?>');"><?php echo Label::getLabel('LBL_Reschedule'); ?></button>
+                    <?php if ($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && $curDateTimeunix < $startDateTimeUnixtime && MyDate::hoursDiff($lesson['slesson_date'] . ' ' . $lesson['slesson_start_time']) >= FatApp::getConfig('LESSON_STATUS_UPDATE_WINDOW', FatUtility::VAR_FLOAT, 24)) { ?>
+                        <button class="btn btn--third reschedule-lesson--js" onclick="requestReschedule('<?php echo $lesson['slesson_id']; ?>');"><?php echo Label::getLabel('LBL_Reschedule'); ?></button>
                     <?php } ?>
                     <?php
                     if (
@@ -163,7 +163,7 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
                         ($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && $curDateTimeunix < $startDateTimeUnixtime)
                     ) {
                     ?>
-                        <button onclick="cancelLesson('<?php echo $lesson['slesson_id']; ?>');" class="btn btn--bordered color-third"><?php echo Label::getLabel('LBL_Cancel'); ?></button>
+                        <button onclick="cancelLesson('<?php echo $lesson['slesson_id']; ?>');" class="btn btn--bordered color-third cancel-lesson--js"><?php echo Label::getLabel('LBL_Cancel'); ?></button>
                     <?php } ?>
                 </div>
             </div>
@@ -413,13 +413,9 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
                         $('.timer.start-lesson-timer').show();
                     } else {
                         $('.timer.start-lesson-timer,.reschedule-lesson--js,.cancel-lesson--js').hide();
-                        fcom.ajax(fcom.makeUrl('TeacherScheduledLessons', 'startLessonAuthentication', [CometJsonFriendData.lessonId]), '', function(t) {
-                            if (t != 0) {
-                                $(".join_lesson_now").show();
-                                endLessonCountDownTimer(startTime, endTime);
-                                checkEveryMinuteStatus();
-                            }
-                        });
+                        $(".join_lesson_now").show();
+                        endLessonCountDownTimer(startTime, endTime);
+                        checkEveryMinuteStatus();
                     }
                 });
             } else if (endTime && curDate < endTime && canEnd && !lesson_completed) {
