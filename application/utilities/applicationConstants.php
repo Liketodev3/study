@@ -426,7 +426,7 @@ class applicationConstants
             self::MEETING_COMET_CHAT => Label::getLabel('LBL_Comet_Chat'),
             self::MEETING_ZOOM => Label::getLabel('LBL_Zoom'),
             self::MEETING_LESSON_SPACE => Label::getLabel('LBL_Lesson_Space'),
-            self::MEETING_WIZIQ => Label::getLabel('LBL_WIZIQ'),
+            // self::MEETING_WIZIQ => Label::getLabel('LBL_WIZIQ'),
         ];
     }
 

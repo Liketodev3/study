@@ -24,17 +24,17 @@ INSERT INTO `tbl_configurations` (`conf_name`, `conf_val`, `conf_common`) VALUES
 ('WIZIQ_API_SECRET_KEY', '', '0'), ('WIZIQ_API_ACCESS_KEY', '', '0'), 
 ('WIZIQ_API_CLASSAPI_URL', '', '1'), ('WIZIQ_API_SERVICE_URL', '', '0');
 
-CREATE TABLE `tbl_wiziq_teachers` (
-  `wizteach_user_id` int NOT NULL,
-  `wizteach_name` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `wizteach_email` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `wizteach_created` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- CREATE TABLE `tbl_wiziq_teachers` (
+--   `wizteach_user_id` int NOT NULL,
+--   `wizteach_name` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+--   `wizteach_email` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+--   `wizteach_created` datetime NOT NULL
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-ALTER TABLE `tbl_wiziq_teachers`  ADD PRIMARY KEY (`wizteach_user_id`);
-ALTER TABLE `tbl_wiziq_teachers`  ADD CONSTRAINT `tbl_wiziq_teachers_ibfk_1` 
-	FOREIGN KEY (`wizteach_user_id`) REFERENCES `tbl_users` (`user_id`) 
-	ON DELETE RESTRICT ON UPDATE RESTRICT;
+-- ALTER TABLE `tbl_wiziq_teachers`  ADD PRIMARY KEY (`wizteach_user_id`);
+-- ALTER TABLE `tbl_wiziq_teachers`  ADD CONSTRAINT `tbl_wiziq_teachers_ibfk_1` 
+-- 	FOREIGN KEY (`wizteach_user_id`) REFERENCES `tbl_users` (`user_id`) 
+-- 	ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE `tbl_teacher_stats` (
  `testat_user_id` int NOT NULL,
