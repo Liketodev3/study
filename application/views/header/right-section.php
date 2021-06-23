@@ -8,8 +8,8 @@
         </a>
     </div>
 
-    <div class="header-dropdown header-dropdown--arrow">
-        <a class="header-dropdown__trigger trigger-js" href="#languages-nav">
+    <div class="header-controls__item header-dropdown header-dropdown--arrow">
+        <a class="header-controls__action header-dropdown__trigger trigger-js" href="#languages-nav">
             <svg class="icon icon--globe">
                 <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#globe'; ?>"></use>
             </svg>
@@ -126,7 +126,7 @@
 
         <div class="header-controls__item header-action">
             <div class="header__action">
-                <a href="javascript:void(0)" onClick="logInFormPopUp();" class="btn btn--bordered color-primary user-click"><?php echo Label::getLabel('LBL_Login'); ?>
+                <a href="javascript:void(0)" onClick="logInFormPopUp();" class="header-controls__action btn btn--bordered color-primary user-click"><?php echo Label::getLabel('LBL_Login'); ?>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="18.375" viewBox="0 0 18.331 15.331" id="enter"><path d="M17.692 0h-11.5a.639.639 0 00-.639.639V5.11a.639.639 0 101.278 0V1.278h10.222v12.775H6.833v-3.832a.639.639 0 00-1.278 0v4.472a.639.639 0 00.639.639h11.5a.639.639 0 00.639-.639V.639A.639.639 0 0017.692 0z"></path><path d="M9.936 9.769a.639.639 0 00.9.9l2.555-2.555q.022-.022.042-.046l.017-.023.02-.027.017-.028.015-.026.014-.029.013-.028c0-.009.007-.019.01-.029l.011-.03c.004-.01.005-.019.007-.029l.008-.032c.002-.011 0-.023.005-.034s0-.018 0-.028a.643.643 0 000-.126v-.028c0-.009 0-.023-.005-.034s-.005-.021-.008-.032 0-.019-.007-.029-.007-.02-.011-.03l-.01-.029c-.003-.01-.009-.018-.013-.028l-.014-.029-.015-.026-.017-.028-.02-.027-.017-.023q-.02-.024-.042-.046L10.84 4.659a.639.639 0 00-.9.9l1.46 1.468H.639A.639.639 0 000 7.666a.639.639 0 00.639.639H11.4z"></path></svg>
                 </a>
                 <a href="javascript:void(0)" onClick="signUpFormPopUp();" class="btn btn--primary color-white user-click">sign up

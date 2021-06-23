@@ -7,14 +7,16 @@
         <span><?php echo Label::getLabel('LBL_EXPLORE_SUBJECTS', CommonHelper::getLangId()); ?></span>
     </a>
     <div id="explore" class="header-dropdown__target">
-        <div class="dropdown__cover">
-            <nav class="menu--inline">
-                <ul>
-                    <?php foreach ($teachLangs as $teachLangId => $teachlang) {  ?>
-                        <li class="menu__item "><a href="<?php echo CommonHelper::generateUrl('teachers', 'index', [$teachLangId], CONF_WEBROOT_FRONTEND); ?>"><?php echo $teachlang; ?></a></li>
-                    <?php } ?>
-                </ul>
-            </nav>
-        </div>
+
+            <div class="dropdown__cover">
+                <nav class="menu--inline">
+                    <ul>
+                        <?php foreach ($teachLangs as $teachLangId => $teachlang) {  ?>
+                            <li class="menu__item "><a href="<?php echo CommonHelper::generateUrl('teachers', 'index', [$teachLangId], CONF_WEBROOT_FRONTEND); ?>"><?php echo $teachlang; ?></a></li>
+                        <?php } ?>
+                    </ul>
+                </nav>
+            </div>
+       
     </div>
 </div>

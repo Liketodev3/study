@@ -502,6 +502,7 @@ $dashboard-calendar: "dashboard-calendar";
     line-height: 1.6;
     min-width: 280px;
     text-align: left;
+    z-index: 999 !important;
 }
 .tooltipevent {
     border-top: 3px solid var(--color-primary);

@@ -642,10 +642,9 @@
     }
 
     .form-search.form-search--blog {
-        padding: 15px;
         background: #fff;
-        border: 1px solid #e5e5e5;
         display: block;
+        margin-bottom: 20px;
     }
 
     .form-search.form-search--blog:after {
@@ -933,6 +932,12 @@
         .svg-icon{
             fill: theme('color.primary');
         }
+        h1{
+            font-size: 1.7rem;
+        }
+        h2{
+            font-size: 1.5rem;
+        }
     }
 }
 
@@ -942,7 +947,39 @@
     }
 }
 
+@media(mIN-width: theme('breakpoints.xl','value')){
+    .blog-sidebar{
+        position: sticky;
+        top: 115px;
+    }
+}
+
+.form-search--blog{
+    .form__element{
+        @media(max-width: theme('breakpoints.xl','value')){
+            display: flex;
+            margin-bottom: 0;
+
+           
+        }
+    }
+    @media(max-width: theme('breakpoints.xl','value')){
+        form {
+            width: calc(100% - 60px);
+            float: right;
+            padding-left: 20px;
+        }
+    }
+}
+
 .blog-sidebar{
-    position: sticky;
-    top: 138px;
+    .form-search--blog{
+        margin-top: 0;
+    }
+}
+
+@media(max-width: theme('breakpoints.sm','value')){
+    .row.row--cols [class*="col-"].-align-right {
+        text-align: left !important;
+    }
 }

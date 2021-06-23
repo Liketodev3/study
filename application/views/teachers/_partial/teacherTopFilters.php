@@ -27,10 +27,11 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 ?>
 	<div class="main__head">
 		<div class="container container--narrow">
-			<div class="filter-wrapper">
-				<div class="filter-form">
-				<div class="filter-form__head">
-					<div class="row">
+
+
+			<div class="filter-form">
+				<div class="filter-header">
+					<div class="row no-gutters">
 						<div class="col-8">
 							<h3> Filters</h3>
 						</div>
@@ -39,163 +40,194 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 						</div>
 					</div>
 				</div>
-					<div class="filter__primary">
-						<div class="filter-form__inner">
-							<div class="filter__head filter__head-trigger filter-trigger-js">
-								<svg class="icon icon--language">
-									<use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#language'; ?>"></use>
-								</svg>
-								<?php
-                                	echo $languageName->getHtml();
-									echo $pageFld->getHtml(); 
-									echo $teachLangIdFld->getHTML(); 
-								?>
+
+
+				<div class="filter-primary">
+
+					<div class="filter-row">
+
+						<div class="filter-colum">
+							<div class="filter">
+								<div class="filter__trigger filter__trigger--arrow filter__trigger--large filter__trigger--outlined filter-trigger-js">
+									<svg class="icon icon--language">
+										<use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#language'; ?>"></use>
+									</svg>
+									<?php
+										echo $languageName->getHtml();
+										echo $pageFld->getHtml(); 
+										echo $teachLangIdFld->getHTML(); 
+									?>
+								</div>
+								<div class="filter__target filter-target-js" style="display: none;">
+									<div class="dropdown-listing">
+										<ul>
+											<?php foreach ($teachLangs as $teachLangId => $teachLangName) { ?>
+												<li <?php echo ( $teachLangId == $teachLangIdFld ->value) ? 'class="is--active"' : '' ?>><a href="javascript:void(0)" class="select-teach-lang-js" teachLangId="<?php echo $teachLangId; ?>"><?php echo $teachLangName; ?></a></li>
+											<?php } ?>
+										</ul>
+									</div>
+								</div>
 							</div>
-							<div class="filter__body filter__body-target filter-target-js" style="display: none;">
-								<div class="dropdown-listing">
+						</div>
+
+						<div class="filter-colum">
+
+							<div class="filter">
+								<div class="filter__trigger filter__trigger--arrow filter__trigger--large filter__trigger--outlined filter-trigger-js">
+									<svg class="icon icon--availbility">
+										<use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#availability'; ?>"></use>
+									</svg>
+									<span class="filter__trigger-label"><?php echo Label::getLabel("LBL_Availability", $siteLangId) ?></span>
+								</div>
+								<div class="filter__target filter-target-js" style="display: none;">
+									<div class="dropdown-availbility">
+										<div class="availbility-title"><?php echo Label::getLabel('LBL_Days_Of_Week', $siteLangId); ?></div>
+										<div class="selection-tabs selection--weeks">
+											<?php foreach ($daysArr as $dayId => $dayName) { ?>
+												<label class="selection-tabs__label" id="day_<?php echo $dayId; ?>">
+													<input type="checkbox" name="filterWeekDays[]" value="<?php echo $dayId; ?>" class="selection-tabs__input">
+													<div class="selection-tabs__title"><span class="name"><?php echo $dayName; ?></span></div>
+												</label>
+											<?php } ?>
+										</div>
+
+										<div class="-gap"></div>
+
+										<div class="availbility-title days"><?php echo Label::getLabel('LBL_Time_of_Days', $siteLangId) ?></div>
+										<div class="selection-tabs selection--days">
+											<?php foreach ($timeSlotArr as $timeSlotId => $timeSlotName) { ?>
+												<label class="selection-tabs__label" id="slot_<?php echo $timeSlotId; ?>">
+													<input type="checkbox" name="filterTimeSlots[]" value="<?php echo $timeSlotId; ?>" class="selection-tabs__input">
+													<div class="selection-tabs__title"><span class="name"><?php echo $timeSlotName; ?></span></div>
+												</label>
+											<?php } ?>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+
+						<div class="filter-colum">
+							<div class="filter">
+								<div class="filter__trigger filter__trigger--arrow filter__trigger--large filter__trigger--outlined filter-trigger-js">
+									<svg class="icon icon--price-tag">
+										<use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#price-tag' ?>"></use>
+									</svg>
+									<span class="filter__trigger-label"><?php echo Label::getLabel('LBL_Price', $siteLangId); ?></span>
+								</div>
+								<div class="filter__target filter-target-js" style="display: none;">
+									<div class="dropdown-price">
+										<input type="text" id="price_range" value="<?php echo $minPrice; ?>-<?php echo $maxPrice; ?>" name="price_range" />
+										<input type="hidden" value="<?php echo $minPrice; ?>" name="filterDefaultMinValue" id="filterDefaultMinValue" />
+										<input type="hidden" value="<?php echo $maxPrice; ?>" name="filterDefaultMaxValue" id="filterDefaultMaxValue" />
+										<div class="price-field">
+											<div class="input-field">
+												<span><?php echo CommonHelper::getCurrencySymbolRight() ? CommonHelper::getCurrencySymbolRight() : CommonHelper::getCurrencySymbolLeft(); ?></span>
+												<input type="number" name="priceFilterMinValue" value="<?php echo $priceArr['minPrice']; ?>">
+											</div>
+											<div class="input-field">
+												<span><?php echo CommonHelper::getCurrencySymbolRight() ? CommonHelper::getCurrencySymbolRight() : CommonHelper::getCurrencySymbolLeft(); ?></span>
+												<input type="number" name="priceFilterMaxValue" value="<?php echo $priceArr['maxPrice']; ?>">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="filter-colum filter-colum--large">
+							<div class="filter">
+								<div class="filter__trigger filter__trigger--large filter__trigger--outlined">
+									<div class="filter-search">
+										<input type="text" name="keyword" id="keyword" placeholder="<?php echo Label::getLabel('LBL_SEARCH_BY_NAME_AND_KEYWORD'); ?>">
+										<svg id="btnTeacherSrchSubmit" class="icon icon--search">
+											<use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#search'; ?>"></use>
+										</svg>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="filter-secondary">
+				
+				<div class="filter-row">				
+
+					
+					<div class="filter-colum">
+						<div class="filter">
+							<div class="filter__trigger filter__trigger--arrow filter-trigger-js">
+							<span class="filter__trigger-label"><?php echo Label::getLabel('LBL_Location', $siteLangId); ?></span>
+							</div>
+
+							<div class="filter__target filter-target-js" style="display: none;">
+								<div class="listing-dropdown">
 									<ul>
-										<?php foreach ($teachLangs as $teachLangId => $teachLangName) { ?>
-											<li <?php echo ( $teachLangId == $teachLangIdFld ->value) ? 'class="is--active"' : '' ?>><a href="javascript:void(0)" class="select-teach-lang-js" teachLangId="<?php echo $teachLangId; ?>"><?php echo $teachLangName; ?></a></li>
-										<?php } ?>
+										<?php foreach ($fromArr as $countryId => $countryName) { ?>
+											<li>
+												<label id="location_<?php echo $countryName['user_country_id']; ?>"><span class="checkbox"><input type="checkbox" name="filterFromCountry[]" value="<?php echo $countryName['user_country_id']; ?>"><i class="input-helper"></i></span><span class="name"><?php echo $countryName['country_name']; ?></span></label>
+											</li>
+										<?php  } ?>
+
 									</ul>
 								</div>
 							</div>
 						</div>
-						<div class="filter-form__inner">
-							<div class="filter__head filter__head-trigger filter-trigger-js">
-								<svg class="icon icon--availbility">
-									<use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#availability'; ?>"></use>
-								</svg>
-								<h6><?php echo Label::getLabel("LBL_Availability", $siteLangId) ?></h6>
-							</div>
-							<div class="filter__body filter__body-target filter-target-js" style="display: none;">
-								<div class="dropdown-availbility">
-									<div class="availbility-title"><?php echo Label::getLabel('LBL_Days_Of_Week', $siteLangId); ?></div>
-									<div class="selection-tabs selection--weeks">
-										<?php foreach ($daysArr as $dayId => $dayName) { ?>
-											<label class="selection-tabs__label" id="day_<?php echo $dayId; ?>">
-												<input type="checkbox" name="filterWeekDays[]" value="<?php echo $dayId; ?>" class="selection-tabs__input">
-												<div class="selection-tabs__title"><span class="name"><?php echo $dayName; ?></span></div>
-											</label>
-										<?php } ?>
-									</div>
+					</div>
 
-									<div class="-gap"></div>
-
-									<div class="availbility-title days"><?php echo Label::getLabel('LBL_Time_of_Days', $siteLangId) ?></div>
-									<div class="selection-tabs selection--days">
-										<?php foreach ($timeSlotArr as $timeSlotId => $timeSlotName) { ?>
-											<label class="selection-tabs__label" id="slot_<?php echo $timeSlotId; ?>">
-												<input type="checkbox" name="filterTimeSlots[]" value="<?php echo $timeSlotId; ?>" class="selection-tabs__input">
-												<div class="selection-tabs__title"><span class="name"><?php echo $timeSlotName; ?></span></div>
-											</label>
+					<div class="filter-colum">
+						<div class="filter">
+							<div class="filter__trigger filter__trigger--arrow filter-trigger-js">
+							<span class="filter__trigger-label"><?php echo Label::getLabel('LBL_Speaks', $siteLangId); ?></span>
+							</div>
+							<div class="filter__target filter-target-js" style="display: none;">
+								<div class="listing-dropdown">
+									<ul>
+										<?php foreach ($spokenLangsArr as $spokenLangId => $spokenLangName) { ?>
+											<li>
+												<label id="spoken_<?php echo $spokenLangId; ?>"><span class=" checkbox"><input type="checkbox" name="filterSpokenLanguage[]" value="<?php echo $spokenLangId; ?>"><i class="input-helper"></i></span><span class="name"><?php echo $spokenLangName; ?></span></label>
+											</li>
 										<?php } ?>
-									</div>
+
+									</ul>
 								</div>
-							</div>
-						</div>
-						<div class="filter-form__inner">
-							<div class="filter__head filter__head-trigger filter-trigger-js">
-								<svg class="icon icon--price-tag">
-									<use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#price-tag' ?>"></use>
-								</svg>
-								<h6><?php echo Label::getLabel('LBL_Price', $siteLangId); ?></h6>
-							</div>
-							<div class="filter__body filter__body-target filter-target-js" style="display: none;">
-								<div class="dropdown-price">
-									<input type="text" id="price_range" value="<?php echo $minPrice; ?>-<?php echo $maxPrice; ?>" name="price_range" />
-									<input type="hidden" value="<?php echo $minPrice; ?>" name="filterDefaultMinValue" id="filterDefaultMinValue" />
-									<input type="hidden" value="<?php echo $maxPrice; ?>" name="filterDefaultMaxValue" id="filterDefaultMaxValue" />
-									<div class="price-field">
-										<div class="input-field">
-											<span><?php echo CommonHelper::getCurrencySymbolRight() ? CommonHelper::getCurrencySymbolRight() : CommonHelper::getCurrencySymbolLeft(); ?></span>
-											<input type="number" name="priceFilterMinValue" value="<?php echo $priceArr['minPrice']; ?>">
-										</div>
-										<div class="input-field">
-											<span><?php echo CommonHelper::getCurrencySymbolRight() ? CommonHelper::getCurrencySymbolRight() : CommonHelper::getCurrencySymbolLeft(); ?></span>
-											<input type="number" name="priceFilterMaxValue" value="<?php echo $priceArr['maxPrice']; ?>">
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="filter-form__inner filter--search">
-							<div class="filter__head">
-								<input type="text" name="keyword" id="keyword" placeholder="<?php echo Label::getLabel('LBL_SEARCH_BY_NAME_AND_KEYWORD'); ?>">
-								<svg id="btnTeacherSrchSubmit" class="icon icon--search">
-									<use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#search'; ?>"></use>
-								</svg>
 							</div>
 						</div>
 					</div>
 
-					<div class="filter__secondary">
-					
-						<div class="filter-group">
-							<div class="filter-group__inner">
-								<div class="filter__head filter__head-trigger filter-trigger-js">
-									<h6><?php echo Label::getLabel('LBL_Location', $siteLangId); ?></h6>
-								</div>
+					<div class="filter-colum">
+						<div class="filter">
+							<div class="filter__trigger filter__trigger--arrow filter-trigger-js">
+							<span class="filter__trigger-label"><?php echo Label::getLabel('LBL_Gender', $siteLangId); ?></span>
+							</div>
+							<div class="filter__target filter-target-js" style="display: none;">
+								<div class="listing-dropdown">
+									<ul>
+										<?php foreach ($genderArr as $genderId => $genderName) { ?>
+											<li>
+												<label id="gender_<?php echo $genderId; ?>"><span class="checkbox"><input  type="checkbox" name="filterGender[]" value="<?php echo $genderId; ?>"><i class="input-helper"></i></span><span class="name"><?php echo $genderName; ?></span></label>
+											</li>
+										<?php } ?>
 
-								<div class="filter__body filter__body-target filter-target-js" style="display: none;">
-									<div class="listing-dropdown">
-										<ul>
-											<?php foreach ($fromArr as $countryId => $countryName) { ?>
-												<li>
-													<label id="location_<?php echo $countryName['user_country_id']; ?>"><span class="checkbox"><input type="checkbox" name="filterFromCountry[]" value="<?php echo $countryName['user_country_id']; ?>"><i class="input-helper"></i></span><span class="name"><?php echo $countryName['country_name']; ?></span></label>
-												</li>
-											<?php  } ?>
-
-										</ul>
-									</div>
+									</ul>
 								</div>
 							</div>
+						</div>
+					</div>
 
-							<div class="filter-group__inner">
-								<div class="filter__head filter__head-trigger filter-trigger-js">
-									<h6><?php echo Label::getLabel('LBL_Speaks', $siteLangId); ?></h6>
-								</div>
-								<div class="filter__body filter__body-target filter-target-js" style="display: none;">
-									<div class="listing-dropdown">
-										<ul>
-											<?php foreach ($spokenLangsArr as $spokenLangId => $spokenLangName) { ?>
-												<li>
-													<label id="spoken_<?php echo $spokenLangId; ?>"><span class=" checkbox"><input type="checkbox" name="filterSpokenLanguage[]" value="<?php echo $spokenLangId; ?>"><i class="input-helper"></i></span><span class="name"><?php echo $spokenLangName; ?></span></label>
-												</li>
-											<?php } ?>
-
-										</ul>
+						<?php foreach ($preferenceTypeArr as $key => $preferenceType) {
+							if (!isset($allPreferences[$key])) {
+								continue;
+							} ?>
+							<div class="filter-colum">
+								<div class="filter">
+									<div class="filter__trigger filter__trigger--arrow filter-trigger-js">
+										<span class="filter__trigger-label"><?php echo $preferenceType; ?></span>
 									</div>
-								</div>
-							</div>
-
-							<div class="filter-group__inner">
-								<div class="filter__head filter__head-trigger filter-trigger-js">
-									<h6><?php echo Label::getLabel('LBL_Gender', $siteLangId); ?></h6>
-								</div>
-								<div class="filter__body filter__body-target filter-target-js" style="display: none;">
-									<div class="listing-dropdown">
-										<ul>
-											<?php foreach ($genderArr as $genderId => $genderName) { ?>
-												<li>
-													<label id="gender_<?php echo $genderId; ?>"><span class="checkbox"><input  type="checkbox" name="filterGender[]" value="<?php echo $genderId; ?>"><i class="input-helper"></i></span><span class="name"><?php echo $genderName; ?></span></label>
-												</li>
-											<?php } ?>
-
-										</ul>
-									</div>
-								</div>
-							</div>
-
-							<?php foreach ($preferenceTypeArr as $key => $preferenceType) {
-								if (!isset($allPreferences[$key])) {
-									continue;
-								} ?>
-								<div class="filter-group__inner">
-									<div class="filter__head filter__head-trigger filter-trigger-js">
-										<h6><?php echo $preferenceType; ?></h6>
-									</div>
-									<div class="filter__body filter__body-target filter-target-js" style="display: none;">
+									<div class="filter__target filter-target-js" style="display: none;">
 										<div class="listing-dropdown">
 											<ul>
 												<?php foreach ($allPreferences[$key] as $preference) { ?>
@@ -208,11 +240,16 @@ $frmTeacherSrch->getField('btnTeacherSrchSubmit')->setFieldTagAttribute('class',
 										</div>
 									</div>
 								</div>
-							<?php } ?>
-						</div>
+							</div>
+						<?php } ?>
 					</div>
+					</div>		
+				
+
+
+
 				</div>
-			</div>
+	
 		</div>
 	</div>
 	<?php $filterApply = (!empty($teachLanguageValue)); ?>

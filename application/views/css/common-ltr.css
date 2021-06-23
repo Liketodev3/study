@@ -1665,7 +1665,8 @@ ul {
   border: 1px solid #e2e2e4;
   line-height: 1.6;
   min-width: 280px;
-  text-align: left; }
+  text-align: left;
+  z-index: 999 !important; }
 
 .tooltipevent {
   border-top: 3px solid var(--color-primary);
@@ -7781,8 +7782,11 @@ textarea[disabled] {
   position: relative;
   display: inline-block;
   vertical-align: top;
-  padding: 0 40px;
-  word-break: break-all; }
+  padding: 10px 10px 10px 50px;
+  word-break: break-all;
+  max-width: 500px;
+  text-align: left;
+  line-height: 18px; }
 
 .div_error {
   text-align: left;
@@ -7844,7 +7848,7 @@ textarea[disabled] {
 
 .div_msg {
   font-weight: normal;
-  padding: 20px 40px 20px 0;
+  padding: 10px 40px 10px 0;
   padding-left: 60px;
   position: relative;
   color: #fff;
@@ -7854,7 +7858,10 @@ textarea[disabled] {
 #mbsmessage .div_msg,
 .system_message .div_msg {
   padding-left: 35px;
-  padding-right: 20px; }
+  padding-right: 20px;
+  max-width: 400px;
+  text-align: left;
+  line-height: 18px; }
 
 .div_msg li {
   font-weight: 300;

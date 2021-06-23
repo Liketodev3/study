@@ -143,13 +143,10 @@ $slideshow: "slideshow";
             background: transparent;
             border-right: 2px solid;
             border-bottom: 2px solid;
-            transform: rotate(45deg);
+            transform: translateY(-50%) rotate(45deg);
             #{theme('direction.right','value')}: 24px;
-            top: 24px;
+            top: 50%;
             pointer-events: none;
-            @media(max-width: theme('breakpoints.md','value')) {
-                top: 20px;
-            }
         }
         svg{
             fill: var(--color-gray-1000);
@@ -662,13 +659,17 @@ $tile: 'tile';
     .info-tag{
         display: flex;
         align-items: center;
-        margin-#{theme('direction.right','value')}: var(--margin-5);
         &:last-child{
             margin-#{theme('direction.right','value')}: var(--margin-0);
         }
-
+        @media(min-width: theme('breakpoints.md','value')){
+            margin-#{theme('direction.right','value')}: var(--margin-5);
+        }
         @media(max-width: theme('breakpoints.md','value')){
             margin-bottom: theme('margin.4');
+            &:last-child{
+                margin-bottom: 0;
+            }
         }
         .icon--location{
             width: 11px;
@@ -923,11 +924,6 @@ $card: 'card';
             }.slick-prev{
                 left: -10%;
             }
-            .slick-arrow{
-                &::before{
-                    border-color: var(--color-white);
-                }
-            }
         }
 
 
@@ -940,35 +936,8 @@ $card: 'card';
             }
         }
 
-        @media(min-width:theme('breakpoints.md','value')) and (max-width:theme('breakpoints.xl','value')){
-            .slick-next{
-               right: -1.2rem;
-
-            }.slick-prev{
-               left: -1.2rem;
-            }
-        }
-
-        @media(max-width:theme('breakpoints.sm','value')){
-            .slick-next{
-                right: -15px;
-
-            }.slick-prev{
-              left: -15px;
-            }
-        }
-        
-
         .slider__item{
             padding: 0 var(--padding-4);
-        }
-
-        .slick-dots{
-            .slick-active{
-                button{
-                    background-color: theme('color.white');
-                }
-            }
         }
     }
 
@@ -1156,6 +1125,29 @@ $card: 'card';
         margin-#{theme('direction.left','value')}: var(--margin-16);
         svg{
             margin-#{theme('direction.right','value')}: 10px;
+        }
+    }
+    @media(max-width: theme('breakpoints.md','value')){
+        justify-content: center;
+    }
+
+    .icon-play {
+        width: 22px;
+        height: 22px;
+        position: relative;
+        border-radius: 50%;
+        background: theme('color.secondary');
+        margin-#{theme('direction.right','value')}: theme('margin.3');
+        &:before{
+            content: "";
+            position: absolute;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 6px solid theme('color.white');
+            top: 50%;
+            left: 50%;
+            transform: translate(-34%, -50%);
+            pointer-events: none;
         }
     }
 }
@@ -1451,3 +1443,6 @@ $card: 'card';
     }
 
 }
+
+
+.step-tabs .slick-track{transform: translate3d(0,0,0)!important;}

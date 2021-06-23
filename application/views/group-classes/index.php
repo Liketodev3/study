@@ -18,43 +18,54 @@ $language->setFieldTagAttribute('id', 'language');
 
     <div class="main__head">
         <div class="container container--narrow">
-            <div class="filter-wrapper filter--group">
+          
                 <?php echo $frmSrch->getFormTag(); 
                 echo $language->getHTML();
                 ?>
-                <div class="filter-form">
-                    <div class="filter__primary">
-                        <div class="filter-form__inner">
-                            <div class="filter__head filter__head-trigger filter-trigger-js">
-                                <svg class="icon icon--language">
-                                    <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#language'; ?>"></use>
-                                </svg>
-                                <input class="filter__input filter__input-js" readonly id="teachLang" type="text" name="teachLang" placeholder="<?php echo $language->selectCaption; ?>">
-                            </div>
-                            <div class="filter__body filter__body-target filter-target-js" style="display: none;">
-                                <div class="dropdown-listing">
-                                    <ul>
-                                    <li class="is--active"><a href="javascript:void(0);" class="select-teach-lang-js" data-id=""><?php echo $language->selectCaption; ?></a></li>
-                                    <?php foreach ($language->options as $key => $value) { ?>
-                                        <li><a href="javascript:void(0);" class="select-teach-lang-js" data-id="<?php echo $key; ?>"><?php echo $value; ?></a></li>
-                                    <?php  } ?>
-                                    </ul>
+                
+                    <div class="filter-primary">
+                    <div class="filter-row">
+                        <div class="filter-colum">
+                            <div class="filter">
+                                <div class="filter__trigger filter__trigger--arrow filter__trigger--large filter__trigger--outlined filter-trigger-js">
+                                    <svg class="icon icon--language">
+                                        <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#language'; ?>"></use>
+                                    </svg>
+                                    <input class="filter__input filter__input-js" readonly id="teachLang" type="text" name="teachLang" placeholder="<?php echo $language->selectCaption; ?>">
+                                </div>
+                                <div class="filter__target filter-target-js" style="display: none;">
+                                    <div class="dropdown-listing">
+                                        <ul>
+                                        <li class="is--active"><a href="javascript:void(0);" class="select-teach-lang-js" data-id=""><?php echo $language->selectCaption; ?></a></li>
+                                        <?php foreach ($language->options as $key => $value) { ?>
+                                            <li><a href="javascript:void(0);" class="select-teach-lang-js" data-id="<?php echo $key; ?>"><?php echo $value; ?></a></li>
+                                        <?php  } ?>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="filter-form__inner filter--search">
-                            <div class="filter__head">
-                                 <?php echo $keywordField->getHTML(); ?>
-                                <svg class="icon icon--search search-group-class-js" >
-                                    <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#search'; ?>"></use>
-                                </svg>
-                            </div>
+                     
+                       
+                        <div class="filter-colum filter-colum--large">
+							<div class="filter">
+								<div class="filter__trigger filter__trigger--large filter__trigger--outlined">
+									<div class="filter-search">
+                                     <?php echo $keywordField->getHTML(); ?>
+                                    <svg class="icon icon--search search-group-class-js" >
+                                        <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#search'; ?>"></use>
+                                    </svg>
+									</div>
+								</div>
+							</div>
+						</div>
                         </div>
-                    </div>
+                       
+
+                 
                 </div>
                 </form>
-            </div>
+          
         </div>
     </div>
     <div class="main__body">

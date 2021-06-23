@@ -5229,7 +5229,6 @@ div.tagsinput div {
     top: 0;
     bottom: 0;
     background: var(--color-primary);
-    border-radius: var(--radius-2);
     text-align: center;
     display: -webkit-box;
     display: -ms-flexbox;

@@ -154,7 +154,7 @@ $section--value: 'section--value';
         bottom: 0;
         
         @media(min-width: theme('breakpoints.lg','value')){
-            #{theme('direction.left','value')}: 82px;
+            #{theme('direction.left','value')}: 30px;
             position: absolute;
         }
         .slick-active{
