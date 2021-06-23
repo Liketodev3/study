@@ -2757,6 +2757,10 @@ p {
     border: none;
     border-bottom: 1px solid var(--color-gray-300); } }
 
+@media (min-width: 1199px) {
+  .filter-secondary .filter__trigger {
+    margin-right: var(--margin-5); } }
+
 .filter-search {
   width: 100%; }
   @media (max-width: 767px) {
@@ -2849,6 +2853,8 @@ p {
         .filter__trigger input {
           font-weight: var(--font-weight-medium);
           font-size: 14px; } }
+  .filter .is-active .filter__trigger-label {
+    color: var(--color-primary); }
   .filter__trigger--arrow:before {
     content: "";
     position: absolute;

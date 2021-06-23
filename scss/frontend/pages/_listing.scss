@@ -100,9 +100,13 @@ $filter-form: "filter-form";
         
             }
         }
+
+        &__trigger{
+            @media(min-width: theme('breakpoints.xl','value')){
+                margin-#{theme('direction.right','value')}: theme('margin.5');
+            }
+        }
     }
-   
- 
 
 }
 
@@ -162,7 +166,6 @@ $filter-form: "filter-form";
         //     @media(max-width: theme('breakpoints.xl','value')){
         //         &{ border-bottom: 1px solid theme('color.gray.300');}
         // }
-
            
             @media(min-width: theme('breakpoints.md','value')){
                 display: flex;
@@ -200,6 +203,12 @@ $filter-form: "filter-form";
                 font-weight: theme('font.weight.medium'); font-size: 14px;
              }
             
+        }
+    }
+
+    .is-active{
+        .filter__trigger-label{
+            color: theme('color.primary');
         }
     }
 
