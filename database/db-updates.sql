@@ -547,3 +547,5 @@ REPLACE INTO `tbl_language_labels` ( `label_key`, `label_lang_id`, `label_captio
 
 
 REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Before_You_Go', '1', 'Before You Go ...');
+
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.21.0.20210624' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
