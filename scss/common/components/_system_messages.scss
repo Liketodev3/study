@@ -16,8 +16,11 @@
     position: relative;
     display: inline-block;
     vertical-align: top;
-	padding:0 40px;
+	padding:10px 10px 10px 50px;
 	word-break: break-all;
+    max-width: 500px;
+    text-align: left;
+    line-height: 18px;
 
 }
 
@@ -128,7 +131,7 @@
 
 .div_msg {
     font-weight: normal;
-    padding: 20px 40px 20px 0; padding-#{theme('direction.left','value')}: 60px;
+    padding: 10px 40px 10px 0; padding-#{theme('direction.left','value')}: 60px;
     position: relative;
     color: #fff;
     background: url(../images/icon--success.svg) no-repeat 15px 15px #00b6ad;
@@ -137,7 +140,8 @@
 
 #mbsmessage .div_msg,
 .system_message .div_msg {
-   padding-#{theme('direction.left','value')}: 35px;padding-#{theme('direction.right','value')}:20px;
+   padding-#{theme('direction.left','value')}: 35px;padding-#{theme('direction.right','value')}:20px;max-width: 400px;    text-align: left;
+   line-height: 18px;
 }
 
 .div_msg li {
@@ -372,4 +376,8 @@
     .system_message .content {
         min-width: inherit;
     }
+}
+
+.alert{
+
 }

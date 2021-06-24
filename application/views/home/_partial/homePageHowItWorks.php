@@ -50,9 +50,7 @@ $hWorksdata = isset($banners['BLOCK_HOW_IT_WORKS']) ? $banners['BLOCK_HOW_IT_WOR
                                                         <?php } ?>
                                                         <?php if ($banners['banner_video_url']) { ?>
                                                             <a href="<?php echo $banners['banner_video_url']; ?>" target="_blank" class="btn-video">
-                                                                <svg class="icon icon--play">
-                                                                    <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#play'; ?>"></use>
-                                                                </svg>
+                                                                <div class="icon-play"></div>
                                                                 <span><?php echo $banners['banner_video_caption']; ?></span>
                                                             </a>
                                                         <?php } ?>

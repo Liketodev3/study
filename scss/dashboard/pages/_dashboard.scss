@@ -104,8 +104,8 @@ $status-bar: "status-bar";
         }
     }
     .status-bar__body{
-        
-        @media (min-width:theme('breakpoints.xl','value')) {
+        margin: theme('margin.6');
+        @media (min-width:theme('breakpoints.xxl','value')) {
             height: calc(100% - 408px);
             overflow: auto;
         }
@@ -117,7 +117,6 @@ $status-bar: "status-bar";
         
         .listing-window{
             position: relative;
-            padding: theme('padding.6');
             .scrollbar{
                 max-height: inherit;
                 height: calc(100% - 1px);
