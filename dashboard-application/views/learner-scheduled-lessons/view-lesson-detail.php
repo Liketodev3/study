@@ -36,8 +36,8 @@ if ($lesson['slesson_grpcls_id'] <= 0) {
 $scheduledLessonAction = ($lesson['op_lpackage_is_free_trial'] > 0) ? 'free_trial' : '';
 $lessonsStatus = $statusArr[$lesson['sldetail_learner_status']];
 if (
-        $lesson['lesreschlog_id'] > 0 &&
-        ($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING ||
+    $lesson['lesreschlog_id'] > 0 &&
+    ($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING ||
         $lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED)
 ) {
     $lessonsStatus = Label::getLabel('LBL_Rescheduled');
@@ -58,9 +58,9 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                         <?php
                         echo $lessonTitle;
                         if ($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED) {
-                            ?>
+                        ?>
                             <span class="color-primary"><?php echo $lessonsStatus; ?></span>
-                            <?php
+                        <?php
                         }
                         echo ' ' . Label::getLabel('LBL_with');
                         ?>
@@ -96,7 +96,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                         <div class="session-resource">
                             <a href="javascript:void(0);" onclick="viewAssignedLessonPlan('<?php echo $lesson['sldetail_id']; ?>')" class="attachment-file">
                                 <svg class="icon icon--issue icon--attachement icon--xsmall color-black">
-                                <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#attach'; ?>"></use>
+                                    <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#attach'; ?>"></use>
                                 </svg>
                                 <?php echo $lesson['tlpn_title'] ?>
                             </a>
@@ -107,7 +107,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
             <div class="col-xl-4 col-lg-4 col-sm-12">
                 <div class="session-infobar__action">
                     <span class="btn btn--live" id="end_lesson_timer" style="display:none;"> </span>
-                    <button class="btn bg-red end_lesson_now" <?php echo!$canEnd || !$isJoined ? 'style="display:none;"' : '' ?> id="endL" onclick="endLesson(<?php echo $lesson['sldetail_id']; ?>);"><?php echo Label::getLabel('LBL_End_Lesson'); ?>
+                    <button class="btn bg-red end_lesson_now" <?php echo !$canEnd || !$isJoined ? 'style="display:none;"' : '' ?> id="endL" onclick="endLesson(<?php echo $lesson['sldetail_id']; ?>);"><?php echo Label::getLabel('LBL_End_Lesson'); ?>
                     </button>
                     <?php if ($lesson['sldetail_learner_status'] != ScheduledLesson::STATUS_CANCELLED) { ?>
                         <?php if ($lesson['slesson_grpcls_id'] <= 0 && $lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && MyDate::hoursDiff($lesson['slesson_date'] . ' ' . $lesson['slesson_start_time']) >= FatApp::getConfig('LESSON_STATUS_UPDATE_WINDOW', FatUtility::VAR_FLOAT, 24)) { ?>
@@ -123,16 +123,17 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                         $lessonEnddate = $lesson['slesson_end_date'] . ' ' . $lesson['slesson_end_time'];
                         $lessonReportDate = strtotime($lessonEnddate . " +" . $reportHours . " hour");
                         if ($lesson['repiss_id'] > 0) {
-                            ?>
+                        ?>
                             <button class="btn btn--third" onclick="issueDetails('<?php echo $lesson['repiss_id']; ?>');"><?php echo Label::getLabel('LBL_Issue_Details'); ?></button>
-                            <?php
-                        } else if ($reportHours > 0 &&
-                                (($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_COMPLETED ||
+                        <?php
+                        } else if (
+                            $reportHours > 0 &&
+                            (($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_COMPLETED ||
                                 ($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED &&
-                                $currentUnixTime > $endDateTimeUnixtime && $lesson['slesson_teacher_join_time'] == '0000-00-00 00:00:00')) &&
+                                    $currentUnixTime > $endDateTimeUnixtime && $lesson['slesson_teacher_join_time'] == '0000-00-00 00:00:00')) &&
                                 $lesson['repiss_id'] < 1 && $lessonReportDate > strtotime(date('Y-m-d H:i:s')))
                         ) {
-                            ?>
+                        ?>
                             <button class="btn btn--third" onclick="issueReported('<?php echo $lesson['sldetail_id']; ?>');"><?php echo Label::getLabel('LBL_Report_Issue'); ?></button>
                         <?php } ?>
                         <?php if ($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_COMPLETED && $countReviews == 0) { ?>
@@ -154,13 +155,13 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                 $statusInfoLabel = '';
                 if ($currentUnixTime > $endDateTimeUnixtime && $lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED) {
                     $statusInfoLabel = Label::getLabel('LBL_Note_End_time_for_this_lesson_is_passed._Schedule_more_lessons.');
-                    ?>
+                ?>
                     <div class="status_media">
                         <svg class="icon">
-                        <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#clock'; ?>"></use>
+                            <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#clock'; ?>"></use>
                         </svg>
                     </div>
-                    <?php
+                <?php
                 }
                 switch ($lesson['sldetail_learner_status']) {
                     case ScheduledLesson::STATUS_NEED_SCHEDULING:
@@ -190,12 +191,12 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                     echo "<p>" . $statusInfoLabel . "</p>";
                 }
                 if ($showGoToDashboardBtn) {
-                    ?>
+                ?>
                     <a href="<?php echo CommonHelper::generateUrl('LearnerScheduledLessons'); ?>" class="btn bg-primary"><?php echo Label::getLabel('LBL_Go_to_Dashboard.'); ?></a>
                 <?php } ?>
                 <?php ?>
                 <?php if ($lesson['sldetail_learner_join_time'] == '0000-00-00 00:00:00' || $activeMettingTool == ApplicationConstants::MEETING_ZOOM) { ?>
-                    <div class="join-btns join_lesson_now" id="joinL" <?php echo ($startDateTimeUnixtime > $currentUnixTime || $currentUnixTime > $endDateTimeUnixtime || !$isScheduled ? 'style="display:none;"' : '') ?>>
+                    <div class="join-btns join_lesson_now" <?php echo ($startDateTimeUnixtime > $currentUnixTime || $currentUnixTime > $endDateTimeUnixtime || !$isScheduled ? 'style="display:none;"' : '') ?>>
                         <?php if ($activeMettingTool == ApplicationConstants::MEETING_ZOOM) { ?>
                             <a href="javascript:void(0);" class="btn btn--primary" onclick="joinLesson('<?php echo $chatId; ?>', '<?php echo $lesson['slesson_teacher_id']; ?>');"><?php echo Label::getLabel('LBL_Join_Lesson_From_Browser'); ?></a>
                             <a href="javascript:void(0);" class="btn btn--secondary" onclick="joinLessonFromApp('<?php echo $chatId; ?>', '<?php echo $lesson['slesson_teacher_id']; ?>');"><?php echo Label::getLabel('LBL_Join_Lesson_From_App'); ?></a>
@@ -240,7 +241,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
     }
 
     function joinLessonButtonAction() {
-        $("#joinL, .reschedule-lesson--js, .cancel-lesson--js").hide();
+        $(".join_lesson_now, .reschedule-lesson--js, .cancel-lesson--js").hide();
         $("#endL").show();
         checkEveryMinuteStatus();
         checkNewFlashCards();
@@ -250,7 +251,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
     }
 
     function endLessonButtonAction() {
-        $("#end_lesson_time_div,#endL, .screen-chat-js").hide();
+        $("#end_lesson_time_div, #endL,.reschedule-lesson--js, .screen-chat-js, .cancel-lesson--js").hide();
         $('.lessonBox').removeClass('session-window__frame').addClass('sesson-window__content').hide();
         searchFlashCards(document.frmFlashCardSrch);
         if (typeof checkEveryMinuteStatusVar != "undefined") {
@@ -266,8 +267,8 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
         if (typeof checkEveryMinuteStatusVar != "undefined") {
             return;
         }
-        checkEveryMinuteStatusVar = setInterval(function () {
-            fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'checkEveryMinuteStatus', ['<?php echo $lesson['sldetail_id'] ?>']), '', function (t) {
+        checkEveryMinuteStatusVar = setInterval(function() {
+            fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'checkEveryMinuteStatus', ['<?php echo $lesson['sldetail_id'] ?>']), '', function(t) {
                 var t = JSON.parse(t);
                 if (!lesson_joined && !lesson_completed && t.has_teacher_joined == 1 && t.has_learner_joined == 0) {
                     $.mbsmessage('<?php echo Label::getLabel('LBL_Teacher_Has_Joined_Now_you_can_also_Join_The_Lesson!'); ?>', true, 'alert alert--success');
@@ -287,12 +288,12 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                             useBootstrap: false,
                             boxWidth: '20%',
                             escapeKey: false,
-                            onClose: function () {
+                            onClose: function() {
                                 $.mbsmessage.close();
                                 location.reload();
                             },
                         });
-                        setTimeout(function () {
+                        setTimeout(function() {
                             $.mbsmessage.close();
                             location.reload();
                         }, 1500);
@@ -311,14 +312,14 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                                     text: langLbl.Proceed,
                                     btnClass: 'btn btn--primary',
                                     keys: ['enter', 'shift'],
-                                    action: function () {
+                                    action: function() {
                                         endLessonSetup(sldetail_id);
                                     }
                                 },
                                 Quit: {
                                     text: langLbl.Quit,
                                     btnClass: 'btn btn--secondary',
-                                    action: function () {
+                                    action: function() {
                                         isConfirmpopOpen = false;
                                     }
                                 }
@@ -334,7 +335,7 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
         if ((typeof flashCardEnabled !== typeof undefined) && !flashCardEnabled) {
             return;
         }
-        checkNewFlashCardsVar = setInterval(function () {
+        checkNewFlashCardsVar = setInterval(function() {
             searchFlashCards(document.frmFlashCardSrch);
         }, 30000)
     }
@@ -347,14 +348,13 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
             });
         }
 
-        worker.onmessage = function (e) {
-            console.log(e.data);
+        worker.onmessage = function(e) {
             func(e.data);
         };
     }
 
     function endLessonCountDownTimer(curDate, endTime) {
-        countDownTimer(curDate, endTime, function (w_res_data) {
+        countDownTimer(curDate, endTime, function(w_res_data) {
             if (w_res_data) {
                 $('#end_lesson_timer').show();
                 if (lesson_joined) {
@@ -367,25 +367,22 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
         });
     }
 
-    $(function () {
+    $(function() {
         var curDate = "<?php echo $curDate; ?>";
         var startTime = "<?php echo $startTime; ?>";
         var endTime = "<?php echo $endTime; ?>";
-<?php if ($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED) { ?>
+        <?php if ($lesson['sldetail_learner_status'] == ScheduledLesson::STATUS_SCHEDULED) { ?>
             if (startTime && curDate < startTime) {
-                countDownTimer(curDate, startTime, function (w_res_data) {
+                countDownTimer(curDate, startTime, function(w_res_data) {
                     $('#start_lesson_timer').html(w_res_data);
                     if (w_res_data) {
                         $('.timer.start-lesson-timer').show();
                     } else {
                         $('.timer.start-lesson-timer,.reschedule-lesson--js,.cancel-lesson--js').hide();
-                        fcom.ajax(fcom.makeUrl('LearnerScheduledLessons', 'startLessonAuthentication', ['<?php echo $lesson['sldetail_id'] ?>']), '', function (t) {
-                            if (t != 0) {
-                                $(".join_lesson_now").show();
-                                endLessonCountDownTimer(startTime, endTime);
-                                checkEveryMinuteStatus();
-                            }
-                        });
+
+                        $(".join_lesson_now").show();
+                        endLessonCountDownTimer(startTime, endTime);
+                        checkEveryMinuteStatus();
                     }
                 });
             } else if (endTime && curDate < endTime && canEnd && !lesson_completed) {
@@ -395,14 +392,14 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
             if ($('.timer.start-lesson-timer').is(":visible")) {
                 $("#lesson_actions").show();
             }
-<?php } ?>
+        <?php } ?>
 
         $('body').addClass('is-screen-on');
         $(".tabs-content-js").hide();
         $(".tabs-js li:first").addClass("is-active").show();
         $(".tabs-content-js:first").show();
 
-        $(".tabs-js li").click(function () {
+        $(".tabs-js li").click(function() {
             $(".tabs-js li").removeClass("is-active");
             $(this).addClass("is-active");
             $(".tabs-content-js").hide();

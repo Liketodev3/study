@@ -30,6 +30,13 @@ $(document).ready(function () {
 		});
 	};
 
+	DeleteAccountForm = function () {
+		$(dv).html(fcom.getLoader());
+		fcom.ajax(fcom.makeUrl('Account', 'deleteAccount'), '', function (t) {
+			$(dv).html(t);
+		});
+	};
+
 	getTeacherProfileProgress = function (showMessage) {
 		showMessage = (showMessage) ? showMessage : true;
 		if (!userIsTeacher || !isTeacherDashboardTabActive) {
@@ -499,6 +506,8 @@ $(document).ready(function () {
 		});
 	};
 
+
+
 	setUpGdprDelAcc = function(frm){
 
 		if (!$(frm).validate()) return false;
@@ -613,7 +622,10 @@ $(document).ready(function () {
 	};
 
 	sumbmitProfileImage = function (goToLangForm) {
-		$.loader.show();
+		if(!$("#frmProfile").validate()){
+            return;
+        }
+        $.loader.show();
 		$("#frmProfile").ajaxSubmit({
 			delegation: true,
 			success: function (json) {
@@ -751,9 +763,36 @@ $(document).ready(function () {
 		$.loader.show();
 		fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpProfileLangInfo'), data, function (t) {
 			$.loader.hide();
-			f
-			
+			if(!gotToNextLangForm) {
+				if (t.langId > 0) {
+					getLangProfileInfoForm(t.langId);
+					return;
+				}
+			}
+			else if($('.profile-lang-tab.is-active').next('.profile-lang-tab').length > 0){
+				$('.profile-lang-tab.is-active').next('.profile-lang-tab').find('a').click();
+			}
 		});
 	};
+
+    validateVideolink = function (field) {
+        let frm = field.form;
+        $(frm).validate();
+        let url = field.value.trim();
+        if (url == '') {
+            return false;
+        }
+        let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
+        let matches = url.match(regExp);
+        if (!matches || matches[2].length != 11) {
+            $(field).val('');
+            return false;
+        }
+        let validUrl = "https://www.youtube.com/embed/";
+        validUrl += matches[2];
+        $(field).val(validUrl);
+        $(frm).validate();
+        return matches[1];
+    };
 
 })();

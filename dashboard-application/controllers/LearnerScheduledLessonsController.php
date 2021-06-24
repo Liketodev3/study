@@ -1166,21 +1166,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $this->set('msg', Label::getLabel('LBL_Flashcard_Saved_Successfully!'));
         $this->_template->render(false, false, 'json-success.php');
     }
-
-    public function startLessonAuthentication($lDetailId)
-    {
-        $srch = new ScheduledLessonSearch(false);
-        $srch->addMultipleFields(['slns.slesson_id']);
-        $srch->addCondition('sld.sldetail_learner_status', '=', ScheduledLesson::STATUS_SCHEDULED);
-        $srch->addCondition('sld.sldetail_learner_id', '=', UserAuthentication::getLoggedUserId());
-        $srch->addCondition('sld.sldetail_id', '=', $lDetailId);
-        $srch->addCondition('slns.slesson_date', '=', date('Y-m-d'));
-        $srch->addCondition('slns.slesson_start_time', '<=', date('H:i:s'));
-        $srch->addCondition('slns.slesson_end_time', '>=', date('H:i:s'));
-        $srch->getResultSet();
-        echo $count = $srch->recordCount();
-    }
-
+    
     public function endLessonSetup()
     {
         $lDetailId = FatApp::getPostedData('lDetailId', FatUtility::VAR_INT, 0);

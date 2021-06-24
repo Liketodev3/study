@@ -122,13 +122,13 @@ $isTeacherDashboardTabActive = (User::getDashboardActiveTab() == User::USER_TEAC
                             </a>
                         </li>
                         <li class="menu__item">
-                            <a href="javascript:void(0);" onClick="getCookieConsentForm()">
+                            <a href="javascript:void(0);" onClick="getCookieConsentForm(false)">
                                 <?php echo Label::getLabel('LBL_cookie_consent'); ?>
                                 <span class="menu__icon"></span>
                             </a>
                         </li>
                         <li class="menu__item">
-								<a href="javascript::void(0)" onclick="deleteAccount();">									
+								<a href="javascript::void(0)" onclick="DeleteAccountForm();">									
 									<?php echo Label::getLabel('LBL_Delete_My_Account');?>
 									<span class="menu__icon"></span>
 								</a>

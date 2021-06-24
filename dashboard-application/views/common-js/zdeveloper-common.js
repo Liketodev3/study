@@ -50,10 +50,14 @@ sendMessage = function (frm) {
 	});
 };
 
-getCookieConsentForm = function(){
-
+getCookieConsentForm = function(inFacebox){
+	inFacebox = (inFacebox) ? inFacebox : false; 
 	fcom.ajax(fcom.makeUrl('Custom','cookieForm', [], confFrontEndUrl),'',function(t){
-		$.facebox( t,'facebox-medium cookies-popup');
+		if(inFacebox){
+			$.facebox( t,'facebox-medium cookies-popup');
+			return;
+		}
+		$('#formBlock-js').html(t);
 	});
 }
 saveCookieSetting = function(form) {
