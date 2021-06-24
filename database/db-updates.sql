@@ -547,3 +547,6 @@ REPLACE INTO `tbl_language_labels` ( `label_key`, `label_lang_id`, `label_captio
 
 
 REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_Before_You_Go', '1', 'Before You Go ...');
+
+REPLACE INTO `tbl_banner_locations` (`blocation_id`, `blocation_key`, `blocation_identifier`, `blocation_banner_width`, `blocation_banner_height`, `blocation_active`) VALUES
+(3, 'BLOCK_HOW_IT_WORKS', 'How It Works', '950.00', '800.00', 1);

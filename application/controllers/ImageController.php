@@ -532,22 +532,16 @@ class ImageController extends FatController
 
     public function showBanner($bannerId, $langId, $type = 1, $secondary = false)
     {
+ 
         $bannerId = FatUtility::int($bannerId);
         $langId = FatUtility::int($langId);
         switch ($type) {
-            case BannerLocation::BLOCK_FIRST_AFTER_HOMESLIDER:
-                $w = 470;
-                $h = 367;
-                break;
-            case BannerLocation::BLOCK_SECOND_AFTER_HOMESLIDER:
-                $w = 110;
-                $h = 69;
-                break;
             case BannerLocation::BLOCK_HOW_IT_WORKS:
-                $w = 800;
-                $h = 600;
+                $w = 950;
+                $h = 800;
                 break;
         }
+
         if ($secondary) {
             $imgType = AttachedFile::FILETYPE_BANNER_SECOND_IMAGE;
         } else {
