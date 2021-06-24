@@ -637,11 +637,11 @@ class ConfigurationsController extends AdminBaseController
                 $fld = $frm->addTextBox(Label::getLabel("LBL_Comet_Chat_Auth", $this->adminLangId), 'CONF_COMET_CHAT_AUTH');
                 $frm->addHtml('', 'lessonspace_api_key', '<h3>' . Label::getLabel("LBL_Lessonspace_API_Key", $this->adminLangId) . '</h3>');
                 $fld = $frm->addTextBox(Label::getLabel("LBL_Lessonspace_Api_Key", $this->adminLangId), 'CONF_LESSONSPACE_API_KEY');
-                $frm->addHtml('', 'WIZIQ_MEETING_API', '<h3>' . Label::getLabel("LBL_WIZIQ_MEETING_API", $this->adminLangId) . '</h3>');
-                $frm->addTextBox(Label::getLabel("WIZIQ_API_SECRET_KEY", $this->adminLangId), 'WIZIQ_API_SECRET_KEY');
-                $frm->addTextBox(Label::getLabel("WIZIQ_API_ACCESS_KEY", $this->adminLangId), 'WIZIQ_API_ACCESS_KEY');
-                $frm->addTextBox(Label::getLabel("WIZIQ_API_SERVICE_URL", $this->adminLangId), 'WIZIQ_API_SERVICE_URL');
-                $frm->addTextBox(Label::getLabel("WIZIQ_API_CLASSAPI_URL", $this->adminLangId), 'WIZIQ_API_CLASSAPI_URL');
+                // $frm->addHtml('', 'WIZIQ_MEETING_API', '<h3>' . Label::getLabel("LBL_WIZIQ_MEETING_API", $this->adminLangId) . '</h3>');
+                // $frm->addTextBox(Label::getLabel("WIZIQ_API_SECRET_KEY", $this->adminLangId), 'WIZIQ_API_SECRET_KEY');
+                // $frm->addTextBox(Label::getLabel("WIZIQ_API_ACCESS_KEY", $this->adminLangId), 'WIZIQ_API_ACCESS_KEY');
+                // $frm->addTextBox(Label::getLabel("WIZIQ_API_SERVICE_URL", $this->adminLangId), 'WIZIQ_API_SERVICE_URL');
+                // $frm->addTextBox(Label::getLabel("WIZIQ_API_CLASSAPI_URL", $this->adminLangId), 'WIZIQ_API_CLASSAPI_URL');
                 $frm->addHtml('', 'Newsletter', '<h3>' . Label::getLabel("LBL_Newsletter_Subscription", $this->adminLangId) . '</h3>');
                 $fld = $frm->addTextBox(Label::getLabel("LBL_Mailchimp_Key", $this->adminLangId), 'CONF_MAILCHIMP_KEY');
                 $fld->htmlAfterField = "<small>" . Label::getLabel("LBL_This_is_the_Mailchimp's_application_key_used_in_subscribe_and_send_newsletters.", $this->adminLangId) . "</small>";
