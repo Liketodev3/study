@@ -61,7 +61,12 @@ $proficiencyField = $frm->getField('utrequest_language_speak_proficiency[]');
                                                 $proficiencyField = $frm->getField('utrequest_language_speak_proficiency[' . $key . ']');
                                                 $proficiencyField->addFieldTagAttribute('onchange', 'changeProficiency(this,' . $key . ');');
                                                 $proficiencyField->addFieldTagAttribute('data-lang-id', $key);
-                                                $isLangSpeak = $speakLangField->checked;
+                                                $isLangSpeak = false;
+                                                $proficiencyKey = array_search($key, $request['utrequest_language_speak']);
+                                                if ($proficiencyKey !== false) {
+                                                    $proficiencyField->value = $request['utrequest_language_speak_proficiency'][$proficiencyKey];
+                                                    $isLangSpeak = true;
+                                                }
                                                 ?>
                                                 <div class="selection selection--select slanguage-<?php echo $key; ?> <?php echo ($isLangSpeak) ? 'is-selected' : ''; ?>">
                                                     <label class="selection__trigger ">
