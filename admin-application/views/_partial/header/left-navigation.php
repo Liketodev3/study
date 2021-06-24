@@ -275,9 +275,9 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
                         <?php if ($objPrivilege->canViewUrlRewrites($adminLoggedId, true)) { ?>
                             <li><a href="<?php echo CommonHelper::generateUrl('UrlRewriting'); ?>"><?php echo Label::getLabel('LBL_Url_Rewriting', $adminLangId); ?></a></li>
                         <?php } ?>
-                        <?php if ($objPrivilege->canViewImageAttributes($adminLoggedId, true)) { ?>
+                        <!-- <?php if ($objPrivilege->canViewImageAttributes($adminLoggedId, true)) { ?>
                             <li><a href="<?php echo CommonHelper::generateUrl('ImageAttributes'); ?>"><?php echo Label::getLabel('LBL_Image_Attributes', $adminLangId); ?></a></li>
-                        <?php } ?>
+                        <?php } ?> -->
                         <?php if ($objPrivilege->canViewRobotsSection($adminLoggedId, true)) { ?>
                             <li><a href="<?php echo CommonHelper::generateUrl('Bots'); ?>"><?php echo Label::getLabel('LBL_Robots', $adminLangId); ?></a></li>
                         <?php } ?>
