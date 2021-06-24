@@ -815,7 +815,7 @@ class TeachersController extends MyAppController
         }
 
         $frm = new Form('frmTeacherSrch');
-        $frm->addTextBox('', 'teach_language_name', $teachLangName, ['placeholder' => Label::getLabel('LBL_Select_a_language')]);
+        $frm->addTextBox('', 'teach_language_name', $teachLangName, ['placeholder' => Label::getLabel('LBL_Language')]);
         $frm->addHiddenField('', 'teachLangId', $teachLangId);
         $frm->addTextBox('', 'teach_availability', '', ['placeholder' => Label::getLabel('LBL_Select_date_time')]);
         $keyword = $frm->addTextBox('', 'keyword', '', ['placeholder' => Label::getLabel('LBL_Search_By_Teacher_Name')]);
