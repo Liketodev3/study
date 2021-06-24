@@ -55,7 +55,7 @@ $slideshow: "slideshow";
     
     transform: translateY(-50%);
     z-index: 2;
-    padding: var(--padding-14) var(--padding-18);
+    padding: theme('padding.14') theme('padding.18');
     text-align: center;
     backdrop-filter: saturate(180%) blur(20px);
     background: rgba(255,255,255,0.7);
@@ -67,7 +67,7 @@ $slideshow: "slideshow";
     // }
 
     @media(max-width: theme('breakpoints.xl','value')) {
-        padding: var(--padding-8) var(--padding-10);
+        padding: theme('padding.8') theme('padding.10');
         min-width: 450px;
         max-width: 450px;
         // margin: 0 0 0 -355px;
@@ -84,7 +84,7 @@ $slideshow: "slideshow";
             padding: theme('padding.6') theme('padding.8') theme('padding.10');
             text-align: center;
             min-width: 100%;
-            color: var(--color-dark);
+            color: theme('color.dark');
             border-bottom: 1px solid theme('color.gray.200');
         }
     }
@@ -93,7 +93,7 @@ $slideshow: "slideshow";
         font-size: 2.6rem;
         font-weight: normal;
         line-height: 4rem;
-        margin-bottom: var(--margin-3);
+        margin-bottom: theme('margin.3');
         @media(max-width: theme('breakpoints.xl','value')) {
             &{
                 font-size: 1.4rem;
@@ -105,17 +105,17 @@ $slideshow: "slideshow";
                 font-size: 24px;
                 line-height: 40px;
                 font-weight: 600;
-                padding: 0 var(--padding-5);
+                padding: 0 theme('padding.5');
             }
         }
     }
     p{
-        font-size: var(--font-size-medium);
+        font-size: theme('font.size.medium');
         color: inherit;
         line-height: 30px;
-        margin-bottom: calc(var(--margin-10) - 3px);
+        margin-bottom: theme('padding.10');
         @media(max-width: theme('breakpoints.xl','value')) {
-            margin-bottom: var(--margin-6);
+            margin-bottom: theme('margin.6');
             font-size: 1.1rem;
         }
     }
@@ -127,13 +127,13 @@ $slideshow: "slideshow";
 }
 
 .slideshow__form{
-    margin-bottom: var(--margin-6);
+    margin-bottom: theme('margin.6');
     @media(max-width: theme('breakpoints.md','value')) {
-        margin-bottom: var(--margin-4);
+        margin-bottom: theme('margin.4');
     }
     .slideshow-input{
         position: relative;
-        margin-bottom: var(--margin-6);
+        margin-bottom: theme('margin.6');
 
         &::after{
             content: "";
@@ -149,13 +149,13 @@ $slideshow: "slideshow";
             pointer-events: none;
         }
         svg{
-            fill: var(--color-gray-1000);
+            fill: theme('color.gray.1000');
         }
         input[type="text"]{
             border-radius: 0;
             height: 60px;
-            padding-#{theme('direction.left','value')}: var(--padding-16);
-            padding-#{theme('direction.right','value')}: var(--padding-16);
+            padding-#{theme('direction.left','value')}: theme('padding.16');
+            padding-#{theme('direction.right','value')}: theme('padding.16');
             position: relative;
             border: none;
             @media(max-width: theme('breakpoints.lg','value')) {
@@ -163,7 +163,7 @@ $slideshow: "slideshow";
             }
             @media(max-width: theme('breakpoints.md','value')) {
                 height: 50px;
-                border: 1px solid var(--color-gray-500);
+                border: 1px solid theme('color.gray.500');
             }
         }
         .icon--search{
@@ -197,14 +197,14 @@ $slideshow: "slideshow";
     display: flex;
     justify-content: center;
     b{
-        margin-#{theme('direction.right','value')}: var(--margin-3);
+        margin-#{theme('direction.right','value')}: theme('margin.3');
         color: inherit;
         font-size: 1.1rem;
     }
     ul{
         display: flex;
         align-items: center;
-        margin-#{theme('direction.left','value')}: var(--margin-2);
+        margin-#{theme('direction.left','value')}: theme('margin.2');
         flex-wrap: wrap;
 
         .tags-inline__item{
@@ -218,20 +218,20 @@ $slideshow: "slideshow";
                 font-size: 1.1rem;
             }
             :hover{
-                color: var(--color-secondary);
+                color: theme('color.secondary');
             }
         }
     }
 }
 
 .section__head{
-    padding: var(--padding-0) !important;
+    padding: 0 !important;
     text-align: center;
     margin-bottom: theme('margin.14');
     
     @media (max-width:theme('breakpoints.lg','value')){
         & {
-            margin-bottom: var(--margin-10);
+            margin-bottom: theme('margin.10');
         }
     }
 
@@ -241,7 +241,7 @@ $slideshow: "slideshow";
         line-height: 40px !important;
         font-weight: normal;
         color: #111;
-        font-size: var(--font-size-h1);
+        font-size: theme('font.size.h1');
         @media (max-width:theme('breakpoints.xl','value')){
             font-size: 1.7rem;
             font-weight: 600;
@@ -253,7 +253,7 @@ $slideshow: "slideshow";
     }
     .view-all{
         font-weight: 600;
-        color: var(--color-primary);
+        color: theme('color.primary');
         padding-bottom: 5px;
         border-bottom: 1px dashed;
     }
@@ -263,7 +263,7 @@ $slideshow: "slideshow";
     .section__head{
         @media (max-width:theme('breakpoints.md','value')){
             max-width: 80%;
-            margin: 0 auto var(--margin-8);         
+            margin: 0 auto theme('margin.8');         
         }
     }
 }
@@ -278,7 +278,7 @@ $service: 'service';
     
     @media (min-width:theme('breakpoints.md','value')){
         &{
-            padding: var(--padding-12) var(--padding-10);
+            padding: theme('padding.12') theme('padding.10');
         }
     }
 
@@ -303,7 +303,7 @@ $service: 'service';
         justify-content: center;
         align-items: center;
         position: relative;
-        color: var(--color-primary);
+        color: theme('color.primary');
         &::before{
             position: absolute;
             left: 0;
@@ -331,11 +331,11 @@ $service: 'service';
     }
     .service__content{
         @media (min-width:theme('breakpoints.md','value')){
-            margin-#{theme('direction.left','value')}: var(--margin-6);
+            margin-#{theme('direction.left','value')}: theme('margin.6');
         }
         h3{
             font-size: theme('font.size.h5');;
-            margin-bottom: var(--margin-4);
+            margin-bottom: theme('margin.4');
             line-height: 20px;
             @media (max-width:theme('breakpoints.md','value')){
                 font-size: theme('font.size.medium');
@@ -351,7 +351,7 @@ $service: 'service';
 .section--services {
     .section__body{
         @media (max-width:theme('breakpoints.md','value')){
-            padding: 0 var(--padding-8);
+            padding: 0 theme('padding.8');
         }
     }
 }
@@ -376,16 +376,16 @@ $flag-wrapper: 'flag-wrapper';
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        margin: 0 var(--margin-3) var(--margin-6);
+        margin: 0 theme('margin.3') theme('margin.6');
         position: relative;
         transition: .3s all ease-in-out;
         color: #111;
         border: 1px solid transparent;
-        padding: var(--padding-6) 0;
+        padding: theme('padding.6') 0;
 
         @media(max-width: theme('breakpoints.xl','value')) {
             &{
-                background-color: var(--color-white);
+                background-color: theme('color.white');
             }
         }
         @media(max-width: theme('breakpoints.md','value')) {
@@ -408,7 +408,7 @@ $flag-wrapper: 'flag-wrapper';
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: var(--margin-6);
+            margin-bottom: theme('margin.6');
             background: #fff;
             @media(max-width: theme('breakpoints.md','value')) {
                 width: 40px;
@@ -454,14 +454,14 @@ $flag-wrapper: 'flag-wrapper';
             border: 1px solid #E6E6E6;
             background: #fff;
             .lesson-count {
-                color: var(--color-gray-700);
+                color: theme('color.gray.700');
             }
         }
     }
 }
 
 .section--language, .section--step{
-    background: var(--color-gray-100);
+    background: theme('color.gray.100');
 }
 
 .more-info{
@@ -473,7 +473,7 @@ $flag-wrapper: 'flag-wrapper';
             font-size: 1.1rem;
         }
         a{
-            color: var(--color-primary);
+            color: theme('color.primary');
             font-weight: 600;
             position: relative;
             padding-bottom: 4px;
@@ -489,7 +489,7 @@ $flag-wrapper: 'flag-wrapper';
 $tutor-card: 'tutor-card';
 
 .#{$tutor-card} {
-    margin-bottom: calc(var(--margin-18) - 1px);
+    margin-bottom: theme('margin.18');
     transition: .3s all ease-in-out;
     &:hover{
         box-shadow: 0px 10px 16px rgba(0,0,0,0.1);
@@ -504,12 +504,12 @@ $tutor-card: 'tutor-card';
         opacity: 0;
         visibility: hidden;
         position: absolute;
-        padding-left: var(--padding-8);
-        padding-right: var(--padding-8);
+        padding-left: theme('padding.8');
+        padding-right: theme('padding.8');
         bottom: 65px;
         left: 0;
         transition: all 0.2s;
-        padding: 0 var(--padding-8) var(--padding-8);
+        padding: 0 theme('padding.8') theme('padding.8');
         color: inherit;
         &::before{
             position: absolute;
@@ -528,14 +528,14 @@ $tutor-card: 'tutor-card';
 $tile: 'tile';
 
 .#{$tile} {
-    margin-bottom: var(--margin-10);
+    margin-bottom: theme('margin.10');
     transition: all 0.3s;
     position: relative;
 
     @media(max-width: theme('breakpoints.xl','value')){
         &{
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
-            margin-bottom: var(--margin-10);
+            margin-bottom: theme('margin.10');
         }
     }
 
@@ -552,7 +552,7 @@ $tile: 'tile';
         right: 0;
         color: unset;
         @media(min-width: theme('breakpoints.xl','value')){
-            padding: 0 var(--padding-5);
+            padding: 0 theme('padding.5');
         }
         &::before{
             content: none;
@@ -578,12 +578,12 @@ $tile: 'tile';
 
 @media(min-width: theme('breakpoints.xl','value')){
     .tile:hover{
-        box-shadow: var(--boxShadow-vertical);
+        box-shadow: theme('boxShadow.vertical');
         .card__row--action{
             opacity: 1;
             visibility: visible;
-            padding-top: var(--padding-3);
-            padding-bottom: var(--padding-3);
+            padding-top: theme('padding.3');
+            padding-bottom: theme('padding.3');
             transform: translateY(100%);
         }
     }
@@ -601,12 +601,12 @@ $tile: 'tile';
 
 
 .tile__body{
-    padding: var(--padding-5);
+    padding: theme('padding.5');
     text-align: center;
     color: #111;
     @media(min-width: theme('breakpoints.xl','value')){
         & {
-            padding: var(--padding-5) var(--padding-5) var(--padding-20);
+            padding: theme('padding.5') theme('padding.5') theme('padding.20');
         }
     }
 
@@ -623,8 +623,8 @@ $tile: 'tile';
 
     .tile__title{
         h4{
-            margin-bottom: var(--margin-3);
-            font-size: calc(var(--font-size-medium) + 1px);
+            margin-bottom: theme('margin.3');
+            font-size: theme('font.size.medium');
             font-weight: bold;
             color: #111;
             @media(max-width: theme('breakpoints.md','value')){
@@ -636,7 +636,7 @@ $tile: 'tile';
 
     @media(max-width: theme('breakpoints.xl','value')){
         .card__row--action{
-            margin-top: var(--margin-5);
+            margin-top: theme('margin.5');
         }   
     }
 
@@ -660,10 +660,10 @@ $tile: 'tile';
         display: flex;
         align-items: center;
         &:last-child{
-            margin-#{theme('direction.right','value')}: var(--margin-0);
+            margin-#{theme('direction.right','value')}: 0;
         }
         @media(min-width: theme('breakpoints.md','value')){
-            margin-#{theme('direction.right','value')}: var(--margin-5);
+            margin-#{theme('direction.right','value')}: theme('margin.5');
         }
         @media(max-width: theme('breakpoints.md','value')){
             margin-bottom: theme('margin.4');
@@ -674,12 +674,12 @@ $tile: 'tile';
         .icon--location{
             width: 11px;
             height: 15px;
-            fill: var(--color-dark);
+            fill: theme('color.dark');
             opacity: 0.7;
         }
         
         .icon{
-            margin-#{theme('direction.right','value')}: var(--margin-2);
+            margin-#{theme('direction.right','value')}: theme('margin.2');
         }
         .value{
             margin-#{theme('direction.right','value')}: 6px;
@@ -689,7 +689,7 @@ $tile: 'tile';
             opacity: 0.8;
         }
         .total-count {
-            margin: 0 var(--margin-2);
+            margin: 0 theme('margin.2');
         }
     }
 }
@@ -737,18 +737,18 @@ $section--cta: 'section--cta';
             margin: theme('margin.20') 0;
         }
         h2{
-            font-size: var(--font-size-h1);
+            font-size: theme('font.size.h1');
             font-weight: normal;
             line-height: calc(3rem + 13px);
-            margin-bottom: var(--margin-16);
+            margin-bottom: theme('margin.16');
 
             @media(max-width: theme('breakpoints.xl','value')){
                 line-height: calc(2.3rem + 10px);
-                margin-bottom: var(--margin-10);
+                margin-bottom: theme('margin.10');
             }
             @media(max-width: theme('breakpoints.sm','value')){
                 font-size: 22px;
-                margin-bottom: var(--margin-8);
+                margin-bottom: theme('margin.8');
             }
 
         }
@@ -759,12 +759,12 @@ $section--cta: 'section--cta';
 $card: 'card';
 
 .#{$card} {
-    padding: calc(var(--padding-10) - 3px) var(--padding-8);
+    padding: theme('padding.10') theme('padding.8');
     transition: all 0.3s;
 
     @media(max-width: theme('breakpoints.xl','value')){
-        margin-bottom: var(--margin-6);
-        padding-bottom: var(--padding-8);
+        margin-bottom: theme('margin.6');
+        padding-bottom: theme('padding.8');
     }
     .card__row--action{
         display: flex;
@@ -793,21 +793,21 @@ $card: 'card';
     }
     .card__head{
         position: relative;
-        margin-bottom: var(--margin-20);
+        margin-bottom: theme('margin.20');
         &::before{
             content: "";
             position: absolute;
             height: 100%;
             width: 4px;
-            background: var(--color-primary);
+            background: theme('color.primary');
             height: calc(100% - 10px);
             #{theme('direction.left','value')}: -27px;
             top: 50%;
             transform: translateY(-50%);
         }
         h3{
-            color: var(--color-primary);
-            font-size: var(--font-size-h5);
+            color: theme('color.primary');
+            font-size: theme('font.size.h5');
             line-height: 30px;
             text-overflow: ellipsis;
             overflow: hidden;
@@ -816,7 +816,7 @@ $card: 'card';
             -webkit-box-orient: vertical;
 
             @media(max-width: theme('breakpoints.md','value')) {
-                font-size: var(--font-size-lg);
+                font-size: theme('font.size.lg');
                 line-height: 26px;
             }
         }
@@ -824,7 +824,7 @@ $card: 'card';
 }
 
 .card__row{
-    margin-bottom: var(--margin-6);
+    margin-bottom: theme('margin.6');
     @media(min-width: theme('breakpoints.xl','value')) {
         &:nth-child(3){
             margin-bottom: 0;
@@ -833,7 +833,7 @@ $card: 'card';
     
     span{
         text-transform: uppercase;
-        font-size: var(--font-size-sm);
+        font-size: theme('font.size.sm');
         opacity: 0.6;
         color: #333;
     }
@@ -842,7 +842,7 @@ $card: 'card';
         color: #333;
         font-weight: 600;
         margin-bottom: 0;
-        margin-top: var(--margin-1);
+        margin-top: theme('margin.1');
     }
 
     .class-price{
@@ -870,12 +870,12 @@ $card: 'card';
 .timer{
 
     .timer__media{
-        margin-#{theme('direction.right','value')}: var(--margin-2);
+        margin-#{theme('direction.right','value')}: theme('margin.2');
         svg{
             width: 14px;
             height: 16px;
             vertical-align: sub;
-            fill: var(--color-secondary);
+            fill: theme('color.secondary');
         }
     }
 
@@ -905,14 +905,14 @@ $card: 'card';
     &::before{
         width: 25px;
         height: 25px;
-        border-color: var(--color-white);
+        border-color: theme('color.white');
     }
 }
 
 .quote-slider{
     max-width: 1030px;
     margin: 0 auto;
-    color: var(--color-white);
+    color: theme('color.white');
 
     .slider{
 
@@ -937,13 +937,13 @@ $card: 'card';
         }
 
         .slider__item{
-            padding: 0 var(--padding-4);
+            padding: 0 theme('padding.4');
         }
     }
 
     .quote {
         
-        padding: var(--padding-12) 0;
+        padding: theme('padding.12') 0;
 
         @media(min-width:theme('breakpoints.md','value')){
             display: flex;
@@ -961,7 +961,7 @@ $card: 'card';
             }
 
             @media(max-width:theme('breakpoints.md','value')){
-                margin-bottom: var(--margin-6);
+                margin-bottom: theme('margin.6');
                 width: 140px;
                 height: 140px;
                 margin: 0 auto theme('margin.6');
@@ -973,12 +973,12 @@ $card: 'card';
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                background: var(--color-secondary);
+                background: theme('color.secondary');
                 position: absolute;
                 top: -18px;
                 #{theme('direction.right','value')}: -18px;
                 svg{
-                    fill: var(--color-white)
+                    fill: theme('color.white')
                 }
 
                 @media(max-width:theme('breakpoints.md','value')){
@@ -996,17 +996,17 @@ $card: 'card';
 
             @media(min-width:theme('breakpoints.md','value')){
                 width: calc(100% - 260px);
-                margin-#{theme('direction.left','value')}: var(--padding-26);
+                margin-#{theme('direction.left','value')}: theme('padding.26');
             }
 
             p{
-                font-size: var(--font-size-h4);
+                font-size: theme('font.size.h4');
                 line-height: 3rem;
-                margin-bottom: var(--margin-20);
+                margin-bottom: theme('margin.20');
                 color: inherit;
 
                 @media(max-width:theme('breakpoints.md','value')){
-                    margin-bottom: var(--margin-14);
+                    margin-bottom: theme('margin.14');
                     font-size: 1.1rem;
                     line-height: 2.3rem;
                 }
@@ -1018,7 +1018,7 @@ $card: 'card';
                 bottom: -26px;
                 svg{
                     opacity: 0.07;
-                    fill: var(--color-white);
+                    fill: theme('color.white');
                 }
 
                 @media(max-width:theme('breakpoints.md','value')){
@@ -1031,7 +1031,7 @@ $card: 'card';
 }
 
 .quote-info{
-    padding-#{theme('direction.left','value')}: var(--padding-5);
+    padding-#{theme('direction.left','value')}: theme('padding.5');
     position: relative;
     @media(max-width:theme('breakpoints.md','value')){
         display: inline-block;
@@ -1049,7 +1049,7 @@ $card: 'card';
         margin-bottom: 10px;
     }
     span{
-        font-size: var(--font-size-medium);
+        font-size: theme('font.size.medium');
         opacity: 0.6;
     }
 }
@@ -1063,7 +1063,7 @@ $card: 'card';
         li{
             &:not(.slick-active){
                 button{
-                    background: var(--color-dark);
+                    background: theme('color.dark');
                     opacity: 0.15;
                 }
             }
@@ -1072,43 +1072,43 @@ $card: 'card';
 }
 
 .step{
-    padding-bottom: var(--padding-20);
+    padding-bottom: theme('padding.20');
 
     @media(max-width: theme('breakpoints.md','value')){
-        padding-bottom: var(--padding-12);
+        padding-bottom: theme('padding.12');
     }
     .step__content{
-        padding: var(--padding-8);
+        padding: theme('padding.8');
 
         @media(max-width: theme('breakpoints.lg','value')) {
-            padding: var(--padding-0);
+            padding: 0;
         }
 
         @media(max-width: theme('breakpoints.md','value')) {
             text-align: center;
-            margin-top: var(--margin-6);
+            margin-top: theme('margin.6');
         }
 
         h3{
-            font-size: var(--font-size-h3);
+            font-size: theme('font.size.h3');
             color: theme('color.dark');
-            margin-bottom: var(--margin-6);
+            margin-bottom: theme('margin.6');
             line-height: 40px;
             @media(max-width: theme('breakpoints.md','value')){
-                font-size: var(--font-size-h4);
-                margin-bottom: var(--margin-4);
+                font-size: theme('font.size.h4');
+                margin-bottom: theme('margin.4');
                 line-height: 36px;
             }
         }
         p{
             font-size: 16px;
             line-height: 32px;
-            margin-bottom: var(--margin-12);
-            color: var(--color-gray-1000);
+            margin-bottom: theme('margin.12');
+            color: theme('color.gray.1000');
             @media(max-width: theme('breakpoints.md','value')){
                 font-size: 15px;
                 line-height: 28px;
-                margin-bottom: var(--margin-8);
+                margin-bottom: theme('margin.8');
             }
         }
     }
@@ -1120,9 +1120,9 @@ $card: 'card';
     .btn-video {
         display: flex;
         align-items: center;
-        color: var(--color-secondary);
+        color: theme('color.secondary');
         height: 42px;
-        margin-#{theme('direction.left','value')}: var(--margin-16);
+        margin-#{theme('direction.left','value')}: theme('margin.16');
         svg{
             margin-#{theme('direction.right','value')}: 10px;
         }
@@ -1191,7 +1191,7 @@ $card: 'card';
         li{
             &:not(.slick-active){
                 button{
-                    background: var(--color-dark);
+                    background: theme('color.dark');
                     opacity: 0.15;
                 }
             }
@@ -1202,7 +1202,7 @@ $card: 'card';
 .blog-card{
     position: relative; overflow: hidden;
     @media(max-width: theme('breakpoints.xl','value')){
-        margin-bottom: var(--margin-6);
+        margin-bottom: theme('margin.6');
     }
 
     &:hover{
@@ -1249,34 +1249,34 @@ $card: 'card';
     .blog__body{
         .blog__detail{
             position: absolute;
-            color: var(--color-white);
+            color: theme('color.white');
             z-index: 1;
-            padding: var(--padding-12);
+            padding: theme('padding.12');
             bottom: -84px;
          
             transition: .3s ease-in-out;
 
             @media(max-width: theme('breakpoints.sm','value')){
-                padding: var(--padding-6);
+                padding: theme('padding.6');
             }
 
             @media(max-width: theme('breakpoints.md','value')){
                 bottom: 0;
             }
             .tags-inline__item{
-                padding: var(--padding-1) var(--padding-3);
+                padding: theme('padding.1') theme('padding.3');
                 font-size: 12px;
-                background: var(--color-secondary);
-                margin-bottom: calc(var(--padding-4) - 2px);
+                background: theme('color.secondary');
+                margin-bottom: theme('padding.4');
                 display: inline-block;
             }
             .blog__title{
-                margin-bottom: var(--margin-8);
+                margin-bottom: theme('margin.8');
                 @media(max-width: theme('breakpoints.md','value')){
-                    margin-bottom: var(--margin-6);
+                    margin-bottom: theme('margin.6');
                 }
                 h3{
-                    font-size: var(--font-size-h4);
+                    font-size: theme('font.size.h4');
                     line-height: 32px;
                     @media(max-width: theme('breakpoints.md','value')){
                         font-size: 16px;
@@ -1287,11 +1287,11 @@ $card: 'card';
             .blog__date{
                 display: flex;
                 align-items: center;
-                margin-bottom: var(--margin-8);
+                margin-bottom: theme('margin.8');
                 .icon{
                     width: 16px;
                     height: 16px;
-                    fill: var(--color-secondary);
+                    fill: theme('color.secondary');
                     margin-#{theme('direction.right','value')}: 10px;
                 }
                 span{
@@ -1329,15 +1329,15 @@ $card: 'card';
     
 
 .step-tabs{
-    margin: 0 auto calc(var(--margin-24) - 4px);
+    margin: 0 auto theme('margin.24');
     max-width: 700px;
     @media(max-width: theme('breakpoints.md','value')){
-        margin-bottom: var(--margin-14);
+        margin-bottom: theme('margin.14');
     }
     .slider-tabs__action{
         border:none;
         font-size: 18px;
-        color:var(--color-dark);
+        color:theme('color.dark');
         opacity: 0.5;
         font-weight: 600;
         width: 140px;
@@ -1359,8 +1359,8 @@ $card: 'card';
 
     .slick-current{
         .slider-tabs__action{
-            border-bottom: 2px solid var(--color-primary);
-            color: var(--color-primary);
+            border-bottom: 2px solid theme('color.primary');
+            color: theme('color.primary');
             opacity: 1;
             font-weight: bold;
         }
@@ -1383,7 +1383,7 @@ $card: 'card';
     .slider__item {
         @media(min-width: theme('breakpoints.sm','value')){
             &{
-                padding: var(--padding-2) var(--padding-4) var(--padding-16);
+                padding: theme('padding.2') theme('padding.4') theme('padding.16');
             }
         }
     }
@@ -1396,7 +1396,7 @@ $card: 'card';
     .slider__item {
         @media(min-width: theme('breakpoints.sm','value')){
             &{
-                padding: 0 var(--padding-4) 0;
+                padding: 0 theme('padding.4') 0;
             }
         }
     }
@@ -1408,12 +1408,12 @@ $card: 'card';
         position: absolute;
         width: 3rem;
         height: 3rem;
-        background-color: var(--color-white);
+        background-color: theme('color.white');
         font-size: 0;
         z-index: 1;
         border: none;
         transition: all 0.3s;
-        color: var(--color-primary);
+        color: theme('color.primary');
         border-radius: 0;
         box-shadow: 0 0 10px rgba(0,0,0,0.10);
     }

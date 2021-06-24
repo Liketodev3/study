@@ -58,19 +58,7 @@ $filter-form: "filter-form";
     }
 
     .#{$filter}{
-        & .is-active{
-            color: theme('color.primary');
-            font-weight: 600;
-            .icon{
-                font-weight: bold;
-                opacity: 1;
-            }
-
-            &:before{
-                border-color: theme('color.primary');
-                opacity: 1;
-            }
-        }
+        
     }
 
  }
@@ -283,10 +271,15 @@ $filter-form: "filter-form";
     }
 
     & .is-active{
+        color: theme('color.primary');
+        font-weight: 600;
         &:before{
-            border-color: theme('color.primary');
+            border-color: currentColor;
             opacity: 1;
             transform: translateY(-16%) rotate(-135deg);
+        }
+        .icon{
+            opacity: 1;
         }
     }
 
@@ -441,8 +434,8 @@ $filter-secondary: "filter-secondary";
 
 
 .main__head {
-    padding: var(--padding-12) 0;
-    border-bottom: 1px solid var(--color-gray-300);
+    padding: theme('padding.12') 0;
+    border-bottom: 1px solid theme('color.gray.300');
     @media(max-width: theme('breakpoints.xl','value')){
         padding: theme('padding.6') 0;
     }
@@ -452,14 +445,14 @@ $filter-secondary: "filter-secondary";
 }
 
 .main__body{
-    padding: var(--padding-18) 0;
+    padding: theme('padding.18') 0;
     @media(max-width: theme('breakpoints.md','value')){
-        padding: var(--padding-10) 0;
+        padding: theme('padding.10') 0;
     }
 }
 
 .section--gray{
-    background-color: var(--color-gray-100);
+    background-color: theme('color.gray.100');
 }
 
 .filter__primary{
@@ -509,20 +502,20 @@ $filter-secondary: "filter-secondary";
         max-width: 220px;
         height: 60px;
         background-color: #fff;
-        border: 1px solid var(--color-gray-200);
+        border: 1px solid theme('color.gray.200');
         display: flex;
         align-items: center;
-        padding: 0 var(--padding-5);
+        padding: 0 theme('padding.5');
         position: relative;
-        padding-#{theme('direction.right','value')}: var(--padding-10);
+        padding-#{theme('direction.right','value')}: theme('padding.10');
         border-#{theme('direction.right','value')}: transparent;
         cursor: pointer;
 
         @media(max-width: theme('breakpoints.xxxl','value')){
             min-width: unset;
             max-width: unset;
-            padding: 0 var(--padding-3);
-            padding-#{theme('direction.right','value')}: var(--padding-12);
+            padding: 0 theme('padding.3');
+            padding-#{theme('direction.right','value')}: theme('padding.12');
             &::before{
                 #{theme('direction.right','value')}: 13px;
             }
@@ -536,7 +529,7 @@ $filter-secondary: "filter-secondary";
             padding: 0 theme('padding.6');
             color: theme('color.dark');
             &:last-child{
-                border-bottom: 1px solid var(--color-gray-200);
+                border-bottom: 1px solid theme('color.gray.200');
             }
             &::before{
                 top: 18px !important;
@@ -551,8 +544,8 @@ $filter-secondary: "filter-secondary";
             height: 8px;
             width: 8px;
             background: transparent;
-            border-right: 2px solid var(--color-gray-500);
-            border-bottom: 2px solid var(--color-gray-500);
+            border-right: 2px solid theme('color.gray.500');
+            border-bottom: 2px solid theme('color.gray.500');
             transform: translateY(-50%) rotate(45deg);
             #{theme('direction.right','value')}: 24px;
             top: 50%;
@@ -574,8 +567,8 @@ $filter-secondary: "filter-secondary";
         .icon{
             min-width: 24px;
             height: 24px;
-            margin-#{theme('direction.right','value')}: var(--margin-2);
-            fill: var(--color-dark);
+            margin-#{theme('direction.right','value')}: theme('margin.2');
+            fill: theme('color.dark');
             opacity: 0.5;
         }
         h6{
@@ -593,7 +586,7 @@ $filter-secondary: "filter-secondary";
         background: #fff;
         box-shadow: 0 5px 7px rgba(0,0,0,0.08);
         z-index: 1;
-        border: 1px solid var(--color-gray-200);
+        border: 1px solid theme('color.gray.200');
         @media(max-width: theme('breakpoints.md','value')){
             width: 100%;
             position: static;
@@ -618,7 +611,7 @@ $filter-secondary: "filter-secondary";
     }
     .filter__head{
         position: relative;
-        border: 1px solid var(--color-gray-200);
+        border: 1px solid theme('color.gray.200');
         @media(min-width: theme('breakpoints.md','value')){
             padding-#{theme('direction.right','value')}: theme('padding.18');
         }
@@ -635,7 +628,7 @@ $filter-secondary: "filter-secondary";
         }
     
         @media(min-width: theme('breakpoints.md','value')) and (max-width: theme('breakpoints.xl','value')){
-            padding-#{theme('direction.right','value')}: var(--padding-12);
+            padding-#{theme('direction.right','value')}: theme('padding.12');
         }
     
         &::before{
@@ -654,7 +647,7 @@ $filter-secondary: "filter-secondary";
         }
         input{
             &::placeholder{
-                color: var(--color-gray-700);
+                color: theme('color.gray.700');
             }
         }
     }
@@ -667,7 +660,7 @@ $filter-secondary: "filter-secondary";
         .filter-group{
             @media(min-width: theme('breakpoints.xl','value')) {
                 width: 100%;
-                padding-top: var(--padding-3);
+                padding-top: theme('padding.3');
             }
         }
       
@@ -694,9 +687,9 @@ $filter-secondary: "filter-secondary";
         max-height: 200px;
         overflow: auto;
         li{
-            margin-bottom: var(--margin-4);
+            margin-bottom: theme('margin.4');
             &:last-child{
-                margin-bottom: var(--margin-0);
+                margin-bottom: 0;
             }
         }
     }
@@ -708,7 +701,7 @@ $filter-secondary: "filter-secondary";
     cursor: pointer;
     &:last-child{
         .filter__head{
-            margin-#{theme('direction.right','value')}: var(--margin-0);
+            margin-#{theme('direction.right','value')}: 0;
         }
     }
     .filter__head{
@@ -716,16 +709,16 @@ $filter-secondary: "filter-secondary";
         @media(min-width: theme('breakpoints.xl','value')) {
             position: relative;
             text-align: left;
-            padding-#{theme('direction.right','value')}: var(--margin-6);
-            margin-#{theme('direction.right','value')}: var(--margin-6);
+            padding-#{theme('direction.right','value')}: theme('margin.6');
+            margin-#{theme('direction.right','value')}: theme('margin.6');
             &::before{
                 content: "";
                 position: absolute;
                 height: 8px;
                 width: 8px;
                 background: transparent;
-                border-right: 2px solid var(--color-dark);
-                border-bottom: 2px solid var(--color-dark);
+                border-right: 2px solid theme('color.dark');
+                border-bottom: 2px solid theme('color.dark');
                 transform:translateY(-60%) rotate(45deg);
                 #{theme('direction.right','value')}: 5px;
                 top: 50%;
@@ -737,8 +730,8 @@ $filter-secondary: "filter-secondary";
 
         h6{
             @media(min-width: theme('breakpoints.xl','value')){
-                padding: var(--padding-3) 0;
-                color: var(--color-dark);
+                padding: theme('padding.3') 0;
+                color: theme('color.dark');
                 font-weight: normal;
                 font-size: 14px;
                 
@@ -748,12 +741,12 @@ $filter-secondary: "filter-secondary";
 
     .filter__body {
         position: absolute;
-        padding: var(--padding-4);
+        padding: theme('padding.4');
         background: #fff;
         z-index: 1;
         width: 235px;
         box-shadow: 0 5px 7px rgba(0,0,0,0.08);
-        border: 1px solid var(--color-gray-200);
+        border: 1px solid theme('color.gray.200');
 
         @media(max-width: theme('breakpoints.xl','value')){
             position: static;
@@ -768,8 +761,8 @@ $filter-secondary: "filter-secondary";
     display: flex;
     align-items: center;
     justify-content: space-between;
-    color: var(--color-dark);
-    margin-bottom: var(--margin-10);
+    color: theme('color.dark');
+    margin-bottom: theme('margin.10');
 
     @media(max-width: theme('breakpoints.md','value')) {
         flex-direction: column;
@@ -793,7 +786,7 @@ $filter-secondary: "filter-secondary";
     select{
         width: 49%;
         border-radius: 0;
-        padding: 0 var(--padding-5);
+        padding: 0 theme('padding.5');
     }
     .btn--filter{
         width: 49%;
@@ -820,7 +813,7 @@ $filter-secondary: "filter-secondary";
 
     h4{
         font-weight: 600;
-        font-size: calc(var(--font-size-h4) - 1px);
+        font-size: theme('font.size.h4');
         color: #333;
 
         @media(max-width: theme('breakpoints.md','value')) {
@@ -828,7 +821,7 @@ $filter-secondary: "filter-secondary";
         }
         b{
             font-weight: bold;
-            border-bottom: 1px solid var(--color-gray-700);
+            border-bottom: 1px solid theme('color.gray.700');
         }
         
     }
@@ -836,7 +829,7 @@ $filter-secondary: "filter-secondary";
 
 .listing__title{
     @media(min-width: theme('breakpoints.md','value')) and (max-width: theme('breakpoints.xl','value')) {
-        margin-bottom: var(--margin-6);
+        margin-bottom: theme('margin.6');
     }
 }
 
@@ -848,8 +841,8 @@ $filter-secondary: "filter-secondary";
             height: 8px;
             width: 8px;
             background: transparent;
-            border-right: 2px solid var(--color-dark);
-            border-bottom: 2px solid var(--color-dark);
+            border-right: 2px solid theme('color.dark');
+            border-bottom: 2px solid theme('color.dark');
             transform: rotate(45deg);
             #{theme('direction.right','value')}: 15px;
             top: 15px;
@@ -859,20 +852,20 @@ $filter-secondary: "filter-secondary";
             display: flex;
             align-items: center;
             width: 200px;
-            color: var(--color-dark);
+            color: theme('color.dark');
             background: #fff;
             
             height: 42px;
-            border: 1px solid var(--color-gray-200);
+            border: 1px solid theme('color.gray.200');
             position: relative;
             b{
                 white-space: nowrap;
-                margin-right: var(--margin-1);
+                margin-right: theme('margin.1');
             }
         }
         &{
             select{
-                padding: 0 var(--padding-6);
+                padding: 0 theme('padding.6');
                 background-image: none;
                 background-color: transparent;
                 border: none;
@@ -899,7 +892,7 @@ $filter-secondary: "filter-secondary";
 
 .box-wrapper{
     .box{
-        background-color: var(--color-white);
+        background-color: theme('color.white');
         display: flex;
         flex-wrap: wrap;
         
@@ -936,7 +929,7 @@ $box__primary: "box__primary";
     }
 
     // @media(min-width: theme('breakpoints.lg','value')){
-    //     max-width: 700px; padding: var(--padding-8);
+    //     max-width: 700px; padding: theme('padding.8');
     // }
 }
 
@@ -953,7 +946,7 @@ $box__primary: "box__primary";
     }
 
     .list__media{
-        margin-bottom: var(--margin-5);
+        margin-bottom: theme('margin.5');
         position: relative;
         .avtar{
             width: 140px;
@@ -983,7 +976,7 @@ $box__primary: "box__primary";
     .list__price{
         p{
             font-weight: bold;
-            color: var(--color-dark);
+            color: theme('color.dark');
             border-bottom: 1px dashed;
             display: inline-block;
             line-height: 18px;
@@ -1020,7 +1013,7 @@ $box__primary: "box__primary";
     }
     .list__action-btn{
         .btn{
-            margin-bottom: var(--margin-3);
+            margin-bottom: theme('margin.3');
             &:last-child{
                 margin: 0;
             }
@@ -1030,7 +1023,7 @@ $box__primary: "box__primary";
             width: 100%;
             .btn{
                 margin-bottom: 0;
-                margin-#{theme('direction.right','value')}: var(--margin-4);
+                margin-#{theme('direction.right','value')}: theme('margin.4');
                 &:last-child{
                     margin-#{theme('direction.right','value')}: 0;
                 }
@@ -1042,12 +1035,12 @@ $box__primary: "box__primary";
 
 
 .profile-detail{
-    color: var(--color-dark);
+    color: theme('color.dark');
     .profile-detail__head{
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: var(--margin-3);
+        margin-bottom: theme('margin.3');
     }
 }
 
@@ -1070,7 +1063,7 @@ $box__primary: "box__primary";
         }
     }
     .flag{
-        margin-#{theme('direction.left','value')}: var(--margin-4);
+        margin-#{theme('direction.left','value')}: theme('margin.4');
         @media(max-width: theme('breakpoints.md','value')){
             margin-#{theme('direction.left','value')}: auto;
         }
@@ -1079,7 +1072,7 @@ $box__primary: "box__primary";
 
 .profile-detail__body{
     .info-wrapper{
-        margin-bottom: var(--margin-6);
+        margin-bottom: theme('margin.6');
         flex-wrap: wrap;
         .ratings{
             @media(max-width: theme('breakpoints.sm','value')){
@@ -1132,9 +1125,9 @@ $box__primary: "box__primary";
         }
     }
     .is--active{
-        background-color: var(--color-primary);
+        background-color: theme('color.primary');
         .icon{
-            fill: var(--color-white);
+            fill: theme('color.white');
             opacity: 1;
         }
     }
@@ -1181,7 +1174,7 @@ $box__primary: "box__primary";
     }
     a{
         display: inline;
-        color: var(--color-black);
+        color: theme('color.black');
         text-decoration: underline;
     }
 }
@@ -1198,11 +1191,11 @@ $box__primary: "box__primary";
 
 .link-detail{
     transition: all 0.2s;
-    padding: var(--padding-3);
-    color: var(--color-primary);
+    padding: theme('padding.3');
+    color: theme('color.primary');
     font-weight: 600;
     text-decoration-style: dotted;
-    text-decoration-color: var(--color-primary);
+    text-decoration-color: theme('color.primary');
     text-decoration: underline;
     white-space: nowrap;
     @media(min-width: theme('breakpoints.xl','value')){
@@ -1240,7 +1233,7 @@ $box__primary: "box__primary";
 }
 
 .box__secondary{
-    border-left: 1px solid var(--color-gray-200);
+    border-left: 1px solid theme('color.gray.200');
 
     @media(min-width: theme('breakpoints.lg','value')){
         width: 420px;
@@ -1263,19 +1256,19 @@ $box__primary: "box__primary";
     tbody{
         td{
             position: relative;
-            padding: var(--padding-2) var(--padding-1);
+            padding: theme('padding.2') theme('padding.1');
             &:first-child{
                 .cal-cell{
                     background-color: transparent;
                     border: none;
                     width: 45px;
-                    color: var(--color-gray-800);
+                    color: theme('color.gray.800');
                 }
             }
             .cal-cell{
                 width: 33px;
                 height: 19px;
-                background-color: var(--color-gray-100);
+                background-color: theme('color.gray.100');
                 @media(max-width: theme('breakpoints.md','value')){
                     width: 30px;
                     
@@ -1298,7 +1291,7 @@ $box__primary: "box__primary";
                 white-space: nowrap;
             }
             .cell-green-100{
-                background-color: var(--color-green);
+                background-color: theme('color.green');
              }
              .cell-green-80{
                  background-color: theme('color.green-80');
@@ -1318,7 +1311,7 @@ $box__primary: "box__primary";
             text-transform: uppercase;
             text-align: center;
             font-size: 12px;
-            padding-bottom: var(--padding-2);
+            padding-bottom: theme('padding.2');
         }
     }
 
@@ -1329,7 +1322,7 @@ $box__primary: "box__primary";
 
 .panel-box{
     .panel-box__head{
-        border-bottom: 1px solid var(--color-gray-200);
+        border-bottom: 1px solid theme('color.gray.200');
         ul{
             display: flex;
             align-items: center;
@@ -1343,7 +1336,7 @@ $box__primary: "box__primary";
                     display: flex;
                     align-items: center;
                     justify-content: flex-end;
-                    padding: 0 var(--padding-5);
+                    padding: 0 theme('padding.5');
                     color: rgba(0,0,0,0.7);
                 }
             }
@@ -1351,14 +1344,14 @@ $box__primary: "box__primary";
                 position: relative;
                 .panel-action{
                     font-weight: 600;
-                    color: var(--color-dark);
+                    color: theme('color.dark');
                 }
                 &::before{
                     content: "";
                     position: absolute;
                     width: calc(100% - 34px);
                     height: 2px;
-                    background: var(--color-primary);
+                    background: theme('color.primary');
                     bottom: 0;
                     left: 50%;
                     transform: translateX(-50%);
@@ -1372,14 +1365,14 @@ $box__primary: "box__primary";
         }
     }
     .panel-box__body {
-        padding: var(--padding-10);
+        padding: theme('padding.10');
         position: relative;
         @media(max-width: theme('breakpoints.md','value')){
-            padding: var(--padding-6);
+            padding: theme('padding.6');
         }
 
         @media(min-width: theme('breakpoints.lg','value')) and (max-width: theme('breakpoints.xl','value')){
-            padding: var(--padding-8) var(--padding-6) 0;
+            padding: theme('padding.8') theme('padding.6') 0;
         }
     }
 }
@@ -1428,7 +1421,7 @@ $box__primary: "box__primary";
     .btn--show{
         color: theme('color.gray-dark');
         background-color: #fff;
-        border: 1px solid var(--color-gray-200);
+        border: 1px solid theme('color.gray.200');
         font-weight: 600;
         height: 40px;
         width: 242px;
@@ -1448,16 +1441,16 @@ $box__primary: "box__primary";
         li{
             &:hover{
                 a{
-                    background-color: var(--color-gray-100);
+                    background-color: theme('color.gray.100');
                 }
             }
             a{
                 display: block;
-                padding: var(--padding-2);
+                padding: theme('padding.2');
             }
         }
         .is--active{
-            color: var(--color-primary);
+            color: theme('color.primary');
             position: relative;
             &::before{
                 position: absolute;
@@ -1481,8 +1474,8 @@ $box__primary: "box__primary";
     }
    
     .availbility-title{
-        color: var(--color-dark);
-        margin-bottom: var(--margin-4);
+        color: theme('color.dark');
+        margin-bottom: theme('margin.4');
         font-weight: 600;
     }
 }
@@ -1506,8 +1499,8 @@ $box__primary: "box__primary";
 .selection-tabs__label{
     position: relative;
     overflow: auto;
-    margin-bottom: var(--margin-3);
-    padding: var(--padding-1);
+    margin-bottom: theme('margin.3');
+    padding: theme('padding.1');
     &:last-child{
         .selection-tabs__title{
             margin-#{theme('direction.right','value')}: 0;
@@ -1527,14 +1520,14 @@ $box__primary: "box__primary";
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    padding: var(--padding-2) var(--padding-4);
-    border: 1px solid var(--color-gray-200);
-    font-size: var(--font-size-sm);
+    padding: theme('padding.2') theme('padding.4');
+    border: 1px solid theme('color.gray.200');
+    font-size: theme('font.size.sm');
 }
 
 .selection-tabs__input:checked + .selection-tabs__title {
-    color: var(--color-primary);
-    border-color: var(--color-primary);
+    color: theme('color.primary');
+    border-color: theme('color.primary');
     position: relative;
     &:before{
         position: absolute;
@@ -1548,13 +1541,13 @@ $box__primary: "box__primary";
         opacity: 0.04;
     }
     svg{
-        fill: var(--color-primary) !important;
+        fill: theme('color.primary') !important;
     }
 }
 
 .dropdown-price{
     width: 280px;
-    padding: var(--padding-3) var(--padding-4);
+    padding: theme('padding.3') theme('padding.4');
     @media(max-width: theme('breakpoints.md','value')){
         margin: 0 auto;
     }
@@ -1605,13 +1598,13 @@ $box__primary: "box__primary";
             vertical-align: top;
             a{
                 position: relative;
-                background: var(--color-primary);
-                color: var(--color-white);
+                background: theme('color.primary');
+                color: theme('color.white');
                 border-radius: 3px;
-                padding: 0 var(--padding-10) 0 var(--padding-3);
+                padding: 0 theme('padding.10') 0 theme('padding.3');
                 line-height: 30px;
                 display: block;
-                font-size: var(--font-size-small);
+                font-size: theme('font.size.small');
                 white-space: nowrap;
                 &:after{
                     width: 20px;
@@ -1627,14 +1620,14 @@ $box__primary: "box__primary";
                     transform: rotate(45deg);
                     font-size: 1.2rem;
                     transform-origin: center center;
-                    color: var(--color-primary);
+                    color: theme('color.primary');
                 }
             }
         }
         .clear-filter{
             a{
                 background: none;
-                color: var(--color-dark);
+                color: theme('color.dark');
                 text-decoration: underline;
                 padding: 0;
                 white-space: nowrap;
@@ -1651,8 +1644,8 @@ $box__primary: "box__primary";
 .search-field{
     position: relative;
     .input-search{
-        padding-left: var(--padding-12);
-        margin-bottom: var(--margin-4);
+        padding-left: theme('padding.12');
+        margin-bottom: theme('margin.4');
         border-radius: 0;
     }
     .icon--search{
@@ -1661,21 +1654,21 @@ $box__primary: "box__primary";
         position: absolute;
         left: 12px;
         top: 10px;
-        fill: var(--color-gray-600);
+        fill: theme('color.gray.600');
     }
 }
 
 .filter-tags {
-    padding: var(--padding-4) 0;
-    border-bottom: 1px solid var(--color-gray-300);
+    padding: theme('padding.4') 0;
+    border-bottom: 1px solid theme('color.gray.300');
 }
 
 .price-field {
-    padding: var(--padding-4) 0 0;
+    padding: theme('padding.4') 0 0;
     display: flex;
     .input-field{
         position: relative;
-        margin-#{theme('direction.right','value')}: var(--margin-3);
+        margin-#{theme('direction.right','value')}: theme('margin.3');
         &:last-child{
             margin: 0;
         }
@@ -1684,13 +1677,13 @@ $box__primary: "box__primary";
             position: absolute;
             left: 14px;
             top: 12px;
-            color: var(--color-primary);
+            color: theme('color.primary');
             font-weight: 600;
         }
 
         input[type="number"]{
             border-radius: 0;
-            padding-#{theme('direction.left','value')}: var(--padding-10);
+            padding-#{theme('direction.left','value')}: theme('padding.10');
             
         }
     }

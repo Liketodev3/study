@@ -17,13 +17,13 @@
                 align-items: center;
                 display: flex;
                 line-height: 1;
-                color: var(--color-gray-500);
+                color: theme('color.gray.500');
             }
         }
         .is--active{
             a{
-                border-bottom: 2px solid var(--color-primary);
-                color: var(--color-primary);
+                border-bottom: 2px solid theme('color.primary');
+                color: theme('color.primary');
                 font-weight: bold;
             }
         }
@@ -31,7 +31,7 @@
 }
 
 .section--faq{
-    background: var(--color-gray-100);
+    background: theme('color.gray.100');
 }
 
 .faq-cover {
@@ -45,7 +45,7 @@
 .search-panel{
     position: relative;
     width: 100%;
-    margin-bottom: calc(var(--margin-12) - 1px);
+    margin-bottom: theme('margin.12');
     .icon{
         z-index: 1;
         top: 50%;
@@ -54,7 +54,7 @@
         position: absolute;
         width: 20px;
         height: 20px;
-        fill: var(--color-gray-600);
+        fill: theme('color.gray.600');
         @media(max-width: theme('breakpoints.md','value')) {
             width: 18px;
             height: 18px;
@@ -64,18 +64,18 @@
     input[type="text"]{
         border-radius: 0;
         height: 80px;
-        padding-#{theme('direction.left','value')}: var(--padding-20);
-        padding-#{theme('direction.right','value')}: var(--padding-16);
+        padding-#{theme('direction.left','value')}: theme('padding.20');
+        padding-#{theme('direction.right','value')}: theme('padding.16');
         position: relative;
-        border: 1px solid var(--color-gray-200);
+        border: 1px solid theme('color.gray.200');
         @media(max-width: theme('breakpoints.md','value')) {
             height: 60px;
-            padding-#{theme('direction.left','value')}: var(--padding-12);
-            padding-#{theme('direction.right','value')}: var(--padding-6);
+            padding-#{theme('direction.left','value')}: theme('padding.12');
+            padding-#{theme('direction.right','value')}: theme('padding.6');
         }
     }
     @media(max-width: theme('breakpoints.lg','value')) {
-        margin-bottom: var(--margin-6);
+        margin-bottom: theme('margin.6');
     }
 }
 
@@ -83,36 +83,36 @@
     .faq-row {
         background: #fff;
         
-        border: 1px solid var(--color-gray-200);
+        border: 1px solid theme('color.gray.200');
         position: relative;
-        margin-bottom: calc(var(--margin-6) - 1px);
+        margin-bottom: theme('margin.6');
         counter-increment: counter-inc;
 
         @media(max-width: theme('breakpoints.md','value')) {
-            margin-bottom: var(--margin-3);
+            margin-bottom: theme('margin.3');
         }
         .faq-title{
-            padding: calc(var(--padding-10) + 2px) calc(var(--padding-10) + 2px);
+            padding: theme('padding.10');
             display: block;
             position: relative;
-            padding-#{theme('direction.right','value')}: var(--padding-14);
+            padding-#{theme('direction.right','value')}: theme('padding.14');
             @media(max-width: theme('breakpoints.md','value')) {
-                padding: var(--padding-5);
-                padding-#{theme('direction.right','value')}: var(--padding-10);
+                padding: theme('padding.5');
+                padding-#{theme('direction.right','value')}: theme('padding.10');
             }
             @media(max-width: theme('breakpoints.xl','value')) {
-                padding: var(--padding-6);
-                padding-#{theme('direction.right','value')}: var(--padding-10);
+                padding: theme('padding.6');
+                padding-#{theme('direction.right','value')}: theme('padding.10');
             }
             h5{
-                color: var(--color-dark);
-                font-size: var(--font-size-h5);
+                color: theme('color.dark');
+                font-size: theme('font.size.h5');
                 position: relative;
                 
                 &::before{
                     content: counter(counter-inc)".";
                     font-weight: bold;
-                    margin-#{theme('direction.right','value')}: var(--margin-1);
+                    margin-#{theme('direction.right','value')}: theme('margin.1');
                 }
                 
                 @media(max-width: theme('breakpoints.md','value')) {
@@ -126,8 +126,8 @@
                 height: 10px;
                 width: 10px;
                 background: transparent;
-                border-#{theme('direction.right','value')}: 2px solid var(--color-dark);
-                border-bottom: 2px solid var(--color-dark);
+                border-#{theme('direction.right','value')}: 2px solid theme('color.dark');
+                border-bottom: 2px solid theme('color.dark');
                 transform: rotate(45deg)  translateY(-50%);
                 #{theme('direction.right','value')}: 30px;
                 top: 48%; 
@@ -144,18 +144,18 @@
         }
         .faq-answer{
             display: none;
-            padding: 0 calc(var(--padding-10) + 1px) calc(var(--padding-10) + 3px);
+            padding: 0 theme('padding.10') theme('padding.10');
             @media(max-width: theme('breakpoints.md','value')) {
-                padding: 0 var(--padding-5) var(--padding-5);
+                padding: 0 theme('padding.5') theme('padding.5');
             }
             @media(max-width: theme('breakpoints.xl','value')) {
-                padding: 0 var(--padding-6) var(--padding-6);
+                padding: 0 theme('padding.6') theme('padding.6');
             }
             p{
-                margin-bottom: var(--margin-10);
+                margin-bottom: theme('margin.10');
                 line-height: 30px;
                 @media(max-width: theme('breakpoints.md','value')) {
-                    margin-bottom: var(--margin-4);
+                    margin-bottom: theme('margin.4');
                     line-height: 25px;
                 }
                 &:last-child{
@@ -167,10 +167,10 @@
     .is-active{
         .faq-title{
             h5{
-                color: var(--color-primary);
+                color: theme('color.primary');
             }
             &::before{
-                border-color: var(--color-primary);
+                border-color: theme('color.primary');
                 transform: rotate(-135deg);
             }
         }
@@ -189,12 +189,12 @@
     }
     .contact__content{
         h3{
-            font-size: calc(var(--font-size-h3) - 1px);
-            color: var(--color-dark);
-            margin-bottom: var(--margin-2);
+            font-size: theme('font.size.h3');
+            color: theme('color.dark');
+            margin-bottom: theme('margin.2');
         }
         p{
-            font-size: var(--font-size-h5);
+            font-size: theme('font.size.h5');
             margin-bottom: 0;
             @media(max-width: theme('breakpoints.md','value')) {
                 font-size: 1.1rem;
@@ -204,7 +204,7 @@
             text-align: center;
         }
         @media(max-width: theme('breakpoints.md','value')) {
-            margin-bottom: var(--margin-6);
+            margin-bottom: theme('margin.6');
         }
     }
     .btn{
