@@ -1512,7 +1512,7 @@ p {
   .slideshow-content h1 {
     font-size: 2.3rem;
     font-weight: normal;
-    line-height: 4rem;
+    line-height: 3.6rem;
     margin-bottom: var(--margin-3); }
     @media (max-width: 1199px) {
       .slideshow-content h1 {
@@ -1983,7 +1983,7 @@ p {
     -webkit-box-pack: center;
         -ms-flex-pack: center;
             justify-content: center; }
-    @media (max-width: 767px) {
+    @media (max-width: 576px) {
       .tile__body .info-wrapper {
         -webkit-box-orient: vertical;
         -webkit-box-direction: normal;
@@ -2013,7 +2013,9 @@ p {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  color: #333; }
+  color: #333;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap; }
   .info-wrapper .info-tag {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -2025,12 +2027,13 @@ p {
       margin-left: 0; }
     @media (max-width: 576px) {
       .info-wrapper .info-tag {
-        margin-bottom: var(--margin-4); } }
-    @media (max-width: 767px) {
-      .info-wrapper .info-tag {
-        margin-left: var(--margin-5); }
+        margin-bottom: var(--margin-4); }
         .info-wrapper .info-tag:last-child {
           margin-bottom: 0; } }
+    @media (min-width: 576px) {
+      .info-wrapper .info-tag {
+        margin-left: var(--margin-5);
+        margin-bottom: var(--margin-2); } }
     .info-wrapper .info-tag .icon--location {
       width: 11px;
       height: 15px;

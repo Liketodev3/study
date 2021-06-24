@@ -1,6 +1,6 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <?php if ($topRatedTeachers) { ?>
-    <section class="section">
+    <section class="section padding-bottom-5">
         <div class="container container--narrow">
             <div class="section__head">
                 <h2><?php echo Label::getLabel('Lbl_Top_Rated_Teachers',$siteLangId); ?></h2>

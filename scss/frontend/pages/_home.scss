@@ -87,7 +87,7 @@ $slideshow: "slideshow";
     h1{
         font-size: 2.3rem;
         font-weight: normal;
-        line-height: 4rem;
+        line-height: 3.6rem;
         margin-bottom: theme('margin.3');
         @media(max-width: theme('breakpoints.xl','value')) {
             &{
@@ -611,7 +611,7 @@ $tile: 'tile';
     
     .info-wrapper{
         justify-content: center;
-        @media(max-width: theme('breakpoints.md','value')){
+        @media(max-width: theme('breakpoints.sm','value')){
             flex-direction: column;
         }
     }
@@ -650,6 +650,7 @@ $tile: 'tile';
     display: flex;
     align-items: center;
     color: #333;
+    flex-wrap: wrap;
     
     .info-tag{
         display: flex;
@@ -660,13 +661,13 @@ $tile: 'tile';
 
         @media(max-width: theme('breakpoints.sm','value')){
             margin-bottom: theme('margin.4');
-        }
-        @media(max-width: theme('breakpoints.md','value')){
-            
-            margin-#{theme('direction.right','value')}: theme('margin.5');
             &:last-child{
                 margin-bottom: 0;
             }
+        }
+        @media(min-width: theme('breakpoints.sm','value')){
+            margin-#{theme('direction.right','value')}: theme('margin.5');
+            margin-bottom: theme('margin.2');
         }
         .icon--location{
             width: 11px;
