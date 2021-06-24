@@ -5644,8 +5644,6 @@ input[type=file] {
   height: 8px;
   background: var(--color-secondary);
   border-radius: 50%;
-  top: 6px;
-  left: 6px;
   -webkit-transform: scale(0);
   -ms-transform: scale(0);
       transform: scale(0); }
@@ -5814,10 +5812,6 @@ textarea[disabled] {
 
 .list-inline label .radio .input-helper:before {
   top: -1px; }
-
-.list-inline label .checkbox .input-helper:after,
-.list-inline label .radio .input-helper:after {
-  top: 6px; }
 
 .list-inline .is-active label {
   color: var(--color-secondary);
