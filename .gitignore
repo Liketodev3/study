@@ -10,7 +10,7 @@
 /.htaccess
 /library/core
 /fatlib
-/robots.txt
+/public/robots.txt
 /public/config.js
 /vendor/
 /nbproject

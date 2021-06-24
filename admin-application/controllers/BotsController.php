@@ -7,7 +7,7 @@ class BotsController extends AdminBaseController
     {
         parent::__construct($action);
         $this->objPrivilege->canViewRobotsSection($this->admin_id);
-        $this->fileName = CONF_INSTALLATION_PATH . DIRECTORY_SEPARATOR . 'robots.txt';
+        $this->fileName = CONF_INSTALLATION_PATH.'public/robots.txt';
     }
 
     public function index()

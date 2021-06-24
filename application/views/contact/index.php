@@ -83,7 +83,7 @@
                                         <div class="col-md-12">
                                             <div class="field-set">
                                                 <div class="field-wraper">
-                                                 <div class="g-recaptcha" data-sitekey="'.FatApp::getConfig('CONF_RECAPTCHA_SITEKEY', FatUtility::VAR_STRING, '').'"></div>
+                                                 <div class="g-recaptcha" data-sitekey="<?php echo FatApp::getConfig('CONF_RECAPTCHA_SITEKEY', FatUtility::VAR_STRING, ''); ?>"></div>
                                                 </div>
                                             </div>
                                         </div>
