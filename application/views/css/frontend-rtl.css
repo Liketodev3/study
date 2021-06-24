@@ -2034,12 +2034,12 @@ p {
             align-items: center; }
     .info-wrapper .info-tag:last-child {
       margin-left: 0; }
-    @media (min-width: 767px) {
+    @media (max-width: 576px) {
       .info-wrapper .info-tag {
-        margin-left: var(--margin-5); } }
+        margin-bottom: var(--margin-4); } }
     @media (max-width: 767px) {
       .info-wrapper .info-tag {
-        margin-bottom: var(--margin-4); }
+        margin-left: var(--margin-5); }
         .info-wrapper .info-tag:last-child {
           margin-bottom: 0; } }
     .info-wrapper .info-tag .icon--location {

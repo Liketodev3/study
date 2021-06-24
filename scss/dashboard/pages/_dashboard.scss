@@ -22,7 +22,7 @@ $dashboard: "dashboard";
             order: 2;
         }
         @media(max-width: theme('breakpoints.xxxl','value')) {
-            padding: 0 var(--padding-5);
+            padding: 0 theme('padding.5');
         }
     }
     
@@ -34,11 +34,11 @@ $dashboard: "dashboard";
         background-color: #fff;
         position: relative;
         transition: all 0.2s;
-        box-shadow: var(--boxShadow-l-r);
+        box-shadow: theme('boxShadow.l-r');
         
         @media(max-width: theme('breakpoints.xxl','value')){
             &{
-                margin: var(--margin-5) var(--margin-5) 0;
+                margin: theme('margin.5') theme('margin.5') 0;
             }
         }
         
@@ -85,22 +85,22 @@ $status-bar: "status-bar";
 
     @media (min-width:theme('breakpoints.lg','value')) and (max-width:theme('breakpoints.xxl','value')) {
         &{
-            padding: var(--padding-8) var(--padding-4);
+            padding: theme('padding.8') theme('padding.4');
             max-height: 558px;
             display: grid;
             grid-template-columns: 1fr 1fr;
         }
     }
     .status-title{
-        padding: var(--padding-5);  
+        padding: theme('padding.5');  
         position: relative;
         display: flex;
         justify-content: space-between;
         align-items: center;
         border-bottom: 2px solid theme('color.gray.200');
         h5{
-            font-size: var(--font-size-h5);
-            color: var(--color-gray-000);
+            font-size: theme('font.size.h5');
+            color: theme('color.dark');
         }
     }
     .status-bar__body{
@@ -144,7 +144,7 @@ $status-bar: "status-bar";
 
 .learnerscheduledlessons{ 
     .tooltipevent{
-        border-top: 3px solid var(--color-primary);
+        border-top: 3px solid theme('color.primary');;
         border-radius: 6px;
         .booking-view{
             h3{
@@ -160,11 +160,11 @@ $lesson-list-container: "lesson-list-container";
 .#{&lesson-list-container} {
 
     .date{
-        font-size: var(--font-size-small);
+        font-size: theme('font.size.small');
         text-transform: uppercase;
-        color: var(--color-gray-1000);
-        font-weight: var(--font-weight-medium);
-        margin-bottom: var(--margin-4);
+        color: theme('color.gray.1000');
+        font-weight: theme('font.weight.medium');
+        margin-bottom: theme('margin.4');
         .lesson-list{
             &:first-child{
                 margin-top: 10px;
@@ -181,10 +181,10 @@ $lesson-list: "lesson-list";
     display: flex;
     flex-wrap: nowrap;
     position: relative;
-    padding: var(--padding-6) var(--padding-4);
+    padding: theme('padding.6') theme('padding.4');
     background-color: #EDEFF3;
     border-radius: theme('radius.1');
-    margin-bottom: var( --margin-3);
+    margin-bottom: theme('margin.3');
     &::after{
         position: absolute;
         #{theme('direction.right','value')}: 10px;
@@ -192,8 +192,8 @@ $lesson-list: "lesson-list";
         content: "";
         width: 7px;
         height: 7px;
-        border-right: 1px solid var(--color-gray-000);
-        border-bottom: 1px solid var(--color-gray-000);
+        border-right: 1px solid theme('color.dark');
+        border-bottom: 1px solid theme('color.dark');
         transform: rotate(-45deg) translate(0, -100%);
         pointer-events: none;
     }
@@ -208,7 +208,7 @@ $lesson-list: "lesson-list";
         p{
             margin-bottom: theme('margin.3');
             line-height: 1;
-            color: var(--color-black);
+            color: theme('color.dark');
 
             &:last-child{
                 margin-bottom: theme('margin.0');
@@ -216,14 +216,14 @@ $lesson-list: "lesson-list";
         }
 
         .lesson-time{
-            color: var(--color-gray-000);
-            font-weight: var(--font-weight-medium);
+            color: theme('color.dark');
+            font-weight: theme('font.weight.medium');
             white-space: nowrap;
             overflow: hidden;
             width: 100%;
             text-overflow: ellipsis;
             span{
-                color: var(--color-primary);
+                color: theme('color.primary');;
                 margin-right: 3px;
             }
 
@@ -250,23 +250,23 @@ $lesson-list: "lesson-list";
 }
 
 .lesson-list-container{
-    margin-bottom: var(--margin-12);
+    margin-bottom: theme('margin.12');
     &:last-child{
-        margin-bottom: var(--margin-0);
+        margin-bottom: 0;
     }
 }
 
 $stat: "stat";
 
 .#{&stat}{
-    background-color: var(--color-white);
-    padding: var(--padding-6);
+    background-color: theme('color.white');
+    padding: theme('padding.6');
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: relative;
-    border-radius: var(--radius-1);
-    box-shadow: var(--boxShadow-all);
+    border-radius: theme('radius.1');
+    box-shadow: theme('boxShadow.all');
     transition: all 0.2s;
 
     .stat__media {
@@ -290,7 +290,7 @@ $stat: "stat";
         }
     }
     span{
-        color: var(--color-gray-1000);
+        color: theme('color.gray.1000');
     }
     .stat__action{
         position: absolute;
@@ -303,14 +303,14 @@ $stat: "stat";
 
     @media(min-width:theme('breakpoints.xl','value')){
         &:hover{
-            box-shadow: var(--boxShadow-vertical);
+            box-shadow: theme('boxShadow.vertical');
             margin-left: -5px;
             margin-right: -5px;
         }
     }
 
     @media(max-width:theme('breakpoints.xl','value')){
-        margin-bottom: var(--padding-6);
+        margin-bottom: theme('padding.6');
     }
 }
 
@@ -318,13 +318,13 @@ $stat: "stat";
 $statistics: "statistics";
 
 .#{&statistics}{
-    background-color: var(--color-white);
-    padding: var(--padding-6);
+    background-color: theme('color.white');
+    padding: theme('padding.6');
     position: relative;
-    border-radius: var(--radius-1);
-    box-shadow: var(--boxShadow-all);
+    border-radius: theme('radius.1');
+    box-shadow: theme('boxShadow.all');
     .statistics__head {
-        margin-bottom: var(--padding-6);
+        margin-bottom: theme('padding.6');
     }
 
     .statistics__body{
@@ -346,13 +346,13 @@ $sale-stat: "sale-stat";
 
     @media(min-width:theme('breakpoints.xxxl','value')){
         &{
-            padding: var(--padding-12);
+            padding: theme('padding.12');
         }
     }
     @media(max-width:theme('breakpoints.xxxl','value')){
         &{
-            padding: var(--padding-6) var(--padding-4);
-            margin-bottom: var(--margin-4);
+            padding: theme('padding.6') theme('padding.4');
+            margin-bottom: theme('margin.4');
         }
     }
 
@@ -373,7 +373,7 @@ $sale-stat: "sale-stat";
 }
 
 .sale-stat--yellow{
-    color: var(--color-third);
+    color: theme('color.third');
     &::before{
         position: absolute;
         left: 0;
@@ -411,17 +411,17 @@ $sale-stat: "sale-stat";
 $margin-bottom-6: "margin-bottom-6";
 
 .#{&margin-bottom-6} {
-    margin-bottom: var(--padding-6);
+    margin-bottom: theme('padding.6');
 }
 
 .upcoming {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: var(--margin-3);
+    margin-bottom: theme('margin.3');
 
     h6 {
-        color: var(--color-gray-000);
+        color: theme('color.dark');
     }
 }
 
@@ -429,7 +429,7 @@ $margin-bottom-6: "margin-bottom-6";
 
     .dashboard__primary{
         @media (min-width:theme('breakpoints.xxxl','value')) {
-            padding: 0 var(--padding-12);
+            padding: 0 theme('padding.12');
             width: 100%;
         }
     }
@@ -448,12 +448,12 @@ $margin-bottom-6: "margin-bottom-6";
 
     .select2-selection--single{
         height: 2.8rem !important;
-        border: 1px solid var(--color-gray-300) !important;
+        border: 1px solid theme('color.gray.300') !important;
         position: relative;
 
         .select2-selection__rendered{
             line-height: 38px !important;
-            padding: 0 var(--padding-4) !important;
+            padding: 0 theme('padding.4') !important;
             color: #999 !important;
             padding-right: 30px !important;
         }
@@ -518,12 +518,12 @@ $aside--progress--menu: "aside--progress--menu";
             min-width: 1.75em;
             height: 1.75em;
             border-radius: 1.75em;
-            padding-#{theme('direction.left','value')}: var(--padding-1);
-            padding-#{theme('direction.right','value')}: var(--padding-1);
+            padding-#{theme('direction.left','value')}: theme('padding.1');
+            padding-#{theme('direction.right','value')}: theme('padding.1');
             content: attr(data-count);
             font-size: 0.66em;
             line-height: 1.75em;
-            background-color: var(--color-third);
+            background-color: theme('color.third');
             pointer-events: none;
         }
     }
@@ -551,7 +551,7 @@ $aside--progress--menu: "aside--progress--menu";
                 opacity: 1;
 
                 .menu__icon{
-                    background-color: var(--color-yellow);
+                    background-color: theme('color.yellow');
                     display: block;
                 }
             }
@@ -564,10 +564,10 @@ $aside--progress--menu: "aside--progress--menu";
             #{theme('direction.right','value')}: 1rem;
             top: 50%;
             border-radius: 1.75em;
-            padding-#{theme('direction.left','value')}: var(--padding-1);
+            padding-#{theme('direction.left','value')}: theme('padding.1');
             font-size: 0.66em;
             line-height: 1.75em;
-            padding-#{theme('direction.right','value')}: var(--padding-1);
+            padding-#{theme('direction.right','value')}: theme('padding.1');
             transform: translate(0, -50%);
             @media (max-width:theme('breakpoints.md','value')) {
                 #{theme('direction.right','value')}: 0rem;

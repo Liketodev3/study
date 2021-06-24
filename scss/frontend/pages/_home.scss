@@ -662,11 +662,13 @@ $tile: 'tile';
         &:last-child{
             margin-#{theme('direction.right','value')}: 0;
         }
-        @media(min-width: theme('breakpoints.md','value')){
-            margin-#{theme('direction.right','value')}: theme('margin.5');
+
+        @media(max-width: theme('breakpoints.sm','value')){
+            margin-bottom: theme('margin.4');
         }
         @media(max-width: theme('breakpoints.md','value')){
-            margin-bottom: theme('margin.4');
+            
+            margin-#{theme('direction.right','value')}: theme('margin.5');
             &:last-child{
                 margin-bottom: 0;
             }
