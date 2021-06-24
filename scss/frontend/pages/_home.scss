@@ -49,8 +49,8 @@ $slideshow: "slideshow";
     position: absolute;
     #{theme('direction.left','value')}:5%;
     top: 50%;
-    min-width: 520px;
-    max-width: 520px;
+    min-width: 460px;
+    max-width: 460px;
     color: #111;
     
     transform: translateY(-50%);
@@ -60,11 +60,6 @@ $slideshow: "slideshow";
     backdrop-filter: saturate(180%) blur(20px);
     background: rgba(255,255,255,0.7);
 
-    // @media(min-width: theme('breakpoints.xxxxl','value')) {
-    //     #{theme('direction.left','value')}: 50%;
-    //     margin-#{theme('direction.left','value')}:-390px;
-    //     transform: translate(#{theme('direction.left', -50%)}, -50%);
-    // }
 
     @media(max-width: theme('breakpoints.xl','value')) {
         padding: theme('padding.8') theme('padding.10');
@@ -90,7 +85,7 @@ $slideshow: "slideshow";
     }
 
     h1{
-        font-size: 2.6rem;
+        font-size: 2.3rem;
         font-weight: normal;
         line-height: 4rem;
         margin-bottom: theme('margin.3');

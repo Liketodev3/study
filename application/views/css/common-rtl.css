@@ -5810,9 +5810,6 @@ textarea[disabled] {
 .list-inline label:focus {
   background: rgba(0, 0, 0, 0.02); }
 
-.list-inline label .radio .input-helper:before {
-  top: -1px; }
-
 .list-inline .is-active label {
   color: var(--color-secondary);
   font-weight: 600; }

@@ -46,27 +46,21 @@ $header-primary: 'header-primary';
     }
 
     .header__logo{
-        margin-#{theme('direction.right','value')}: var(--margin-16);
+       
         width: 160px;
         height: 46px;
         position: relative; display: flex!important; align-items: center;
-        @media(min-width: theme('breakpoints.md','value')) and (max-width: theme('breakpoints.xxl','value')) {
-            margin-#{theme('direction.right','value')}: var(--margin-3);
 
+        // @media(max-width: theme('breakpoints.xxl','value')) {
+        //     width: 120px;
+        //     height: 35px;
+        // }
+
+        @media(min-width: theme('breakpoints.md','value')) {
+            margin-#{theme('direction.right','value')}:theme('margin.8');
         }
 
-        @media(max-width: theme('breakpoints.xxl','value')) {
-            width: 120px;
-            height: 35px;
-        }
-
-        @media(max-width: theme('breakpoints.xl','value')) {
-            margin-#{theme('direction.right','value')}: var(--margin-8);
-        }
-
-        @media(max-width: theme('breakpoints.md','value')) {
-            margin-#{theme('direction.right','value')}: var(--margin-0);
-        }
+     
 
         img{
             position: absolute;

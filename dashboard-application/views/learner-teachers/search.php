@@ -4,6 +4,7 @@
 	<table class="table table--styled table--responsive table--aligned-middle">
 		<tr class="title-row">
 			<th><?php echo $teacherLabel = Label::getLabel('LBL_Teacher'); ?></th>
+			<th><?php echo $teachesLabel = Label::getLabel('LBL_Teaches'); ?></th>
 			<th><?php echo $ratingLabel = Label::getLabel('LBL_Average_Rating'); ?></th>
 			<th><?php echo $loclLabel = Label::getLabel('LBL_Lock_(Single/Bulk_Price)'); ?></th>
 			<th><?php echo $scheduledLabel = Label::getLabel('LBL_Scheduled'); ?></th>
@@ -13,7 +14,7 @@
 		</tr>
 		<?php
 		foreach ($teachers as $teacher) {
-			$teacherDetailPageUrl = CommonHelper::generateUrl('teachers', 'view', array($teacher['user_url_name']),CONF_WEBROOT_FRONTEND); ?>
+			$teacherDetailPageUrl = CommonHelper::generateUrl('teachers', 'view', array($teacher['user_url_name']), CONF_WEBROOT_FRONTEND); ?>
 			<tr>
 				<td>
 					<div class="flex-cell">
@@ -35,38 +36,15 @@
 								<div class="profile-meta__details">
 									<p class="bold-600 color-black"><?php echo $teacher['teacherFname']; ?></p>
 									<p class="small"><?php echo $teacher['teacherCountryName']; ?></p>
-									<?php
-									if ($teacher['teacherTeachLanguageName'] != '' && !empty($teacher['teacherTeachLanguageName'])) {
-										$teachLangs = explode(',', $teacher['teacherTeachLanguageName']);
-										if (count($teachLangs) > 1) {
-											$first_array = array_slice($teachLangs, 0, 1);
-											$second_array = array_slice($teachLangs, 1, count($teachLangs));
-									?>
-											<div class="language">
-												<p class="my_teacher_lang_heading"><span><?php echo Label::getLabel('LBL_Teaches:'); ?></span> </p>
-												<?php foreach ($first_array as $teachLang) {  ?>
-													<span class="main-language"><?php echo $teachLang; ?></span>
-												<?php } ?>
-												<div class="more-dropdown">
-													<a class="menu__item-trigger trigger-js color-secondary" href="#more-lang<?php echo $teacher['teacherId']; ?>"><?php echo count($second_array) . ' ' . Label::getLabel('LBL_More'); ?></a>
-													<ul class="menu__dropdown more--dropdown" id="more-lang<?php echo $teacher['teacherId']; ?>">
-														<?php foreach ($second_array as $key => $teachLang) { ?>
-															<li>
-																<h6><?php echo $teachLang; ?></h6>
-															</li>
-														<?php } ?>
-													</ul>
-												</div>
-											</div>
-									<?php
-										} else {
-											echo ' <p><span>' . Label::getLabel('LBL_Teaches:') . '</span> ' . $teacher['teacherTeachLanguageName'] . ' </p>';
-										}
-									}
-									?>
 								</div>
 							</div>
 						</div>
+					</div>
+				</td>
+				<td>
+					<div class="flex-cell">
+						<div class="flex-cell__label"><?php echo $teachesLabel; ?></div>
+						<div class="flex-cell__content"><?php echo $teacher['teacherTeachLanguageName']; ?></div>
 					</div>
 				</td>
 				<td>
@@ -75,6 +53,7 @@
 						<div class="flex-cell__content"><?php echo $teacher['teacher_rating']; ?></div>
 					</div>
 				</td>
+
 				<td>
 					<div class="flex-cell">
 						<div class="flex-cell__label"><?php echo $loclLabel; ?></div>
@@ -138,7 +117,7 @@
 							<div class="flex-cell__label"><?php echo $actionLabel; ?></div>
 							<div class="flex-cell__content">
 								<div class="actions-group">
-									<a href="javascript:void(0);" onclick="cart.proceedToStep({teacherId: <?php echo $teacher['teacherId']; ?>},'getUserTeachLangues');"  class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
+									<a href="javascript:void(0);" onclick="cart.proceedToStep({teacherId: <?php echo $teacher['teacherId']; ?>},'getUserTeachLangues');" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
 										<svg class="icon icon--buy">
 											<use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#icon-buy'; ?>"></use>
 										</svg>
