@@ -199,3 +199,12 @@
         }
     }
 }
+
+.cookies-popup{
+    .content-panel__head{
+        padding: theme('padding.4');
+    }
+    .form__actions{
+        padding: theme('padding.4');
+    }
+}

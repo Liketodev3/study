@@ -252,7 +252,8 @@ input[type=file] {
     transition: background 250ms ease, box-shadow 250ms ease;}
 
     .checkbox input:checked + .input-helper, .radio input:checked + .input-helper{
-        box-shadow: inset 0 0 0 1px var(--color-secondary);
+        box-shadow: none;
+        border: 2px solid var(--color-secondary);
     }
 
 
@@ -515,4 +516,17 @@ textarea[disabled] {
 
 .form__body{
     min-height: unset !important;
+}
+
+.checkbox{
+    .input-helper{
+        &::before{
+            left: 3px;
+            bottom: 6.1px;
+        }
+        &::after{
+            left: 6px;
+            bottom: 3px;
+        }
+    }
 }
