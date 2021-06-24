@@ -612,7 +612,7 @@ ul {
       .box--checkout .box__head {
         padding: var(--padding-6) var(--padding-6) var(--padding-8) !important; } }
     .box--checkout .box__head h4 {
-      font-size: calc(var(--font-size-h4) - 1px);
+      font-size: var(--font-size-h4);
       margin: 0 auto !important; }
     @media (max-width: 576px) {
       .box--checkout .box__head .btn {
@@ -630,7 +630,7 @@ ul {
         margin-left: var(--margin-2); }
         @media (max-width: 576px) {
           .box--checkout .box__head .btn--back .icon--back {
-            margin-left: var(--margin-0); } }
+            margin-left: 0; } }
   .box--checkout .box__body {
     position: relative;
     padding: var(--padding-16) var(--padding-3); }
@@ -642,7 +642,7 @@ ul {
         height: calc(100% - 150px);
         overflow: auto; } }
   .box--checkout .box-foot {
-    padding: calc(var(--padding-12) - 2px);
+    padding: var(--padding-12);
     border-top: 1px solid var(--color-gray-300);
     display: -webkit-box;
     display: -ms-flexbox;
@@ -712,7 +712,7 @@ ul {
       -webkit-box-align: center;
           -ms-flex-align: center;
               align-items: center;
-      margin-right: calc(var(--margin-12) - 2px); }
+      margin-right: var(--margin-12); }
       .step-nav ul .step-nav_item:first-child {
         margin-right: 0; }
       .step-nav ul .step-nav_item a {
@@ -754,10 +754,10 @@ ul {
         padding: var(--padding-2);
         width: 100%; } }
     .selection--checkout .selection-tabs__label .selection-tabs__title {
-      padding: calc(var(--padding-8) - 3px) calc(var(--padding-12) - 2px);
+      padding: var(--padding-8) var(--padding-12);
       display: inline-block;
       width: 100%;
-      font-size: calc(var(--font-size-medium) + 1px);
+      font-size: var(--font-size-medium);
       cursor: pointer; }
       @media (max-width: 767px) {
         .selection--checkout .selection-tabs__label .selection-tabs__title {
@@ -820,7 +820,7 @@ ul {
       -ms-flex-align: center;
           align-items: center; }
   .teacher-profile .teacher__media {
-    margin-left: calc(var(--margin-4) + 1px); }
+    margin-left: var(--margin-4); }
     .teacher-profile .teacher__media .avtar {
       border-radius: 0; }
 
@@ -916,7 +916,7 @@ ul {
 
 .checkout-title {
   text-align: center;
-  margin-bottom: calc(var(--margin-6) - 1px); }
+  margin-bottom: var(--margin-6); }
   .checkout-title p {
     color: var(--color-gray);
     margin-bottom: 0;
@@ -952,9 +952,9 @@ ul {
   .selection--payment .selection-tabs__label {
     width: 100%;
     padding: 0;
-    margin-bottom: calc(var(--padding-6) - 1px); }
+    margin-bottom: var(--padding-6); }
     .selection--payment .selection-tabs__label .selection-tabs__title {
-      padding: calc(var(--padding-6) - 1px);
+      padding: var(--padding-6);
       font-size: var(--font-size-h6);
       font-weight: 600;
       display: inline-block; }
@@ -970,7 +970,7 @@ ul {
     display: none; }
   .payment-type .total__payment {
     display: none;
-    margin-top: calc(var(--margin-6) + 3px); }
+    margin-top: var(--margin-6); }
     .payment-type .total__payment .btn {
       text-transform: uppercase; }
       @media (min-width: 991px) {

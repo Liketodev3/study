@@ -15,15 +15,15 @@
 .#{$montly-lesson-calendar} {
     
     .fc-header-toolbar{
-        padding: var(--padding-6) var(--padding-6) 0;
+        padding: theme('padding.6') theme('padding.6') 0;
         margin: 0 !important;
     }
 
     .fc-view-harness{
-        margin: var(--padding-6);
+        margin: theme('padding.6');
 
         .fc-scrollgrid{
-            border: 1px solid var(--color-gray-200);
+            border: 1px solid theme('color.gray.200');
         }
 
         
@@ -44,7 +44,7 @@ $fc-scroller-harness: "fc-scroller-harness";
 .#{$fc-scroller-harness} {
     .fc-col-header-cell{
 
-        border: 1px solid var(--color-gray-200);
+        border: 1px solid theme('color.gray.200');
         
         .fc-scrollgrid-sync-inner{
             height: 40px;
@@ -61,17 +61,17 @@ $fc-scroller-harness: "fc-scroller-harness";
     .fc-scrollgrid-sync-table{
 
         .fc-daygrid-day{
-            border: 1px solid var(--color-gray-200);
+            border: 1px solid theme('color.gray.200');
 
             .fc-daygrid-event {
-                background: var(--color-gray-100);
-                padding: var(--padding-2) var(--padding-3);
+                background: theme('color.gray.100');
+                padding: theme('padding.2') theme('padding.3');
                 height: 35px;
-                border-#{theme('direction.left','value')}: 2px solid var(--color-primary);
+                border-#{theme('direction.left','value')}: 2px solid theme('color.primary');
                 border-radius: 0;
-                margin-#{theme('direction.left','value')}: var(--margin-2) ;
-                margin-#{theme('direction.right','value')}: var(--margin-2);
-                margin-bottom: var(--margin-1) !important;
+                margin-#{theme('direction.left','value')}: theme('margin.2') ;
+                margin-#{theme('direction.right','value')}: theme('margin.2');
+                margin-bottom: theme('margin.1') !important;
             }
         }
 
@@ -132,9 +132,9 @@ $dashboard-calendar: "dashboard-calendar";
 .fc-button-group .fc-button {
     background: transparent;
     border-radius: 0;
-    margin: var(--margin-1);
+    margin: theme('margin.1');
     box-shadow: 1px 2px 2px 1px rgba(0,0,0,0.07);
-    border: 1px solid var(--color-gray-200);
+    border: 1px solid theme('color.gray.200');
     width: 2.70rem;
     height: 2.70rem;
     display: flex;
@@ -148,7 +148,7 @@ $dashboard-calendar: "dashboard-calendar";
 
 .fc-button-group .fc-button:hover{
     background-color: transparent;
-    border-color:var(--color-gray-200);
+    border-color:theme('color.gray.200');
 }
 
 .fc-event-main-frame .closeon {
@@ -156,7 +156,7 @@ $dashboard-calendar: "dashboard-calendar";
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--color-dark);
+    color: theme('color.dark');
 }
 
 .fc-timegrid-event .fc-event-time{
@@ -196,18 +196,18 @@ $dashboard-calendar: "dashboard-calendar";
     }
 }
 .fc-event.booked-slot {
-    background: var(--color-red);
-    border-color: var(--color-red);
+    background: theme('color.red');
+    border-color: theme('color.red');
 }
 
 .cal-status .booked-box{
-    background: var(--color-red);
+    background: theme('color.red');
 }
 .cal-status .available-box{
-    background: var(--color-green);
+    background: theme('color.green');
 }
 .fc-event.slot_unavailable{
-    background: var(--color-gray-500);
+    background: theme('color.gray.500');
     border-color: transparent;
     background-image: linear-gradient(45deg, #dddddd 14.29%, #ffffff 14.29%, #ffffff 50%, #dddddd 50%, #dddddd 64.29%, #ffffff 64.29%, #ffffff 100%);
     background-size: 9.90px 9.90px;
@@ -253,7 +253,7 @@ $dashboard-calendar: "dashboard-calendar";
     .calendar-view__head{
         
         @media(min-width:theme('breakpoints.md','value')){
-            margin-bottom: var(--margin-8);
+            margin-bottom: theme('margin.8');
         }
         [class*="col-sm-7"]{
             display: flex;
@@ -262,20 +262,20 @@ $dashboard-calendar: "dashboard-calendar";
             }
         }
         h4{
-            color: var(--color-dark);
+            color: theme('color.dark');
             font-weight: theme('font.weight.bold');
             @media(min-width:theme('breakpoints.xxl','value')){
-                font-size: var(--font-size-h5);
+                font-size: theme('font.size.h5');
             }
             @media(min-width:theme('breakpoints.lg','value')) and (max-width:theme('breakpoints.xl','value')){
                 font-size: theme('font.size.h6');
             }
         }
         @media(max-width:theme('breakpoints.md','value')){
-            padding: var(--padding-5) var(--padding-1);
+            padding: theme('padding.5') theme('padding.1');
             text-align: center;
             h4{
-                margin-bottom: var(--margin-4);
+                margin-bottom: theme('margin.4');
             }
             [class*="col-sm-7"]{
                 justify-content: center;
@@ -312,13 +312,13 @@ $dashboard-calendar: "dashboard-calendar";
     }
 
     .fc-header-toolbar{
-        padding: var(--padding-6) var(--padding-6);
+        padding: theme('padding.6') theme('padding.6');
         margin-bottom: 0 !important;
-        border: 1px solid var(--color-gray-300);
+        border: 1px solid theme('color.gray.300');
         border-bottom: transparent;
         @media(max-width:theme('breakpoints.md','value')){
             flex-direction: column;
-            padding: var(--padding-6) var(--padding-3);
+            padding: theme('padding.6') theme('padding.3');
         }
         .fc-toolbar-chunk{
             &:first-child{
@@ -328,26 +328,26 @@ $dashboard-calendar: "dashboard-calendar";
                 }
             }
             h2{
-                font-size: var(--font-size-h6);
-                color: var(--color-dark);
+                font-size: theme('font.size.h6');
+                color: theme('color.dark');
                 text-transform: uppercase;
                 @media(min-width:theme('breakpoints.md','value')){
-                    margin-right: var(--margin-5);
+                    margin-right: theme('margin.5');
                 }
             }
 
             h6{
                 display: flex;
                 align-items: center;
-                font-size: var(--font-size-h6);
+                font-size: theme('font.size.h6');
                 text-transform: uppercase;
-                color: var(--color-dark);
+                color: theme('color.dark');
                 @media(max-width:theme('breakpoints.md','value')){
                     justify-content: center;
                 }
                 .timer{
-                    color: var(--color-dark);
-                    margin: var(--margin-1);
+                    color: theme('color.dark');
+                    margin: theme('margin.1');
                 }
                
                 
@@ -359,10 +359,10 @@ $dashboard-calendar: "dashboard-calendar";
                     display: inline-table;
                     border: transparent;
                     width: 100%;
-                    padding: 0 var(--padding-6);
+                    padding: 0 theme('padding.6');
                     .fc-button{
                         box-shadow: none;
-                        border: 1px solid var(--color-gray-200);
+                        border: 1px solid theme('color.gray.200');
                         &:first-child{
                             float: #{theme('direction.left','value')};
                         }
@@ -386,13 +386,13 @@ $dashboard-calendar: "dashboard-calendar";
                 border-radius: theme('radius.0');
     
                 .fc-button-primary{
-                    color: var(--color-dark);
+                    color: theme('color.dark');
                     background-color: theme('color.white');
                     height: auto;
-                    padding: var(--padding-2);
+                    padding: theme('padding.2');
                     width: 50px;
                     height: 40px;
-                    border: 1px solid var(--color-gray-200);
+                    border: 1px solid theme('color.gray.200');
                     border-radius: 0;
                     box-shadow: none;
                     
@@ -402,17 +402,17 @@ $dashboard-calendar: "dashboard-calendar";
                     &:active{
                         background-color: theme('color.primary');
                         border-color: theme('color.primary');
-                        color: var(--color-white);
+                        color: theme('color.white');
                     }
                 }
             }
             .fc-today-button{
                 background-color: theme('color.white');
-                padding: 0 var(--padding-8);
+                padding: 0 theme('padding.8');
                 height: 40px;
-                border: 1px solid var(--color-gray-200);
+                border: 1px solid theme('color.gray.200');
                 border-radius: 0;
-                color: var(--color-dark);
+                color: theme('color.dark');
                 text-transform: uppercase;
                 font-weight: 600;
                 opacity: 1;
@@ -423,7 +423,7 @@ $dashboard-calendar: "dashboard-calendar";
     .fc-timegrid{
         .fc-col-header{
             .fc-day-today{
-                color: var(--color-primary);
+                color: theme('color.primary');
                 position: relative;
                 a{
                     font-weight: bold;
@@ -444,7 +444,7 @@ $dashboard-calendar: "dashboard-calendar";
         .fc-timegrid-body{
             .fc-day-today{
                 position: relative;
-                color: var(--color-primary);
+                color: theme('color.primary');
                 background: transparent;
                 &::before{
                     position: absolute;
@@ -505,7 +505,7 @@ $dashboard-calendar: "dashboard-calendar";
     z-index: 999 !important;
 }
 .tooltipevent {
-    border-top: 3px solid var(--color-primary);
+    border-top: 3px solid theme('color.primary');
     border-radius: 6px;
 }
 

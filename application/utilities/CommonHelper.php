@@ -1738,7 +1738,7 @@ class CommonHelper extends FatUtility
             session_set_cookie_params($maxlifetime, $path . $cookieParamsStr, $host, $secure, $httponly);
         } else {
             $cookieParamsArr = [
-                'lifetime' => $maxlifetime,
+                // 'lifetime' => $maxlifetime,
                 'path' => $path,
                 'domain' => $host,
                 'secure' => $secure,

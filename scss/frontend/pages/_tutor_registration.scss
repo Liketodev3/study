@@ -110,7 +110,7 @@ $is-registration: 'is-registration';
 
     .steps--vertical{
         @media(min-width: theme('breakpoints.lg','value')) {
-            margin-top: var(--margin-12);
+            margin-top: theme('margin.12');
         }
     }
 
@@ -253,7 +253,7 @@ $is-registration: 'is-registration';
         }
     }
     .block-content__body{
-        margin-bottom: var(--margin-12);
+        margin-bottom: theme('margin.12');
         .field-set{
             @media(max-width: theme('breakpoints.lg','value')) {
                 margin-bottom: theme('margin.6');
@@ -471,7 +471,7 @@ $profile-media: "profile-media";
     min-height: 3.5rem;
     line-height: 20px;
     background: none;
-    padding: var(--padding-4) var(--padding-6);
+    padding: theme('padding.4') theme('padding.6');
     -webkit-appearance: none;
     -moz-appearance: none;
     cursor: pointer;
@@ -483,10 +483,10 @@ $profile-media: "profile-media";
 }
 .flag-icon {
     display: inline-block;
-    border-radius: var(--radius-round);
+    border-radius: theme('radius.round');
     overflow: hidden;
     vertical-align: text-top;
-    margin-#{theme('direction.right','value')}: var(--margin-2);
+    margin-#{theme('direction.right','value')}: theme('margin.2');
 }
 
 
@@ -512,7 +512,7 @@ $profile-media: "profile-media";
         border-radius: 0;
         background: #fff;
         box-shadow: none;
-        border: 2px solid var(--color-gray-300);
+        border: 2px solid theme('color.gray.300');
         &::after{
             #{theme('direction.left','value')}: 6px;
             bottom: 3px;
@@ -530,7 +530,7 @@ $profile-media: "profile-media";
 
 .application-no{
     max-width: 340px;
-    padding: var(--padding-4) 0;
+    padding: theme('padding.4') 0;
     border-top: 1px solid theme('color.gray.300');
     border-bottom: 1px solid theme('color.gray.300');
     text-transform: uppercase;
@@ -576,7 +576,7 @@ $profile-media: "profile-media";
 .form--register{
     color: theme('color.dark') ;
     background-color: theme('color.white');
-    margin-bottom: var(--margin-12);
+    margin-bottom: theme('margin.12');
     table{
         border-top: transparent;
         .title-row{
@@ -588,7 +588,7 @@ $profile-media: "profile-media";
         }
         .data-group{
             span{
-                font-size: var(--font-size-sm);
+                font-size: theme('font.size.sm');
                 &:first-child{
                     color: inherit ;
                     font-size: theme('font.size.h6');
@@ -605,8 +605,6 @@ $profile-media: "profile-media";
         }
         .actions-group{
             .btn{
-                // border-radius: 5px;
-                // box-shadow: theme('boxShadow.all');
                 .icon{
                     fill: inherit;
                     width: 14px;

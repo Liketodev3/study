@@ -7,7 +7,7 @@ $gift-card: "gift-card";
     @media (max-width:theme('breakpoints.md','value')) {
         &{
             height: 200px;
-            margin-bottom: var(--margin-6);
+            margin-bottom: theme('margin.6');
         }
     }
 
@@ -17,7 +17,7 @@ $gift-card: "gift-card";
         right: 0;
         top:0;
         bottom: 0;
-        background: var(--color-primary);
+        background: theme('color.primary');
         text-align: center;
         display: flex;
         justify-content: center;
@@ -63,7 +63,7 @@ $gift-card: "gift-card";
             width: 50%;
             .card-media {
                 filter: brightness(100);
-                margin-bottom: var(--margin-12);
+                margin-bottom: theme('margin.12');
     
                 img{
                     margin: 0 auto;
@@ -76,7 +76,7 @@ $gift-card: "gift-card";
         
 
         h6{
-            margin-bottom: var(--margin-2);
+            margin-bottom: theme('margin.2');
         }
 
         .btn{

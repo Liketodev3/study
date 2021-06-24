@@ -10,6 +10,7 @@ $(function () {
     };
 
     form = function (id) {
+        $.loader.show();
         fcom.ajax(fcom.makeUrl('TeacherGroupClasses', 'form', [id]), '', function (t) {
             $.facebox(t, 'facebox-large');
             jQuery('#grpcls_start_datetime,#grpcls_end_datetime').each(function () {
@@ -18,7 +19,7 @@ $(function () {
                     step: 15
                 });
             });
-
+            $.loader.hide();
         });
     };
 
@@ -43,6 +44,7 @@ $(function () {
 
     setup = function (frm) {
         if (!$(frm).validate()) return false;
+        $.loader.show();
         var formData = new FormData(frm);
         $.ajax({
             url: fcom.makeUrl('TeacherGroupClasses', 'setup'),
@@ -53,6 +55,7 @@ $(function () {
             processData: false,
             success: function (data, textStatus, jqXHR) {
                 var data = JSON.parse(data);
+                $.loader.hide();
                 if (data.status == 0) {
                     $.mbsmessage(data.msg, true, 'alert alert--danger');
                     return false;
@@ -68,6 +71,7 @@ $(function () {
                 }, 2000);
             },
             error: function (jqXHR, textStatus, errorThrown) {
+                $.loader.hide();
                 $.systemMessage(jqXHR.msg, true);
             }
         });
@@ -85,14 +89,18 @@ $(function () {
         searchGroupClasses(frm);
     };
     editGroupClassLangForm = function (groupClassId, langId) {
+        $.loader.show();
         fcom.ajax(fcom.makeUrl('TeacherGroupClasses', 'langForm', [groupClassId, langId]), '', function (t) {
             $.facebox(t, 'facebox-medium');
+            $.loader.hide();
         });
     };
     setupGroupClassLang = function (frm) {
         if (!$(frm).validate()) return;
         var data = fcom.frmData(frm);
+        $.loader.show();
         fcom.updateWithAjax(fcom.makeUrl('TeacherGroupClasses', 'langSetup'), data, function (t) {
+            $.loader.hide();
             if (t.langId > 0) {
                 editGroupClassLangForm(t.grpclsId, t.langId);
                 return;

@@ -139,7 +139,7 @@
     position: absolute;
     #{theme('direction.right','value')}: 20px;
     top: 15px;
-    background: var(--color-primary);
+    background: theme('color.primary');
     border-radius: 3px;
     color: #fff;
     font-size: 0.9rem;

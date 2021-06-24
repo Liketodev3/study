@@ -89,7 +89,7 @@
 
 .nav-categories > ul > li.is-active > a {
     font-weight: 700;
-    color: var(--color-secondary);
+    color: theme('color.secondary');
 }
 
 .categories-target {
@@ -116,7 +116,7 @@
 
 .nav-categories .nav-subcategories li a:hover {
     text-decoration: underline;
-    color: var(--color-secondary);
+    color: theme('color.secondary');
 }
 
 
@@ -364,7 +364,7 @@
 .comments-list .link--underlined {
     font-weight: normal;
     text-decoration: underline;
-    color: var(--color-secondary);
+    color: theme('color.secondary');
     font-weight: 600;
 }
 
@@ -429,7 +429,7 @@
 .blog-toggle {
     height: 60px;
     width: 60px;
-    background: var(--color-secondary);
+    background: theme('color.secondary');
     float: #{theme('direction.left','value')};
     display: none;
 }
@@ -513,7 +513,7 @@
     }
 
     .blog__content h2 a:hover {
-        color: var(--color-secondary);
+        color: theme('color.secondary');
     }
 
 }

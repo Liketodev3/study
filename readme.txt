@@ -1,5 +1,34 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Number: TV-2.21.1.20210624
+
+Release Date: 2021-06-24
+
+Fixes:
+
+	Task-86405 Contact page recaptcha
+	Task-86405 Fixed display hours issue
+	Bug-#055355-Removed WIZIQ configuration setting
+
+-------------------------------------------------------------------
+
+Release Number: TV-2.21.0.20210624
+Release Date: 2021-06-24
+
+Updates:
+
+Task-86406 Minor tweaks/fixes
+Task-86405 UI/UX tweaks and improvements
+Task-86405 Added cookie Consent new HTML
+Task-84921 Changed design of GDPR request
+
+Fixes:
+    #55345
+    #54983
+    #55340
+    #55028
+
+-------------------------------------------------------------------
 
 Release Number: TV-2.20.0.20210622
 
