@@ -56,7 +56,6 @@ class EmailHandler extends FatModel
             $subject = str_replace($key, $val, $subject);
             $body = str_replace($key, $val, $body);
         }
-        return true;
         if (FatApp::getConfig('CONF_SEND_SMTP_EMAIL')) {
             if (!static::sendSmtpEmail($to, $subject, $body, '', $tpl, $langId, '', $smtp_arr)) {
                 return static::sendMail($to, $subject, $body, '', $tpl, $langId);
