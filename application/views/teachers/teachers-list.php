@@ -181,13 +181,13 @@ $hourStringLabel = Label::getLabel('LBL_{hourstring}_HRS');
                                                                     $hour  = str_replace(":", '.', $hourString);
                                                                     $hour = (ceil(FatUtility::float($hour)));
                                                                     $hour = ($hour == 0) ? 1 : $hour;
-                                                                    $hourStringLabel = str_replace('{hourstring}', $hourString, $hourStringLabel);
+                                                                    $hourString = str_replace('{hourstring}', $hourString, $hourStringLabel);
                                                                 }
                                                             ?>
                                                             <td class="is-hover">
                                                                 <?php if (!empty($hours[$index])) { ?>
                                                                     <div class="cal-cell <?php echo $colorClass[$hour]; ?>"></div>
-                                                                    <div class="tooltip tooltip--top bg-black"><?php echo $hourStringLabel; ?></div>
+                                                                    <div class="tooltip tooltip--top bg-black"><?php echo $hourString; ?></div>
                                                                 <?php } else { ?>
                                                                     <div class="cal-cell"></div>
                                                                 <?php } ?>
