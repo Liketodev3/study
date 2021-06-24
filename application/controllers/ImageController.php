@@ -537,8 +537,8 @@ class ImageController extends FatController
         $langId = FatUtility::int($langId);
         switch ($type) {
             case BannerLocation::BLOCK_HOW_IT_WORKS:
-                $w = 950;
-                $h = 800;
+                $w = 500;
+                $h = 500;
                 break;
         }
 

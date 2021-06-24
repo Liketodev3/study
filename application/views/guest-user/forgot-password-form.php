@@ -21,7 +21,6 @@
 						$frm->setFormTagAttribute('autocomplete', 'off');
 						$frm->setValidatorJsObjectName('forgotValObj'); 
 						$frm->setFormTagAttribute('action', CommonHelper::generateUrl('GuestUser', 'forgotPassword'));  
-						
 						$frmFld = $frm->getField('user_email');
 						/* $frmFld->setFieldTagAttribute('placeholder', Label::getLabel('LBL_EMAIL_ADDRESS')); */
 						if(FatApp::getConfig('CONF_RECAPTCHA_SITEKEY',FatUtility::VAR_STRING,'')!= '' && FatApp::getConfig('CONF_RECAPTCHA_SECRETKEY',FatUtility::VAR_STRING,'')!= ''){
@@ -29,13 +28,10 @@
 							$captchaFld->htmlBeforeField = '<div class="field-set">
 										   <div class="caption-wraper"><label class="field_label"></label></div>
 										   <div class="field-wraper">
-											   <div class="field_cover">';
+										   <div class="field_cover">';
 							$captchaFld->htmlAfterField = '</div></div></div>';
 						}
 						echo $frm->getFormHtml();?>
-						
-
-
                     </div>
                 </div>
             </div>
