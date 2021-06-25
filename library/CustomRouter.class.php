@@ -2,34 +2,8 @@
 
 class CustomRouter
 {
-
     static function setRoute(&$controller, &$action, &$queryString)
     {
-        if (FatApp::getConfig('CONF_LANG_SPECIFIC_URL', FatUtility::VAR_INT, 0) && in_array(strtoupper($controller), LANG_CODES_ARR)) {
-            $langId = FatApp::getConfig('CONF_DEFAULT_SITE_LANG', FatUtility::VAR_INT, 1);
-            $langCodes = array_flip(LANG_CODES_ARR);
-            
-            if (in_array(strtoupper($controller), LANG_CODES_ARR)) {
-                $langId = $langCodes[strtoupper($controller)];
-            }
-            
-            $langId = ($langId > 0) ? $langId : CommonHelper::getLangId();
-
-            define('SYSTEM_LANG_ID', $langId);
-            CommonHelper::setDefaultSiteLangCookie($langId);
-
-            $controller = ($action == 'index') ? 'Home' : $action;
-            
-            if (!array_key_exists(0, $queryString)) {
-                $action = 'index';
-            } else {
-                $action = $queryString[0];
-                array_shift($queryString);
-            }
-        } else {
-            define('SYSTEM_LANG_ID', CommonHelper::getLangId());
-        }
-
         if (defined('SYSTEM_FRONT') && SYSTEM_FRONT === true && !FatUtility::isAjaxCall()) {
             if (UrlHelper::isStaticContentProvider($controller, $action)) {
                 return true;
@@ -43,7 +17,7 @@ class CustomRouter
                 if (in_array(strtoupper($controller), LANG_CODES_ARR)) {
                     $langId = $langCodes[strtoupper($controller)];
                 } else {
-                    $langId = ($langId > 0) ? $langId : CommonHelper::getLangId();
+                    $langId = CommonHelper::getLangId();
                 }
                 define('SYSTEM_LANG_ID', $langId);
                 $controller = ($action == 'index') ? 'Home' : $action;
