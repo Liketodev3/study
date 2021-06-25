@@ -119,7 +119,6 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
                         </div>
                     <?php } ?>
                     <?php if ($lesson['slesson_status'] != ScheduledLesson::STATUS_CANCELLED) { ?>
-                        
                             <?php if ($lesson['tlpn_id'] > 0) { ?>
                                 <div class="session-resource">
                                 <div class="d-flex align-items-center">
@@ -138,7 +137,6 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
                                 <a a href="javascript:void(0);" onclick="listLessonPlans('<?php echo $lesson['slesson_id']; ?>');" class="btn btn--transparent btn--addition color-primary btn--small"><?php echo Label::getLabel('LBL_Add_Lesson_Plan'); ?></a>
                                 </div>
                             <?php } ?>
-                        </div>
                     <?php } ?>
                 </div>
             </div>
@@ -158,7 +156,11 @@ $canEdit = ($lesson['slesson_status'] == ScheduledLesson::STATUS_NEED_SCHEDULING
                             <?php } ?>
                         <?php } ?>
                     <?php } ?>
-                    <?php if ($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED && $curDateTimeunix < $startDateTimeUnixtime && MyDate::hoursDiff($lesson['slesson_date'] . ' ' . $lesson['slesson_start_time']) >= FatApp::getConfig('LESSON_STATUS_UPDATE_WINDOW', FatUtility::VAR_FLOAT, 24)) { ?>
+                    <?php if (
+                        ($lesson['slesson_grpcls_id'] == 0) &&
+                        $lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED &&
+                        $curDateTimeunix < $startDateTimeUnixtime &&
+                        MyDate::hoursDiff($lesson['slesson_date'] . ' ' . $lesson['slesson_start_time']) >= FatApp::getConfig('LESSON_STATUS_UPDATE_WINDOW', FatUtility::VAR_FLOAT, 24)) { ?>
                         <button class="btn btn--third reschedule-lesson--js" onclick="requestReschedule('<?php echo $lesson['slesson_id']; ?>');"><?php echo Label::getLabel('LBL_Reschedule'); ?></button>
                     <?php } ?>
                     <?php

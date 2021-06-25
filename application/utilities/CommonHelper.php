@@ -1838,8 +1838,8 @@ class CommonHelper extends FatUtility
     public static function getBannerUrl(string $url): string
     {
         $formattedUrl = $url;
-        if (false !== strpos($url, '{SITEROOT}')) {
-            $formattedUrl = str_replace('{SITEROOT}', CONF_WEBROOT_URL, $url);
+        if (false !== stripos($url, '{siteroot}')) {
+            $formattedUrl = str_ireplace('{siteroot}', CONF_WEBROOT_URL, $url);
         }
 
         return $formattedUrl;
