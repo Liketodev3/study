@@ -2336,7 +2336,7 @@ p {
     opacity: 0.15; }
 
 .step {
-  padding-bottom: var(--padding-20); }
+  padding-bottom: var(--padding-14); }
   @media (max-width: 767px) {
     .step {
       padding-bottom: var(--padding-12); } }
@@ -2547,7 +2547,7 @@ p {
     top: 22px; } }
 
 .step-tabs {
-  margin: 0 auto var(--margin-24);
+  margin: 0 auto var(--margin-14);
   max-width: 700px; }
   @media (max-width: 767px) {
     .step-tabs {

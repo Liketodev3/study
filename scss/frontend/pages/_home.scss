@@ -1067,7 +1067,7 @@ $card: 'card';
 }
 
 .step{
-    padding-bottom: theme('padding.20');
+    padding-bottom: theme('padding.14');
 
     @media(max-width: theme('breakpoints.md','value')){
         padding-bottom: theme('padding.12');
@@ -1324,7 +1324,7 @@ $card: 'card';
     
 
 .step-tabs{
-    margin: 0 auto theme('margin.24');
+    margin: 0 auto theme('margin.14');
     max-width: 700px;
     @media(max-width: theme('breakpoints.md','value')){
         margin-bottom: theme('margin.14');
