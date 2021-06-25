@@ -136,6 +136,27 @@ $(document).ready(function(){
 		verticalTrackClass: 'scroll__track',
 		verticalHandleClass: 'scroll__handle'
 	});
-
+	
+	$('.statistics-nav-js li a').click(function(){
+		$('.statistics-nav-js li a').removeClass('active');
+		$('.statistics-tab-js .tabs_panel').hide();
+		var activeTab = $(this).attr('rel');
+		$(this).addClass('active');
+		$("#"+activeTab).show();
+		if ($(this).attr('data-chart')) {
+            if (layoutDirection != 'rtl') {
+                $position = 'start';
+            } else {
+                $position = 'end';
+            }
+            if (activeTab == 'tabs_1') {
+                callChart('monthlysales--js', $SalesChartKey, $SalesChartVal, $position);
+            } else if (activeTab == 'tabs_2') {
+                callChart('monthlysalesearnings--js', $earningsKey, $earningsVal, $position);
+            } else if (activeTab == 'tabs_3') {
+                callChart('monthly-signups--js', $signupsKey, $signupsVal, $position);
+            }
+        }
+	});
 
 });
