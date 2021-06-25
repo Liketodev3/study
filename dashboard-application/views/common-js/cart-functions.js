@@ -49,7 +49,7 @@ var cart = {
 		});
 	},
 	removePromoCode: function () {
-		fcom.updateWithAjax(fcom.makeUrl('Cart', 'removePromoCode'), '', function (res) {
+		fcom.updateWithAjax(fcom.makeUrl('Cart', 'removePromoCode', [], confFrontEndUrl), '', function (res) {
 			cart.checkoutStep("getPaymentSummary", "");
 		});
 	},
