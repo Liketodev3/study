@@ -990,5 +990,6 @@
         position: static;
         background: var(--color-gray-400);
         transform: none !important;
+        padding: theme('padding.4');
     }
 }

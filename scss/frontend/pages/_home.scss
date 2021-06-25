@@ -49,10 +49,9 @@ $slideshow: "slideshow";
     min-width: 460px;
     max-width: 460px;
     color: #111;
-    
     transform: translateY(-50%);
     z-index: 2;
-    padding: theme('padding.14') theme('padding.18');
+    padding: theme('padding.14') theme('padding.14');
     text-align: center;
     backdrop-filter: saturate(180%) blur(20px);
     background: rgba(255,255,255,0.7);
@@ -192,6 +191,7 @@ $slideshow: "slideshow";
         margin-#{theme('direction.right','value')}: theme('margin.3');
         color: inherit;
         font-size: 1.1rem;
+        line-height: 23px;
     }
     ul{
         display: flex;
@@ -205,7 +205,7 @@ $slideshow: "slideshow";
                 display: flex;
                 align-items: center;
                 border: none;
-                padding: 0 2px;
+                padding: theme('padding.1');
                 color: inherit;
                 font-size: 1rem;
             }
