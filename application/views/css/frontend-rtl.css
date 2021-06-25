@@ -1481,7 +1481,7 @@ p {
       -ms-transform: translateY(-50%);
           transform: translateY(-50%);
   z-index: 2;
-  padding: var(--padding-14) var(--padding-18);
+  padding: var(--padding-14) var(--padding-14);
   text-align: center;
   -webkit-backdrop-filter: saturate(180%) blur(20px);
           backdrop-filter: saturate(180%) blur(20px);
@@ -1605,7 +1605,8 @@ p {
   .tags-inline b {
     margin-left: var(--margin-3);
     color: inherit;
-    font-size: 1.1rem; }
+    font-size: 1.1rem;
+    line-height: 23px; }
   .tags-inline ul {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -1626,7 +1627,7 @@ p {
             -ms-flex-align: center;
                 align-items: center;
         border: none;
-        padding: 0 2px;
+        padding: var(--padding-1);
         color: inherit;
         font-size: 1rem; }
       .tags-inline ul .tags-inline__item :hover {
@@ -2551,7 +2552,7 @@ p {
   max-width: 700px; }
   @media (max-width: 767px) {
     .step-tabs {
-      margin-bottom: var(--margin-14); } }
+      margin-bottom: var(--margin-6); } }
   .step-tabs .slider-tabs__action {
     border: none;
     font-size: 18px;
@@ -5798,7 +5799,8 @@ p {
     background: var(--color-gray-400);
     -webkit-transform: none !important;
         -ms-transform: none !important;
-            transform: none !important; } }
+            transform: none !important;
+    padding: var(--padding-4); } }
 
 .payment-page {
   height: 100%;
