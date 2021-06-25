@@ -469,11 +469,11 @@ class GuestUserController extends MyAppController
         if (empty($post['id']) || empty($accessToken)) {
             FatUtility::dieJsonError(Label::getLabel("MSG_THERE_WAS_SOME_PROBLEM_IN_AUTHENTICATING_YOUR_ACCOUNT_WITH_FACEBOOK,_PLEASE_TRY_WITH_DIFFERENT_LOGIN_OPTIONS", $this->siteLangId));
         }
+        $userFacebookId = $post['id'];
         $error = '';
-        if (!$this->verifyFacebookUserAccessToken($accessToken, $error)) {
+        if (!$this->verifyFacebookUserAccessToken($accessToken, $userFacebookId, $error)) {
             FatUtility::dieJsonError($error);
         }
-        $userFacebookId = $post['id'];
         $userFirstName = $post['first_name'];
         $userLastName = $post['last_name'];
         $user_type = FatApp::getPostedData('type', FatUtility::VAR_INT, User::USER_TYPE_LEANER);
@@ -1064,7 +1064,7 @@ class GuestUserController extends MyAppController
         }
     }
 
-    private static function verifyFacebookUserAccessToken($facebookUserAccessToken, &$error = '')
+    private static function verifyFacebookUserAccessToken($facebookUserAccessToken, $userFacebookId, &$error = '')
     {
         $facebookUserAccessToken = filter_var($facebookUserAccessToken, FILTER_SANITIZE_STRING);
         $myFacebookAppId = FatApp::getConfig('CONF_FACEBOOK_APP_ID', FatUtility::VAR_STRING, '');
@@ -1088,10 +1088,14 @@ class GuestUserController extends MyAppController
         curl_close($curl);
         $tokenData = json_decode($outputData, true);
         // && $tokenData['data']['application'] == $facebook_application 
-        if ($myFacebookAppId == $tokenData['data']['app_id']  && $tokenData['data']['is_valid'] == true) {
+        $error  = Label::getLabel('LBL_ERROR_TO_VERIFY_FACEBOOK_TOKEN');
+        if (!empty($tokenData['data']['error']) || $tokenData['data']['is_valid'] == false || empty($tokenData['data']['user_id'] || empty($tokenData['data']['app_id']))) {
+            $error = (!empty($tokenData['data']['error']['message'])) ? $tokenData['data']['error']['message'] : $error;
+            return false;
+        }
+        if ($myFacebookAppId == $tokenData['data']['app_id'] && $userFacebookId == $tokenData['data']['user_id'] && $tokenData['data']['is_valid'] == true) {
             return true;
         }
-        $error = (!empty($tokenData['data']['error']['message'])) ? $tokenData['data']['error']['message'] : Label::getLabel('LBL_error_to_verify_facebook_token');
         return false;
     }
 }

@@ -43,7 +43,7 @@
 			if (!response.id || typeof response == "undefined" || response.error) {
 				return;
 			} else {
-				console.log(response);
+				
 				response['type'] = <?php echo $userType; ?>;
 				response['accessToken'] = accessToken;
 				fcom.updateWithAjax(fcom.makeUrl('GuestUser', 'loginFacebook'), response, function(t) {
