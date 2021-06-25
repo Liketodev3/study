@@ -1327,7 +1327,7 @@ $card: 'card';
     margin: 0 auto theme('margin.14');
     max-width: 700px;
     @media(max-width: theme('breakpoints.md','value')){
-        margin-bottom: theme('margin.14');
+        margin-bottom: theme('margin.6');
     }
     .slider-tabs__action{
         border:none;
