@@ -1,0 +1,32 @@
+$error: "error";
+
+.#{$error} {
+
+    @media(min-width: theme('breakpoints.xl', 'value')) {
+        max-width: 992px;
+        margin: 0 auto;
+        padding: calc(30px + 3rem) 0;
+    }
+
+    &__media{
+        text-align: center;
+    }
+
+    &__content{
+        h3{
+            color: theme('color.dark');
+            font-weight: theme('font.weight.bold');
+            font-size: theme('font.size.xxxl');
+            margin-bottom: theme('margin.4');
+        }
+        p{
+            font-size: theme('font.size.h5');
+            color: theme('color.dark');
+            margin-bottom: theme('margin.14');
+        }
+
+        .list-group{
+            margin-bottom: theme('margin.14');
+        }
+    }
+}

@@ -1702,6 +1702,29 @@ ul {
       -ms-flex-pack: center;
           justify-content: center; }
 
+@media (min-width: 1199px) {
+  .error {
+    max-width: 992px;
+    margin: 0 auto;
+    padding: calc(30px + 3rem) 0; } }
+
+.error__media {
+  text-align: center; }
+
+.error__content h3 {
+  color: var(--color-dark);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-xxxl);
+  margin-bottom: var(--margin-4); }
+
+.error__content p {
+  font-size: var(--font-size-h5);
+  color: var(--color-dark);
+  margin-bottom: var(--margin-14); }
+
+.error__content .list-group {
+  margin-bottom: var(--margin-14); }
+
 .align-left {
   text-align: left !important; }
 
@@ -5681,12 +5704,6 @@ textarea[disabled] {
   .list-onethird li {
     width: 100%; } }
 
-.field_cover label .errorlist {
-  margin-bottom: -45px; }
-
-.errorlist.erlist_agree {
-  bottom: -26px; }
-
 .btn-file {
   position: relative; }
   .btn-file input[type=file] {
@@ -5728,6 +5745,10 @@ textarea[disabled] {
 .checkbox .input-helper::after {
   left: 6px;
   bottom: 3px; }
+
+.field-wraper label .errorlist {
+  position: absolute;
+  bottom: 0; }
 
 .label {
   color: #fff;
@@ -6379,10 +6400,6 @@ textarea[disabled] {
     .section {
       padding: var(--padding-12) 0; } }
 
-.section--gray,
-.section--grey {
-  background: #f1f1f1 !important; }
-
 .section-title {
   text-align: center;
   color: var(--color-dark);
@@ -6875,6 +6892,16 @@ textarea[disabled] {
   opacity: 0; }
 
 .slick-dots {
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+      -ms-transform: translateX(-50%);
+          transform: translateX(-50%); }
+  .slick-dots button {
+    width: 30px;
+    background: rgba(255, 255, 255, 0.4); }
+
+.slick-dots {
   text-align: center; }
   .slick-dots li {
     display: inline-block;
@@ -6885,7 +6912,7 @@ textarea[disabled] {
       height: 6px;
       border: none;
       font-size: 0;
-      background: rgba(255, 255, 255, 0.2); }
+      background: rgba(0, 0, 0, 0.2); }
     .slick-dots li.slick-active button {
       background: var(--color-primary); }
 
@@ -7782,7 +7809,8 @@ textarea[disabled] {
   position: relative;
   display: inline-block;
   vertical-align: top;
-  padding: 10px 10px 10px 50px;
+  padding: 10px 10px 10px 10px;
+  padding-left: 50px;
   word-break: break-all;
   max-width: 500px;
   text-align: left;
