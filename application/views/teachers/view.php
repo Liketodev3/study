@@ -202,7 +202,7 @@ if ($loggedUserId == $teacher['user_id']) {
                         <div class="-gap"></div>
                         <div class="note note--blank note--vertical-border">
                             <svg class="icon icon--sound">
-                                <use xlink:href="/YoCoach/images/sprite.yo-coach.svg#sound"></use>
+                                <use xlink:href="/images/sprite.yo-coach.svg#sound"></use>
                             </svg>
                             <p><b><?php echo Label::getLabel('LBL_Note:') ?></b><?php echo Label::getLabel('LBL_Not_finding_your_ideal_time?'); ?><a class="bold-600" href="javascript:void(0)" <?php echo $contactClick; ?>><?php echo Label::getLabel('LBL_Contact'); ?></a> <?php echo Label::getLabel('LBL_this_teacher_to_request_a_slot_outside_of_their_current_schedule'); ?></p>
                         </div>
