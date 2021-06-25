@@ -3729,7 +3729,7 @@ div.tagsinput div {
       left: 0rem; } }
   .menu--steps .profile--progress--menu .menu__icon::before {
     position: absolute;
-    right: 0.43rem;
+    left: 0.43rem;
     font-weight: 600;
     content: "!";
     color: #fff;

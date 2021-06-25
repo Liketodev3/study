@@ -574,7 +574,7 @@ $aside--progress--menu: "aside--progress--menu";
             }
             &::before{
                 position: absolute;
-                #{theme('direction.left','value')}: 0.43rem;
+                left: 0.43rem;
                 font-weight: 600;
                 content: "!";
                 color: #fff;

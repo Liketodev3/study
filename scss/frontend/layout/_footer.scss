@@ -2,7 +2,7 @@
 
 .section--footer{
     background: theme('color.dark-blue');
-    color: var(--color-white);
+    color: theme('color.white');
     @media(max-width: theme('breakpoints.md','value')) {
         padding: 0 !important;
     }
@@ -13,13 +13,13 @@
         padding-bottom: 50px;
     }
     .footer--row{
-        margin-bottom: calc(var(--margin-20) + 10px);
-        padding-bottom: calc(var(--margin-20) + 10px);
+        margin-bottom: theme('margin.20');
+        padding-bottom: theme('margin.20');
         border-bottom: 2px solid rgba(255,255,255,0.1);
 
         @media(max-width: theme('breakpoints.xl','value')) {
-            margin-bottom: calc(var(--margin-10) + 10px);
-            padding-bottom: calc(var(--margin-10) + 10px);
+            margin-bottom: theme('margin.10');
+            padding-bottom: theme('margin.10');
         }
 
         @media(max-width: theme('breakpoints.md','value')) {
@@ -45,7 +45,7 @@
             text-transform: uppercase;
             @media(max-width: theme('breakpoints.md','value')) {
                 margin: 0;
-                padding: var(--padding-5) var(--padding-5);
+                padding: theme('padding.5') theme('padding.5');
                 border-bottom: 1px solid rgba(255, 255, 255, 0.2);
                 cursor: pointer;
                 position: relative;
@@ -96,10 +96,10 @@
             input[type="text"]{
                 border-radius: 0;
                 height: 50px;
-                padding: 0 var(--padding-8);
+                padding: 0 theme('padding.8');
                 background-color: rgba(255,255,255,0.12);
                 border:transparent;
-                padding-#{theme('direction.right','value')}: var(--padding-12);
+                padding-#{theme('direction.right','value')}: theme('padding.12');
             }
             .icon{
                 position: absolute;
@@ -113,13 +113,13 @@
             margin: 1.2rem 0 1.4rem;
             .tags-inline__item{
                 display: inline-block;
-                padding: var(--padding-1) var(--padding-3);
+                padding: theme('padding.1') theme('padding.3');
                 font-size: 13px;
                 background: #FFFFFF1A;
-                margin-bottom: calc(var(--padding-4) - 2px);
+                margin-bottom: theme('padding.4');
                 color: rgba(255,255,255,0.7);
                 line-height: 18px;
-                margin-#{theme('direction.right','value')}: var(--margin-3);
+                margin-#{theme('direction.right','value')}: theme('margin.3');
                 &:first-child{
                     margin-#{theme('direction.left','value')}: 0;
                 }
@@ -128,9 +128,9 @@
     }
 
     .section-copyright{
-        padding: var(--padding-8) 0;
+        padding: theme('padding.8') 0;
         @media(max-width: theme('breakpoints.md','value')) {
-            padding: var(--padding-3) 0;
+            padding: theme('padding.3') 0;
         }
         .copyright{
             display: flex;
@@ -140,7 +140,7 @@
                 flex-direction: column;
                 text-align: center;
                 .footer__logo{
-                    margin-bottom: var(--margin-3);
+                    margin-bottom: theme('margin.3');
                     img{
                         max-width: 120px;
                     }
@@ -199,7 +199,7 @@
             min-width: 17px;
             max-width: 17px;
             height: 16px;
-            margin-#{theme('direction.right','value')}: calc(var(--margin-3) + 2px);
+            margin-#{theme('direction.right','value')}: theme('margin.3');
             opacity: 0.7;
             vertical-align: sub;
         }
@@ -214,15 +214,14 @@
 
 .footer_contact_details{
     li{
-        margin-bottom: var(--margin-4);
+        margin-bottom: theme('margin.4');
         padding: 0;
         .icon{
             margin-top: 4px;
         }
         @media(min-width: theme('breakpoints.md','value')) and (max-width: theme('breakpoints.lg','value')){
-            // flex-direction: column;
             .icon{
-                margin-bottom: var(--margin-3);
+                margin-bottom: theme('margin.3');
             }
         }
     }
@@ -231,22 +230,22 @@
 
 
 .settings{
-    margin-bottom: var(--margin-4);
+    margin-bottom: theme('margin.4');
     position: relative;
     &:last-child{
-        margin-bottom: var(--margin-0);
+        margin-bottom: 0;
     }
     .btn{
         justify-content: flex-start;
-        padding: 0 calc(var(--padding-6) - 1px);
-        border-color: var(--color-gray-300);
+        padding: 0 theme('padding.6');
+        border-color: theme('color.gray.300');
         &::before{
             content: "";
             position: absolute;
             width: 8px;
             height: 8px;
-            border-left: 2px solid var(--color-gray-500);
-            border-bottom: 2px solid var(--color-gray-500);
+            border-left: 2px solid theme('color.gray.500');
+            border-bottom: 2px solid theme('color.gray.500');
             #{theme('direction.right','value')}: 18px;
             top: 14px;
             transform: rotate(-45deg);
@@ -254,7 +253,7 @@
     }
 
     .dropdaown__title{
-        margin-bottom: var(--margin-2);
+        margin-bottom: theme('margin.2');
     }
 
     .settings__target {
@@ -276,20 +275,20 @@
             li{
                 transition: 0.3s all ease-in-out;
                 &:hover{
-                    background-color: var(--color-gray-100);
+                    background-color: theme('color.gray.100');
                 }
                 a{
-                    padding: var(--padding-3);
+                    padding: theme('padding.3');
                     display: block;
-                    color: var(--color-dark);
+                    color: theme('color.dark');
                     width: 100%;
                 }
             }
             .is--active{
-                background-color: var(--color-gray-100);
-                color: var(--color-primary);
+                background-color: theme('color.gray.100');
+                color: theme('color.primary');
                 a{
-                    color: var(--color-primary);
+                    color: theme('color.primary');
                     font-weight: 600;
                     position: relative;
                     &::before{
@@ -313,13 +312,13 @@
 .footer-group{
     .settings{
         .btn{
-            color: var(--color-white);
+            color: theme('color.white');
             opacity: 0.5;
         }
         .settings__target {
             .is--active{
                 a{
-                    color: var(--color-secondary) !important;
+                    color: theme('color.secondary') !important;
                 }
             }
         }
@@ -327,13 +326,13 @@
 }
 
 .form__element{
-    margin-bottom: var(--margin-6);
+    margin-bottom: theme('margin.6');
     
     input[type="text"]{
         border-radius: 0;
         background-color: transparent;
-        padding: 0 var(--padding-8);
-        padding-#{theme('direction.right','value')}: var(--padding-12);
+        padding: 0 theme('padding.8');
+        padding-#{theme('direction.right','value')}: theme('padding.12');
     }
 }
 
@@ -368,7 +367,7 @@
                 opacity: 1;
                 width: 24px;
                 height: 24px;
-                margin-#{theme('direction.right','value')}: var(--margin-3);
+                margin-#{theme('direction.right','value')}: theme('margin.3');
             }
         }
     }

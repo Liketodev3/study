@@ -475,18 +475,6 @@ textarea[disabled] {
     }
 }
 
-.field_cover{
-    label{
-        .errorlist{
-            margin-bottom: -45px;
-        }
-    }
-}
-
-.errorlist.erlist_agree {
-    bottom: -26px;
-}
-
 
 .btn-file{
     position: relative;
@@ -527,6 +515,15 @@ textarea[disabled] {
         &::after{
             left: 6px;
             bottom: 3px;
+        }
+    }
+}
+
+.field-wraper{
+    label{
+        .errorlist{
+            position: absolute;
+            bottom: 0;
         }
     }
 }

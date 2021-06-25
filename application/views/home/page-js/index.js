@@ -103,6 +103,16 @@ $("document").ready(function () {
     cssEase: 'linear',
     arrows: false,
     rtl: (langLbl.layoutDirection == 'rtl') ? true : false,
+    responsive: [
+      {
+        breakpoint: 576,
+        settings: {
+          slidesToShow: 1,
+          arrows: false,
+          dots: true
+        }
+      }
+    ]
   });
 
   $('.slider-onethird-js').slick({

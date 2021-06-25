@@ -1,22 +1,31 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
- <section class="section section--page">
-             <div class="container container--fixed">
-                 <div class="row justify-content-center">
-                     <div class="col-sm-12 col-lg-8 col-xl-6">
-                         
-                        <div class="message-display message-display--404">
-                            <img class="message-display__media" src="<?php echo CONF_WEBROOT_URL; ?>images/error-404.svg" alt="">
-                            <div class="message-display-content">
-                            <h2>Error</h2>
-                            <h5>Page not found!</h5>
-                            </div>
-                            <span class="-gap"></span>
-                            <hr>
-                            <span class="-gap"></span>
-                            <a href="<?php echo CommonHelper::generateUrl(''); ?>" class="btn btn--primary btn--large"><?php echo Label::getLabel('MSG_Back_To_Home');?></a>
-                        </div>
-                         
-                     </div>
-                 </div>
-             </div>
-         </section>
+ <section class="section section--gray">
+    <div class="container container--narrow">
+        <div class="error">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="error__media">
+                        <img src="<?php echo CONF_WEBROOT_URL; ?>images/404.png">
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="error__content align-left margin-bottom-5">
+                        <h3>Sorry! The page cannot be found.</h3>
+                        <p>The page you are looking for might have been removed, had its name changed, or is temporarily unavailable. Please try the following::</p>
+                        <ul class="list-group list-group--line">
+                            <li class="list-group--item">Make sure that the web address displayed is spelled and formatted correctly</li>
+                            <li class="list-group--item">If you reached here by clicking a link, let us know that the link is incorrect</li>
+                            <li class="list-group--item">Whoops! Forget that this ever happened, and go find a tutor..</li>
+                        </ul>
+                        <a href="<?php echo CommonHelper::generateUrl(''); ?>" class="btn btn--primary"><?php echo Label::getLabel('MSG_Find_a_Tutor');?></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+         
