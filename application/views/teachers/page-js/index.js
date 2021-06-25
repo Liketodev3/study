@@ -1,21 +1,21 @@
 var searchArr = [];
 $("document").ready(function () {
-    $(document).on('click','.btn--filters-js',function () {
+    $(document).on('click', '.btn--filters-js', function () {
         $(this).toggleClass("is-active");
         $('html').toggleClass("show-filters-js");
     });
 
 
-    $('.close--filters-js').click(function() {
+    $('.close--filters-js').click(function () {
         $(this).removeClass("is-active");
         $('html').removeClass("show-filters-js");
     });
 
-    $('input[name="teach_language_name"]').keyup(function(){
+    $('input[name="teach_language_name"]').keyup(function () {
         var text = $(this).val();
         $('.select-teach-lang-js').parent().hide();
-        $('.select-teach-lang-js:contains("'+text+'")').parent().show();      
-        });
+        $('.select-teach-lang-js:contains("' + text + '")').parent().show();
+    });
 
     var frm = document.frmTeacherSrch;
 
@@ -72,15 +72,29 @@ $("document").ready(function () {
         }
 
     });
+    $("#keyword").keyup(function (event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            let keywordValue = $("#keyword").val();
+            $('.userKeyword').parent().remove();
+            if (keywordValue != '') {
+                $('#searched-filters').find('ul').append("<li class='filter-li-js'><a href='javascript:void(0);' class='userKeyword tag__clickable' onclick='removeFilterUser(\"userKeyword\",this)' >" + langLbl.userFilterLabel + " : " + keywordValue + "</a></li>");
+                showAppliedFilterSection();
+            } else {
+                hideAppliedFilterSection();
+            }
+            searchTeachers(frm);
+        }
+    });
 
     $('#btnTeacherSrchSubmit').click(function () {
 
         let keywordValue = $("#keyword").val();
+        $('.userKeyword').parent().remove();
         if (keywordValue != '') {
-
             $('#searched-filters').find('ul').append("<li class='filter-li-js'><a href='javascript:void(0);' class='userKeyword tag__clickable' onclick='removeFilterUser(\"userKeyword\",this)' >" + langLbl.userFilterLabel + " : " + keywordValue + "</a></li>");
+            showAppliedFilterSection();
         } else {
-            $('.userKeyword').parent().remove();
             hideAppliedFilterSection();
         }
         searchTeachers(frm);
@@ -341,7 +355,7 @@ function htmlEncode(value) {
     addFilter = function (id, obj, from) {
         $('.filter-tags').show();
         var click = "onclick=removeFilter('" + id + "',this)";
-        var filter = htmlEncode($(obj).parents(".filter-form__inner, .filter-group__inner").find("h6").text());
+        var filter = htmlEncode($(obj).parents(".filter-colum, .filter-group__inner").find(".filter__trigger-label").text());
         $filterVal = htmlEncode($(obj).parents(".selection-tabs__label, label").find(".name").text());
         if (!$('#searched-filters').find('a').hasClass(id)) {
             id += ' tag__clickable';
@@ -398,7 +412,7 @@ function htmlEncode(value) {
         $('.filter-tags').show();
         $('.price').parent("li").remove();
         if (!$('#searched-filters').find('a').hasClass('price')) {
-            var filterCaption = htmlEncode($("#price_range").parents('.filter-form__inner').find("h6").text());
+            var filterCaption = htmlEncode($("#price_range").parents('.filter').find(".filter__trigger-label").text());
             var varcurrencySymbolLeft = $('<textarea />').html(currencySymbolLeft).text();
             var varcurrencySymbolRight = $('<textarea />').html(currencySymbolRight).text();
             $('#searched-filters').find('ul').append('<li class="filter-li-js"><a href="javascript:void(0)" class="price tag__clickable" onclick="removePriceFilter(this)" >' + filterCaption + ': ' + varcurrencySymbolLeft + $("input[name=priceFilterMinValue]").val() + varcurrencySymbolRight + ' - ' + varcurrencySymbolLeft + $("input[name=priceFilterMaxValue]").val() + varcurrencySymbolRight + '</a></li>');
@@ -411,9 +425,8 @@ function htmlEncode(value) {
     removePriceFilter = function () {
         updatePriceFilter();
         searchTeachers(document.frmTeacherSrch);
-        hideAppliedFilterSection();
         $('.price').parent("li").remove();
-
+        hideAppliedFilterSection();
     }
     removePriceFilterCustom = function (e, minPrice, maxPrice) {
         $('input[name="priceFilterMinValue"]').val(minPrice);
