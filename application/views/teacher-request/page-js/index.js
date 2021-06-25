@@ -11,5 +11,13 @@ $("document").ready(function () {
             $('#hide-password').show();
             $('#show-password').hide();
         }
-    })
+    });
+
+        $('.applytoteach').click(function(){
+            $("html,body").animate({scrollTop : 0},700);
+            return false;
+        });
+
+
+
 });
