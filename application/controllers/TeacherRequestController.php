@@ -133,10 +133,14 @@ class TeacherRequestController extends MyAppController
         if (empty($request)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
         }
+        $request['utrequest_teach_slanguage_id'] = empty($request['utrequest_teach_slanguage_id']) ? '[]' : $request['utrequest_teach_slanguage_id'];
+        $request['utrequest_language_speak'] = empty($request['utrequest_language_speak']) ? '[]' : $request['utrequest_language_speak'];
+        $request['utrequest_language_speak_proficiency'] = empty($request['utrequest_language_speak_proficiency']) ? '[]' : $request['utrequest_language_speak_proficiency'];
+  
         $request['utrequest_teach_slanguage_id'] = json_decode($request['utrequest_teach_slanguage_id'], true);
         $request['utrequest_language_speak'] = json_decode($request['utrequest_language_speak'], true);
         $request['utrequest_language_speak_proficiency'] = json_decode($request['utrequest_language_speak_proficiency'], true);
-        
+            
         $spokenLangs = SpokenLanguage::getAllLangs($this->siteLangId, true);
         $frm = $this->getFormStep3($this->siteLangId, $spokenLangs);
         $frm->fill($request);
