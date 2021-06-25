@@ -1,5 +1,43 @@
 This file shares the details of the Yo!Coach version and change log.
 
+Release Number: RV-2.3
+
+Release Date: 2021-06-25
+
+System requirements:
+
+    PHP version upgrade to 7.4
+    MySQL version upgrade to 5.7.8 or above (JSON support required)
+
+Updates/Enhancements:
+    
+    - Refactored URL rewrites
+    - Refactored meta tags
+    - New Design
+        - Dashboard
+        - Homepage
+        - Find a tutor page
+        - Tutor profile page
+        - Checkout Pages
+        - Contact us
+        - Group classes
+        - About us
+        - Apply to Teach
+    - Refactored Report an issue
+    - Refactored Apply to Teach
+    - Multiple pricing slabs 
+    - Admin can change user's password
+    - Admin can edit robots.txt
+    - Support to php7.4
+    - Delete User Personal Details under GDPR
+
+Fixes:
+
+    The group class filter is working fine on the group classes page
+    Various fixes in general and weekly availability
+
+
+-------------------------------------------------------------------
 
 Release Number: TV-2.21.2.20210625
 
