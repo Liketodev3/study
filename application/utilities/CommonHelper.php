@@ -1613,7 +1613,7 @@ class CommonHelper extends FatUtility
 
     public static function demoUrl(): bool
     {
-        return true;
+        /* return true; */
         if (false !== strpos($_SERVER['SERVER_NAME'], 'teach.yo-coach.com')) {
             return true;
         }
