@@ -2743,6 +2743,10 @@ p {
   .filter-secondary .filter__trigger {
     margin-left: var(--margin-5); } }
 
+@media (min-width: 1199px) {
+  .filter-secondary .filter__trigger-label {
+    font-weight: normal; } }
+
 .filter-search {
   width: 100%; }
   @media (max-width: 767px) {

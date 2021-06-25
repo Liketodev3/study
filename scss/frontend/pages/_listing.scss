@@ -93,6 +93,13 @@ $filter-form: "filter-form";
             @media(min-width: theme('breakpoints.xl','value')){
                 margin-#{theme('direction.right','value')}: theme('margin.5');
             }
+
+            
+        }
+        &__trigger-label{
+            @media(min-width: theme('breakpoints.xl','value')){
+                font-weight: normal;
+            }
         }
     }
 
