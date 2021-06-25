@@ -561,3 +561,4 @@ REPLACE INTO `tbl_banner_locations` (`blocation_id`, `blocation_key`, `blocation
 
 REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_delete_user_Message', '1', 'Teacher does not exist, please contact the support %s');
 
+UPDATE `tbl_configurations` SET `conf_val` = 'TV-2.21.2.20210625' WHERE `conf_name` = 'CONF_YOCOACH_VERSION';
