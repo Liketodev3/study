@@ -6,7 +6,7 @@ if ($controllerName != 'GuestUser' && $controllerName != 'Error' && $controllerN
 $layoutDirection = CommonHelper::getLayoutDirection();
 ?>
 <!doctype html>
-<html lang="en" dir="<?php echo $layoutDirection; ?>">
+<html lang="en" dir="<?php echo $layoutDirection; ?>" class="<?php echo (FatApp::getConfig('conf_auto_restore_on', FatUtility::VAR_INT, 1) && CommonHelper::demoUrl()) ? 'sticky-demo-header': '' ?>">
 <head>
 <!-- Basic Page Needs ======================== -->
 <meta charset="utf-8">
@@ -91,6 +91,12 @@ if (FatApp::getConfig('CONF_ENABLE_PWA', FatUtility::VAR_BOOLEAN, false)) { ?>
 </head>
 
 <body class="<?php echo $bodyClass.' '.strtolower($controllerName).' '.strtolower($action).' '.$mainDashboardClass; ?>">
+<?php
+    $autoRestartOn =  FatApp::getConfig('conf_auto_restore_on', FatUtility::VAR_INT, 1);
+    if($autoRestartOn == applicationConstants::YES && CommonHelper::demoUrl()) {
+        $this->includeTemplate( 'restore-system/header-bar.php');
+    }
+?>
     <div class="site">
         <!-- [ SIDE BAR ========= -->
         <aside class="sidebar">

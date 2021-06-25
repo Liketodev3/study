@@ -17,3 +17,8 @@ $layoutDirection = CommonHelper::getLayoutDirection();
 ?>
 
 <body class="<?php echo $htmlBodyClassesString; ?>" <?php echo (strtolower($layoutDirection) == 'rtl') ? 'dir="rtl"' : ""; ?>>
+<?php
+$autoRestartOn =  FatApp::getConfig('conf_auto_restore_on', FatUtility::VAR_INT, 1);
+if($autoRestartOn == applicationConstants::YES && CommonHelper::demoUrl()) {
+    $this->includeTemplate( 'restore-system/header-bar.php');
+}
