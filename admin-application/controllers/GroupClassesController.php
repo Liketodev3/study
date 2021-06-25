@@ -126,7 +126,7 @@ class GroupClassesController extends AdminBaseController
                 $post['grpcls_end_datetime'] = $class_details['grpcls_end_datetime'];
             }
         } else {
-            die('Invalid request');
+            FatUtility::dieJsonError(Label::getLabel("INVALID_REQUEST"));
         }
         $post = $frm->getFormDataFromArray($post);
         if ($post === false) {
@@ -158,8 +158,7 @@ class GroupClassesController extends AdminBaseController
         if ($isAvailable) {
             $msg = Label::getLabel('LBL_Slot_is_already_added_for_1_to_1_class_whichever_first_booked_will_be_booked!');
         }
-        $this->set('msg', $msg);
-        $this->_template->render(false, false, 'json-success.php');
+        FatUtility::dieJsonSuccess($msg);
     }
 
     public function removeClass($grpclsId)
