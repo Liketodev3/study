@@ -12,33 +12,6 @@
 		}
 	};
 
-	/*topReferers = function(interval){
-		$('.topReferers').html('<li>'+fcom.getLoader()+'</li>');
-		data="rtype=top_referrers&interval="+interval;
-
-		fcom.ajax(fcom.makeUrl('home', 'dashboardStats'), data, function(t) {
-			$('.topReferers').html(t);
-		});
-	};
-
-	topCountries = function(interval){
-		$('.topCountries').html('<li>'+fcom.getLoader()+'</li>');
-		data="rtype=top_countries&interval="+interval;
-
-		fcom.ajax(fcom.makeUrl('home', 'dashboardStats'), data, function(t) {
-			$('.topCountries').html(t);
-		});
-	};
-
-	topProducts = function(interval){
-		$('.topProducts').html('<li>'+fcom.getLoader()+'</li>');
-		data="rtype=top_products&interval="+interval;
-
-		fcom.ajax(fcom.makeUrl('home', 'dashboardStats'), data, function(t) {
-			$('.topProducts').html(t);
-		});
-	};*/
-
 	getTopLessonLanguage = function(interval){
 		$('.topLessonLanguage').html('<li>'+fcom.getLoader()+'</li>');
 		data="rtype=top_lesson_languages&interval="+interval;
