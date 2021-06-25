@@ -22,9 +22,6 @@ $slideshow: "slideshow";
 
     .slick-dots {
         bottom: 32px;
-        @media(max-width: theme('breakpoints.md','value')){
-            display: none !important;
-        }
     }
 
     
@@ -35,7 +32,7 @@ $slideshow: "slideshow";
     transform: translateX(-50%);
     button{
         width: 30px;
-      background: rgba(255, 255, 255, 0.4);
+        background: rgba(255, 255, 255, 0.4);
         
     }    
 }
@@ -52,10 +49,9 @@ $slideshow: "slideshow";
     min-width: 460px;
     max-width: 460px;
     color: #111;
-    
     transform: translateY(-50%);
     z-index: 2;
-    padding: theme('padding.14') theme('padding.18');
+    padding: theme('padding.14') theme('padding.14');
     text-align: center;
     backdrop-filter: saturate(180%) blur(20px);
     background: rgba(255,255,255,0.7);
@@ -195,6 +191,7 @@ $slideshow: "slideshow";
         margin-#{theme('direction.right','value')}: theme('margin.3');
         color: inherit;
         font-size: 1.1rem;
+        line-height: 23px;
     }
     ul{
         display: flex;
@@ -208,9 +205,9 @@ $slideshow: "slideshow";
                 display: flex;
                 align-items: center;
                 border: none;
-                padding: 0 2px;
+                padding: theme('padding.1');
                 color: inherit;
-                font-size: 1.1rem;
+                font-size: 1rem;
             }
             :hover{
                 color: theme('color.secondary');
@@ -1070,7 +1067,7 @@ $card: 'card';
 }
 
 .step{
-    padding-bottom: theme('padding.20');
+    padding-bottom: theme('padding.14');
 
     @media(max-width: theme('breakpoints.md','value')){
         padding-bottom: theme('padding.12');
@@ -1327,10 +1324,10 @@ $card: 'card';
     
 
 .step-tabs{
-    margin: 0 auto theme('margin.24');
+    margin: 0 auto theme('margin.14');
     max-width: 700px;
     @media(max-width: theme('breakpoints.md','value')){
-        margin-bottom: theme('margin.14');
+        margin-bottom: theme('margin.6');
     }
     .slider-tabs__action{
         border:none;

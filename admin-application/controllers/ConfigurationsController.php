@@ -268,7 +268,7 @@ class ConfigurationsController extends AdminBaseController
 
     public function redirect()
     {
-        require_once(CONF_INSTALLATION_PATH . 'library/analytics/AnalyticsAPI.php');
+        require_once(CONF_INSTALLATION_PATH . 'library/third-party/analytics/AnalyticsAPI.php');
         $analyticArr = [
             'clientId' => FatApp::getConfig("CONF_ANALYTICS_CLIENT_ID"),
             'clientSecretKey' => FatApp::getConfig("CONF_ANALYTICS_SECRET_KEY"),

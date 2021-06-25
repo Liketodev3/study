@@ -559,7 +559,7 @@ DELETE FROM `tbl_attached_files` WHERE `afile_type` = 9 AND `afile_record_id` NO
 REPLACE INTO `tbl_banner_locations` (`blocation_id`, `blocation_key`, `blocation_identifier`, `blocation_banner_width`, `blocation_banner_height`, `blocation_active`) VALUES
 (3, 'BLOCK_HOW_IT_WORKS', 'How It Works', '500.00', '500.00', 1);
 
-REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_delete_user_Message', '1', 'Teacher Account Deleted , Please Contact to support %s');
+REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_delete_user_Message', '1', 'Teacher does not exist, please contact the support %s');
 
 REPLACE INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `label_caption`) VALUES (NULL, 'LBL_delete_user_Message', '1', 'Teacher Account Deleted , Please Contact to support %s');
 

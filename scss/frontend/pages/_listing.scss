@@ -74,7 +74,7 @@ $filter-form: "filter-form";
 
 
 .#{$filter-secondary}{ 
-    
+    padding-top: theme('padding.2');
     .#{$filter-row}{
     
         @media(min-width: theme('breakpoints.xl','value')){
@@ -93,16 +93,32 @@ $filter-form: "filter-form";
             @media(min-width: theme('breakpoints.xl','value')){
                 margin-#{theme('direction.right','value')}: theme('margin.5');
             }
+
+            
+        }
+        &__trigger-label{
+            @media(min-width: theme('breakpoints.xl','value')){
+                font-weight: normal;
+            }
         }
     }
 
+    @media(min-width: theme('breakpoints.xl','value')){
+        .#{$filter-colum}{ 
+            &:first-child{
+                .#{$filter}{
+                    &__trigger{
+                        padding-#{theme('direction.left','value')}: 0;
+                    }
+                }
+            }        
+        }
+    }
 }
 
 
 .#{$filter-search}{ 
-    // @media(min-width: theme('breakpoints.md','value')){
-    //     height:60px;
-    // }
+
    width: 100%;
    @media(max-width: theme('breakpoints.md','value')){
         border: 1px solid theme('color.gray.300');

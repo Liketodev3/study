@@ -983,3 +983,13 @@
         text-align: left !important;
     }
 }
+
+.is--blog .banner--main .banner__content{
+
+    @media(max-width: theme('breakpoints.md','value')){
+        position: static;
+        background: var(--color-gray-400);
+        transform: none !important;
+        padding: theme('padding.4');
+    }
+}
