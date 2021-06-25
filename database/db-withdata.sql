@@ -6709,7 +6709,7 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (6644, 'LBL_Item_Price:_{item-price}/lesson', 1, 'Item Price: {item-price}/lesson'),
 (6645, 'LBL_TEACH_LANGUAGE_:_{teach-language}', 1, 'Teach Language : {teach-language}'),
 (6646, 'LBL_{teach-lang},{n}_minutes_of_Lesson', 1, '{teach-lang},{n} Minutes Of Lesson'),
-(6647, 'LBL_TOTAL_PRICE_-_%s', 1, 'Total Price - %s'),
+(6647, 'LBL_TOTAL_PRICE_-_%s', 1, 'Total Price: %s'),
 (6648, 'LBL_Lesson_ongoing', 1, 'Lesson Ongoing'),
 (6649, 'LBL_Add_flash_card', 1, 'Add Flash Card'),
 (6650, 'LBL_Add_Lesson_Plan', 1, 'Add Lesson Plan'),

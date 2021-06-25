@@ -10,10 +10,10 @@ class RestoreSystemController extends MyAppController
     const CONF_FILE = 'public/settings.php';
 
     const BACKUP_FILE = CONF_INSTALLATION_PATH . "restore/database/yocoach-restore-db.sql";
-    // const DATABASE_FIRST = 'yocoach87h1y172_demo_yocch';
-    // const DATABASE_SECOND = 'yocoach87h1y172_demo_yocch2';
-	const DATABASE_FIRST = 'yocoach87h1y172_test_restore';
-   const DATABASE_SECOND = 'yocoach87h1y172_test_restore_2';
+    const DATABASE_FIRST = 'yocoach87h1y172_demo_yocch';
+    const DATABASE_SECOND = 'yocoach87h1y172_demo_yocch2';
+	/* const DATABASE_FIRST = 'yocoach87h1y172_test_restore';
+    const DATABASE_SECOND = 'yocoach87h1y172_test_restore_2'; */
 
     const RESTORE_TIME_INTERVAL_HOURS = 4;
 
