@@ -123,7 +123,7 @@ switch ($frmType){
 		if( AttachedFile::getAttachment( AttachedFile::FILETYPE_FRONT_WHITE_LOGO, 0, 0, $lang_id ) ){
 			$desktopWhiteLogoFld->htmlAfterField .= '<div class="uploaded--image"><img src="'.FatUtility::generateFullUrl('Image','siteWhiteLogo',array($lang_id), CONF_WEBROOT_FRONT_URL).'?'.time().'"> ';
             if($canEdit){
-                $desktopWhiteLogoFld->htmlAfterField .= '<a  class="remove--img" href="javascript:void(0);" onclick="removeDesktopLogo('.$lang_id.')" ><i class="ion-close-round"></i></a>';
+                $desktopWhiteLogoFld->htmlAfterField .= '<a  class="remove--img" href="javascript:void(0);" onclick="removeDesktopWhiteLogo('.$lang_id.')" ><i class="ion-close-round"></i></a>';
             }
             $desktopWhiteLogoFld->htmlAfterField .= '</div><br>';
 		}

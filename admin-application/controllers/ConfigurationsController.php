@@ -155,9 +155,9 @@ class ConfigurationsController extends AdminBaseController
         if (!$record->update($post)) {
             FatUtility::dieJsonError($record->getError());
         }
-       
+
         if (!empty($unselectedSlot)) {
-            
+
             $teachLangPrice = new TeachLangPrice();
             $teachLangPrice->deleteTeachSlots($unselectedSlot);
 
@@ -320,6 +320,18 @@ class ConfigurationsController extends AdminBaseController
         $this->objPrivilege->canEditGeneralSettings();
         $lang_id = FatUtility::int($lang_id);
         $fileHandlerObj = new AttachedFile();
+        if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_FRONT_LOGO, 0, 0, 0, $lang_id)) {
+            Message::addErrorMessage($fileHandlerObj->getError());
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+        $this->set('msg', Label::getLabel('MSG_Deleted_Successfully', $this->adminLangId));
+        $this->_template->render(false, false, 'json-success.php');
+    }
+    public function removeDesktopWhiteLogo($lang_id = 0)
+    {
+        $this->objPrivilege->canEditGeneralSettings();
+        $lang_id = FatUtility::int($lang_id);
+        $fileHandlerObj = new AttachedFile();
         if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_FRONT_WHITE_LOGO, 0, 0, 0, $lang_id)) {
             Message::addErrorMessage($fileHandlerObj->getError());
             FatUtility::dieJsonError(Message::getHtml());
@@ -448,7 +460,7 @@ class ConfigurationsController extends AdminBaseController
         $lang_id = FatUtility::int($lang_id);
         $fileHandlerObj = new AttachedFile();
         if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_APPLY_TO_TEACH_BANNER, 0, 0, 0, $lang_id)) {
-            
+
             FatUtility::dieJsonError($fileHandlerObj->getError());
         }
         $this->set('msg', Label::getLabel('MSG_Deleted_Successfully', $this->adminLangId));
@@ -557,12 +569,17 @@ class ConfigurationsController extends AdminBaseController
 
                 $bookingSlots = applicationConstants::getBookingSlots();
                 $fld = $frm->addCheckBoxes(Label::getLabel("LBL_Lesson_durations", $this->adminLangId), "CONF_PAID_LESSON_DURATION", $bookingSlots, array(), array('class' => 'list-inline'));
-                $fld->htmlAfterField = "<br><small>".Label::getLabel("htmlAfterField_LESSON_DURATIONS_TEXT", $this->adminLangId).".</small>";
+                $fld->htmlAfterField = "<br><small>" . Label::getLabel("htmlAfterField_LESSON_DURATIONS_TEXT", $this->adminLangId) . ".</small>";
 
                 $frm->addRadioButtons(Label::getLabel("LBL_Default_Lesson_duration",  $this->adminLangId), "CONF_DEFAULT_PAID_LESSON_DURATION", $bookingSlots, '', array('class' => 'list-inline'))->requirements()->setRequired();
-                
-                $frm->addRadioButtons(Label::getLabel("LBL_Trial_Lesson_duration",  $this->adminLangId), "CONF_TRIAL_LESSON_DURATION",
-                $bookingSlots, '', array('class' => 'list-inline'))->requirements()->setRequired();
+
+                $frm->addRadioButtons(
+                    Label::getLabel("LBL_Trial_Lesson_duration",  $this->adminLangId),
+                    "CONF_TRIAL_LESSON_DURATION",
+                    $bookingSlots,
+                    '',
+                    array('class' => 'list-inline')
+                )->requirements()->setRequired();
                 $fld3 = $frm->addIntegerField(Label::getLabel("LBL_END_LESSON_DURATION", $this->adminLangId), "CONF_ALLOW_TEACHER_END_LESSON");
                 $fld3->htmlAfterField = "<br><small>" . Label::getLabel("LBL_Duration_After_Teacher_Can_End_Lesson_(In_Minutes)", $this->adminLangId) . ".</small>";
                 $fld3 = $frm->addIntegerField(Label::getLabel("LBL_LEARNER_REFUND_PERCENTAGE", $this->adminLangId), "CONF_LEARNER_REFUND_PERCENTAGE");
@@ -743,5 +760,4 @@ class ConfigurationsController extends AdminBaseController
             FatUtility::dieJsonError($e->getMessage());
         }
     }
-
 }

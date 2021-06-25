@@ -187,11 +187,12 @@ $activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::V
                         }
                         break;
                 }
-                if (!empty($statusInfoLabel)) {
+                if($lesson['user_deleted']){
+                    echo "<p>".sprintf(Label::getLabel('LBL_delete_user_Message'),'<a class="color-secondary -link-underline" href="'.CommonHelper::generateUrl('Contact','index',[],CONF_WEBROOT_FRONTEND).'">'.Label::getLabel('LBL_Contact').'</a>')."</p>";
+                }else if(!empty($statusInfoLabel)) {
                     echo "<p>" . $statusInfoLabel . "</p>";
                 }
-                if ($showGoToDashboardBtn) {
-                ?>
+                if ($showGoToDashboardBtn) { ?>
                     <a href="<?php echo CommonHelper::generateUrl('LearnerScheduledLessons'); ?>" class="btn bg-primary"><?php echo Label::getLabel('LBL_Go_to_Dashboard.'); ?></a>
                 <?php } ?>
                 <?php ?>

@@ -207,7 +207,10 @@ class TeacherWeeklySchedule extends MyAppModel
         }
         $db = FatApp::getDb();
         $srch = new ScheduledLessonSearch(false);
-        $userIds = [$userId, UserAuthentication::getLoggedUserId()];
+        $userIds = [$userId];
+        if(UserAuthentication::isUserLogged()){
+            array_push($userIds, UserAuthentication::getLoggedUserId(true));
+        }
         $srch->checkUserLessonBooking($userIds, $startTime, $endTime);
         $srch->setPageSize(1);
         $getResultSet = $srch->getResultSet();

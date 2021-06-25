@@ -161,6 +161,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $srch->applySearchConditions($post);
         $srch->addFld('tlpn.tlpn_title');
         $srch->addFld('tlpn.tlpn_id');
+        $srch->addFld('ut.user_deleted');
         $srch->doNotCalculateRecords();
         $srch->setPageSize(1);
         $lesson = current($srch->fetchAll());
