@@ -112,6 +112,13 @@ $(document).ready(function(){
 			getLangForm( document.frmConfiguration.form_type.value, lang_id );
 		});
 	};
+
+	removeDesktopWhiteLogo = function(lang_id){
+		if(!confirm(langLbl.confirmDeleteImage)){return;}
+		fcom.updateWithAjax(fcom.makeUrl('Configurations', 'removeDesktopWhiteLogo', [lang_id]), '', function(t) {
+			getLangForm( document.frmConfiguration.form_type.value, lang_id );
+		});
+	};
 	
 	removeEmailLogo = function(lang_id){
 		if(!confirm(langLbl.confirmDeleteImage)){return;}
