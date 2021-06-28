@@ -2,7 +2,7 @@
 	<div class="box-group">
 		<div class="box -align-center" style="margin-bottom: 30px;">
 			<div class="-padding-20">
-				<div class="avtar avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($userDetails['user_first_name']); ?>">
+				<div class="avtar avtar--centered" data-title="<?php echo CommonHelper::getFirstChar($userDetails['user_first_name']); ?>">
 					<?php
 					if (true == User::isProfilePicUploaded($userDetails['user_id'])) {
 						$img = CommonHelper::generateUrl('Image', 'user', array($userDetails['user_id'], 'MEDIUM')) . '?' . time();
@@ -46,7 +46,7 @@
 						<?php foreach ($teacherIds as $teacherId) { ?>
 							<li>
 								<a href="javascript:void(0)">
-									<figure class="avtar avtar--small" data-text="A">
+									<figure class="avtar avtar--small" data-title="A">
 										<img src="<?php echo CommonHelper::generateUrl('image', 'user', array($teacherId)) ?>" alt="">
 									</figure>
 								</a>

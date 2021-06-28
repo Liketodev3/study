@@ -21,7 +21,7 @@ if (empty($arr_listing)) {
 ?>
         <div class="msg-list">
             <div class="msg-list__left">
-                <div class="avtar avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($imgUserName); ?>">
+                <div class="avtar avtar--centered" data-title="<?php echo CommonHelper::getFirstChar($imgUserName); ?>">
                     <?php
                     if (true == User::isProfilePicUploaded($imgUserId)) {
                         echo '<img src="' . CommonHelper::generateUrl('Image', 'user', array($imgUserId), CONF_WEBROOT_FRONT_URL) . '?' . time() . '" alt="' . $imgUserName . '" />';

@@ -4,7 +4,7 @@
 if( UserAuthentication::isUserLogged() ){ ?>
 <li class="nav__dropdown nav__dropdown--account">
     <a href="javascript:void(0)" class="nav__dropdown-trigger nav__dropdown-trigger-js">
-        <div class="avtar avtar--xsmall -display-inline" data-text="<?php echo CommonHelper::getFirstChar(UserAuthentication::getLoggedUserAttribute('user_first_name')); ?>">
+        <div class="avtar avtar--xsmall -display-inline" data-title="<?php echo CommonHelper::getFirstChar(UserAuthentication::getLoggedUserAttribute('user_first_name')); ?>">
 			<?php
 			if( true == User::isProfilePicUploaded() ){
 				echo '<img src="'.CommonHelper::generateUrl('Image','user', array( UserAuthentication::getLoggedUserId() )).'?'.time().'" alt="" />';

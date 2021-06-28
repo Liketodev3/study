@@ -3024,6 +3024,12 @@ strong.span-right {
     font-size: 16px;
     font-weight: 600; }
 
+.iti--separate-dial-code .iti__selected-dial-code {
+  margin-right: 6px; }
+
+.iti__flag-box {
+  margin-left: 6px; }
+
 .screen-chat {
   position: absolute;
   left: 0;

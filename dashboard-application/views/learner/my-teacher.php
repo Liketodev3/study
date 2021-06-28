@@ -21,7 +21,7 @@
 							
 							<!-- Image[ -->
 							<div class="col-xl-3 col-lg-3 col-md-4 col-sm-4 -align-center">
-								<div class="avtar avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($teacher['user_first_name']); ?>">
+								<div class="avtar avtar--centered" data-title="<?php echo CommonHelper::getFirstChar($teacher['user_first_name']); ?>">
 									<?php 
 									if( true == User::isProfilePicUploaded( $teacher['user_id'] ) ){
 										$img = CommonHelper::generateUrl('Image','User', array( $teacher['user_id'] )); 

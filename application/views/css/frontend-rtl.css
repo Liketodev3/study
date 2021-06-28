@@ -6176,7 +6176,7 @@ p {
     .panel-head__right {
       position: absolute;
       top: 14%;
-      right: 0; } }
+      left: 0; } }
   @media (max-width: 767px) {
     .panel-head__right {
       margin-top: var(--margin-6); } }
@@ -6599,7 +6599,7 @@ p {
   height: 40px;
   border: 1px solid var(--color-gray-200);
   position: relative;
-  margin-left: var(--margin-4); }
+  margin-right: var(--margin-4); }
   .select--box::before {
     content: "";
     position: absolute;

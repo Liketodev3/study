@@ -36,7 +36,7 @@ foreach ($lessonArr as $key => $lessons) {
                 <div class="col-list">
                     <div class="d-lg-flex align-items-center">
                         <div class="col-xl-4 col-lg-4 col-md-12">
-                            <div class="avtar avtar--normal" data-text="<?php echo CommonHelper::getFirstChar($lesson['teacherFname']); ?>">
+                            <div class="avtar avtar--normal" data-title="<?php echo CommonHelper::getFirstChar($lesson['teacherFname']); ?>">
                                 <?php
                                 if (true == User::isProfilePicUploaded($lesson['teacherId'])) {
                                     $img = CommonHelper::generateUrl('Image', 'user', array($lesson['teacherId']), CONF_WEBROOT_FRONT_URL) . '?' . time();

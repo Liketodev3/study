@@ -28,7 +28,7 @@ foreach ($list as $sn => $order) {
 			break; 
 
 			case 'profile':
-                $div = $td->appendElement('div', array('class'=>'avtar avtar--xsmall','data-text'=> 'A'));	
+                $div = $td->appendElement('div', array('class'=>'avtar avtar--xsmall','data-title'=> 'A'));	
 			if($order['noti_type'] != UserNotifications::NOTICATION_FOR_TEACHER_APPROVAL){
 
                 $picId = ($order['noti_sub_record_id']==0)?UserAuthentication::getLoggedUserId():$order['noti_sub_record_id'];
