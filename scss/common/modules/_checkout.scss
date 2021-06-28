@@ -200,11 +200,11 @@
                     margin-#{theme('direction.right','value')}: theme('margin.2');
                 }
             }
-            span{
-                font-size: unset;
-                text-transform: lowercase;
-                font-weight: normal;
-            }
+            // span{
+            //     font-size: unset;
+            //     text-transform: lowercase;
+            //     font-weight: normal;
+            // }
         }
         
     }
@@ -240,7 +240,7 @@
 .selection--lesson{
     .selection-tabs__title{
         text-align: center;
-        span{
+        .per-lesson{
             font-size: 0.93rem;
             color: theme('color.gray.600');
         }

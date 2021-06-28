@@ -2,6 +2,9 @@
 $form-inline: "form-inline";
 .#{$form-inline}{ position: relative; display: flex; flex-wrap: wrap; align-items: center;
     &__item{padding-#{theme('direction.right','value')}: theme('padding.6');
+        @media(max-width:theme('breakpoints.lg','value')){
+            padding-#{theme('direction.right','value')}: theme('padding.3');
+        }
         &:last-child{padding-#{theme('direction.right','value')}: 0;}
     }
    

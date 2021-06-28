@@ -109,16 +109,7 @@
                                         echo $frmSrch->getFieldHTML('page');
                                         ?>
                                     </div>
-                                    <div class="search-form__action search-form__action--submit">
-                                        <?php echo $frmSrch->getFieldHTML('btn_submit'); ?>
-                                        <span class="btn btn--equal btn--transparent color-black">
-                                            <svg class="icon icon--search icon--small"><use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#search'; ?>"></use></svg>
-                                        </span>
-                                    </div>
-                                    <div class="search-form__action search-form__action--reset">
-                                        <?php echo $frmSrch->getFieldHTML('btn_reset'); ?>
-                                        <span class="close"></span>
-                                    </div>
+                                
                                 </div>
                                 </form>
                             </div>

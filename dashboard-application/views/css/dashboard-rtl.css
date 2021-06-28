@@ -4004,6 +4004,9 @@ div.tagsinput div {
           align-items: center; }
   .form-inline__item {
     padding-left: var(--padding-6); }
+    @media (max-width: 991px) {
+      .form-inline__item {
+        padding-left: var(--padding-3); } }
     .form-inline__item:last-child {
       padding-left: 0; }
   @media (max-width: 576px) {
