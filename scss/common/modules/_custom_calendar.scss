@@ -303,7 +303,7 @@ $dashboard-calendar: "dashboard-calendar";
                 height: 12px;
                 border-radius: 50%;
                 border: none;
-                margin: 0 theme('padding.2') 0 0;
+                margin-#{theme('direction.right','value')}: theme('margin.2');
             }
             .disabled-box {
                 background: theme('color.gray.200');
