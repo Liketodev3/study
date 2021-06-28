@@ -773,10 +773,6 @@ ul {
         @media (max-width: 576px) {
           .selection--checkout .selection-tabs__label .selection-tabs__title svg {
             margin-right: var(--margin-2); } }
-      .selection--checkout .selection-tabs__label .selection-tabs__title span {
-        font-size: unset;
-        text-transform: lowercase;
-        font-weight: normal; }
 
 @media (min-width: 767px) {
   .selection--onehalf {
@@ -808,7 +804,7 @@ ul {
 
 .selection--lesson .selection-tabs__title {
   text-align: center; }
-  .selection--lesson .selection-tabs__title span {
+  .selection--lesson .selection-tabs__title .per-lesson {
     font-size: 0.93rem;
     color: var(--color-gray-600); }
 
@@ -1702,11 +1698,8 @@ ul {
       -ms-flex-pack: center;
           justify-content: center; }
 
-@media (min-width: 1199px) {
-  .error {
-    max-width: 992px;
-    margin: 0 auto;
-    padding: calc(30px + 3rem) 0; } }
+.fc .fc-timegrid-now-indicator-arrow {
+  border-color: var(--color-primary); }
 
 .error__media {
   text-align: center; }
@@ -7811,7 +7804,6 @@ textarea[disabled] {
   vertical-align: top;
   padding: 10px 10px 10px 10px;
   padding-left: 50px;
-  word-break: break-all;
   max-width: 500px;
   text-align: left;
   line-height: 18px; }
@@ -11505,17 +11497,13 @@ textarea[disabled] {
   left: 0;
   right: 0;
   border-style: solid;
-  border-color: red;
-  border-color: var(--fc-now-indicator-color, red);
   border-width: 1px 0 0; }
 
 .fc .fc-timegrid-now-indicator-arrow {
   position: absolute;
   z-index: 4;
   margin-top: -5px;
-  border-style: solid;
-  border-color: red;
-  border-color: var(--fc-now-indicator-color, red); }
+  border-style: solid; }
 
 .fc-direction-ltr .fc-timegrid-now-indicator-arrow {
   left: 0;
@@ -12276,18 +12264,13 @@ body[class*="jconfirm-no-scroll-"] {
   user-select: none;
   border-radius: 4px;
   min-height: 1em;
-  -webkit-transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, background 0.1s ease,
- -webkit-box-shadow 0.1s ease;
-  transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, background 0.1s ease,
- -webkit-box-shadow 0.1s ease;
+  -webkit-transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, background 0.1s ease, -webkit-box-shadow 0.1s ease;
+  transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, background 0.1s ease, -webkit-box-shadow 0.1s ease;
   -webkit-transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, background 0.1s ease, -webkit-box-shadow 0.1s ease;
   transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, background 0.1s ease, -webkit-box-shadow 0.1s ease;
-  -o-transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease,
- background 0.1s ease;
-  transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease,
- background 0.1s ease;
-  transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease,
- background 0.1s ease, -webkit-box-shadow 0.1s ease;
+  -o-transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+  transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+  transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease, -webkit-box-shadow 0.1s ease;
   -webkit-tap-highlight-color: transparent;
   border: 0;
   background-image: none; }
@@ -15632,3 +15615,4 @@ ul.list-accordion li .iss_accordion {
 .fc button.fc-time-button {
   display: none; }
 
+/*# sourceMappingURL=common-ltr.css.map */

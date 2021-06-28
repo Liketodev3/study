@@ -26,7 +26,7 @@ if ($page == 1) { ?>
                 <div>
                     <div class="msg-list align-items-center">
                         <div class="msg-list__left">
-                            <div class="avtar" data-text="<?php echo CommonHelper::getFirstChar($otherUserDetail['user_first_name']); ?>">
+                            <div class="avtar" data-title="<?php echo CommonHelper::getFirstChar($otherUserDetail['user_first_name']); ?>">
                                 <?php echo $senderImage; ?>
                             </div>
                         </div>
@@ -65,7 +65,7 @@ if ($page == 1) { ?>
                 <div class="chat <?php echo (!$fromMe) ? 'chat--incoming' : 'chat--outgoing'; ?>">
                     <?php if (!$fromMe) { ?>
                         <div class="chat__media">
-                            <div class="avtar avtar--small" data-text="<?php echo CommonHelper::getFirstChar($row['message_from_name']); ?>">
+                            <div class="avtar avtar--small" data-title="<?php echo CommonHelper::getFirstChar($row['message_from_name']); ?>">
                                 <?php echo  $senderImage; ?>
                             </div>
                         </div>

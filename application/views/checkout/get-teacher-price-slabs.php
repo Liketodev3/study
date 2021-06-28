@@ -46,7 +46,7 @@
                     <input type="radio" class="selection-tabs__input" name="lessonQty-pack">
                     <div class="selection-tabs__title">
                         <b><?php echo $title; ?></b>
-                        <span><?php echo CommonHelper::displayMoneyFormat($price); ?>/ <?php echo Label::getLabel('LBL_Per_Lesson'); ?></span>
+                        <span class="per-lesson"><?php echo CommonHelper::displayMoneyFormat($price); ?>/ <?php echo Label::getLabel('LBL_Per_Lesson'); ?></span>
                     </div>
                 </label>
             <?php } ?>

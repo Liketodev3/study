@@ -591,3 +591,8 @@ $pricing-wrapper: 'pricing-wrapper';
 
 
 
+.iti--separate-dial-code .iti__selected-dial-code {
+    margin-#{theme('direction.left','value')}: 6px; }
+
+    .iti__flag-box {
+    margin-#{theme('direction.right','value')}: 6px; }

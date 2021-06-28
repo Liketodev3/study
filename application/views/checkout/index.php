@@ -27,7 +27,7 @@ if ($cartData['isFreeTrial'] == applicationConstants::NO && $cartData['lessonQty
 				<div id="lessonDetails" class="col-xl-4 col-lg-4 col-md-12 -clear-right">
 					<div class="box -align-center" style="margin-bottom: 30px;">
 						<div class="-padding-30">
-							<div class="avtar avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($cartData['user_first_name']); ?>">
+							<div class="avtar avtar--centered" data-title="<?php echo CommonHelper::getFirstChar($cartData['user_first_name']); ?>">
 
 								<?php
 								if (true == User::isProfilePicUploaded($cartData['user_id'])) {

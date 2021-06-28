@@ -44,7 +44,7 @@
 			<div class="content-repeated">
 				<div class="row">
 					<div class="col-xl-4 col-lg-4 col-sm-4">
-						<div class="avtar avtar--xsmall" data-text="J"></div>
+						<div class="avtar avtar--xsmall" data-title="J"></div>
 						<h6 class="-small-title">James</h6>
 						<p>March 12, 2018</p>
 					</div>
@@ -61,7 +61,7 @@ person. I would highly recommend Laura as a teacher to anybody.</p>
 			<div class="content-repeated">
 				<div class="row">
 					<div class="col-xl-4 col-lg-4 col-sm-4">
-						<div class="avtar avtar--xsmall" data-text="N"><img src="<?php echo CONF_WEBROOT_URL; ?>images/300x300_2.jpg" alt=""></div>
+						<div class="avtar avtar--xsmall" data-title="N"><img src="<?php echo CONF_WEBROOT_URL; ?>images/300x300_2.jpg" alt=""></div>
 						<h6 class="-small-title">Nathan</h6>
 						<p>March 12, 2018</p>
 					</div>
@@ -77,7 +77,7 @@ materials and she cares a lot about her students.</p>
 			<div class="content-repeated">
 				<div class="row">
 					<div class="col-xl-4 col-lg-4 col-sm-4">
-						<div class="avtar avtar--xsmall" data-text="S"><img src="<?php echo CONF_WEBROOT_URL; ?>images/300x300_3.jpg" alt=""></div>
+						<div class="avtar avtar--xsmall" data-title="S"><img src="<?php echo CONF_WEBROOT_URL; ?>images/300x300_3.jpg" alt=""></div>
 						<h6 class="-small-title">Stephen</h6>
 						<p>March 12, 2018</p>
 					</div>
@@ -93,7 +93,7 @@ person. I would highly recommend Laura as a teacher to anybody</p>
 			<div class="content-repeated">
 				<div class="row">
 					<div class="col-xl-4 col-lg-4 col-sm-4">
-						<div class="avtar avtar--xsmall" data-text="J"></div>
+						<div class="avtar avtar--xsmall" data-title="J"></div>
 						<h6 class="-small-title">James</h6>
 						<p>March 12, 2018</p>
 					</div>
@@ -110,7 +110,7 @@ person. I would highly recommend Laura as a teacher to anybody.</p>
 			<div class="content-repeated">
 				<div class="row">
 					<div class="col-xl-4 col-lg-4 col-sm-4">
-						<div class="avtar avtar--xsmall" data-text="N"><img src="<?php echo CONF_WEBROOT_URL; ?>images/300x300_2.jpg" alt=""></div>
+						<div class="avtar avtar--xsmall" data-title="N"><img src="<?php echo CONF_WEBROOT_URL; ?>images/300x300_2.jpg" alt=""></div>
 						<h6 class="-small-title">Nathan</h6>
 						<p>March 12, 2018</p>
 					</div>
@@ -126,7 +126,7 @@ materials and she cares a lot about her students.</p>
 			<div class="content-repeated">
 				<div class="row">
 					<div class="col-xl-4 col-lg-4 col-sm-4">
-						<div class="avtar avtar--xsmall" data-text="S"><img src="<?php echo CONF_WEBROOT_URL; ?>images/300x300_3.jpg" alt=""></div>
+						<div class="avtar avtar--xsmall" data-title="S"><img src="<?php echo CONF_WEBROOT_URL; ?>images/300x300_3.jpg" alt=""></div>
 						<h6 class="-small-title">Stephen</h6>
 						<p>March 12, 2018</p>
 					</div>

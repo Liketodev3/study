@@ -3,7 +3,7 @@ if($commentsCount){
 	foreach($blogPostComments as $comment){ 
 ?>
 <div class="comments-list">
-                   <div class="avtar avtar--small avtar--centered" data-text="<?php echo CommonHelper::getFirstChar($comment['bpcomment_author_name']); ?>">
+                   <div class="avtar avtar--small avtar--centered" data-title="<?php echo CommonHelper::getFirstChar($comment['bpcomment_author_name']); ?>">
 			
 				<?php 
 				if( true == User::isProfilePicUploaded( $comment['bpcomment_user_id'] ) ){

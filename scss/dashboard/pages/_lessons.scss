@@ -1,7 +1,16 @@
 
 $form-inline: "form-inline";
 .#{$form-inline}{ position: relative; display: flex; flex-wrap: wrap; align-items: center;
+    @media(max-width:theme('breakpoints.lg','value')){
+        flex-wrap: nowrap;
+    }
     &__item{padding-#{theme('direction.right','value')}: theme('padding.6');
+        @media(max-width:theme('breakpoints.lg','value')){
+            
+            &:not(:last-child){
+                padding-#{theme('direction.right','value')}: theme('padding.3');
+            }
+        }
         &:last-child{padding-#{theme('direction.right','value')}: 0;}
     }
    
@@ -47,43 +56,31 @@ $search-form: "search-form";
                 &{
                     .close, .btn{display: none;}
                 }
-                @media(min-width:theme('breakpoints.xl','value')){
-                    &{
-                        position: absolute; top: 0; 
+                
+                &{
+                    position: absolute; top: 0; 
 
-                        &--reset{#{theme('direction.right','value')}: 0;}
-                        &--submit{#{theme('direction.left','value')}: 0; opacity: 0.3;}
-                        .close,.btn{pointer-events: none; display: flex;}
-                    }
-                    &--submit{
-                        & input{padding: 0!important; font-size: 0;width: 3rem; background: transparent!important; position: absolute!important;}
-                    }
-                    &--reset{
-                        & input{padding: 0!important; font-size: 0;width: 3rem; background: transparent!important; position: absolute!important; border: none!important;}
-                       
-                    }
+                    &--reset{#{theme('direction.right','value')}: 0;}
+                    &--submit{#{theme('direction.left','value')}: 0; opacity: 0.3;}
+                    .close,.btn{pointer-events: none; display: flex;}
                 }
+                &--submit{
+                    & input{padding: 0!important; font-size: 0;width: 3rem; background: transparent!important; position: absolute!important;}
+                }
+                &--reset{
+                    & input{padding: 0!important; font-size: 0;width: 3rem; background: transparent!important; position: absolute!important; border: none!important;}
+                    
+                }
+              
                 
                
             }
 
             &__field{
-                @media(min-width:theme('breakpoints.xl','value')){
+                flex: 1;
                 & input{padding-#{theme('direction.left','value')}: theme('padding.12');}
-                }
-                @media(max-width:theme('breakpoints.xl','value')){
-                    &{padding-#{theme('direction.right','value')}: theme('padding.4');}
-                    }
-            }
-
-
-            @media(max-width:theme('breakpoints.sm','value')){
-                &{margin: 0 -6px;
-                    > div{width:50%; padding: theme('padding.2');
-                        &:first-child{width: 100%;}
-                        & input{margin: 0!important;}
-                    }
-                }
+              
+                
             }
 
       

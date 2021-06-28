@@ -2,12 +2,6 @@ $error: "error";
 
 .#{$error} {
 
-    @media(min-width: theme('breakpoints.xl', 'value')) {
-        max-width: 992px;
-        margin: 0 auto;
-        padding: calc(30px + 3rem) 0;
-    }
-
     &__media{
         text-align: center;
     }

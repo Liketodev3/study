@@ -216,7 +216,7 @@
     @media(min-width: theme('breakpoints.md','value')){
         position: absolute;
         top: 14%;
-        right: 0;
+        #{theme('direction.right','value')}: 0;
     }
 
     @media(max-width: theme('breakpoints.md','value')){
@@ -716,7 +716,7 @@
     height: 40px;
     border: 1px solid theme('color.gray.200');
     position: relative;
-    margin-left: theme('margin.4');
+    margin-#{theme('direction.left','value')}: theme('margin.4');
     
     &::before{
         content: "";
