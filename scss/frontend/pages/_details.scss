@@ -141,7 +141,7 @@
 
 .tick-listing li {
     position: relative;
-    padding: 0 0 0 20px;
+    padding-#{theme('direction.left','value')}: 20px;
     margin: 5px 0 15px 0;
 }
 

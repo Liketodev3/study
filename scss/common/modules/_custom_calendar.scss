@@ -322,7 +322,7 @@ $dashboard-calendar: "dashboard-calendar";
         }
         .fc-toolbar-chunk{
             &:first-child{
-                margin-#{theme('direction.right','value')}: auto;
+                margin-right: auto;
                 @media(max-width:theme('breakpoints.md','value')){
                     margin: auto;
                 }

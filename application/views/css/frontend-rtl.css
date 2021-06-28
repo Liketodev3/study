@@ -4226,7 +4226,7 @@ p {
 
 .tick-listing li {
   position: relative;
-  padding: 0 0 0 20px;
+  padding-right: 20px;
   margin: 5px 0 15px 0; }
 
 .tick-listing.tick-listing--onehalf li {
@@ -6606,7 +6606,7 @@ p {
     height: 8px;
     width: 8px;
     background: transparent;
-    border-left: 2px solid var(--color-dark);
+    border-right: 2px solid var(--color-dark);
     border-bottom: 2px solid var(--color-dark);
     -webkit-transform: rotate(45deg);
         -ms-transform: rotate(45deg);
