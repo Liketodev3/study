@@ -1498,7 +1498,7 @@ ul {
     height: 12px;
     border-radius: 50%;
     border: none;
-    margin: 0 var(--padding-2) 0 0; }
+    margin-left: var(--margin-2); }
   .calendar-view .calendar-view__head .cal-status .disabled-box {
     background: var(--color-gray-200); }
 
@@ -1515,7 +1515,7 @@ ul {
               flex-direction: column;
       padding: var(--padding-6) var(--padding-3); } }
   .calendar-view .fc-header-toolbar .fc-toolbar-chunk:first-child {
-    margin-left: auto; }
+    margin-right: auto; }
     @media (max-width: 767px) {
       .calendar-view .fc-header-toolbar .fc-toolbar-chunk:first-child {
         margin: auto; } }

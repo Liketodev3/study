@@ -1498,7 +1498,7 @@ ul {
     height: 12px;
     border-radius: 50%;
     border: none;
-    margin: 0 var(--padding-2) 0 0; }
+    margin-right: var(--margin-2); }
   .calendar-view .calendar-view__head .cal-status .disabled-box {
     background: var(--color-gray-200); }
 
