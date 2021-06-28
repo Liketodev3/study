@@ -12,10 +12,8 @@ if ($controllerName != 'GuestUser' && $controllerName != 'Error' && $controllerN
         <meta name="author" content="">
         <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no, maximum-scale=1.0,user-scalable=0"/>
-        <link rel="shortcut icon" href="<?php echo CommonHelper::generateUrl('Image', 'favicon', array($siteLangId)); ?>">
-        <link rel="apple-touch-icon" href="<?php echo CommonHelper::generateUrl('Image', 'appleTouchIcon', array($siteLangId)); ?>">
-        <link rel="apple-touch-icon" sizes="72x72" href="<?php echo CONF_WEBROOT_URL; ?>images/apple-touch-icon-72x72.png">
-        <link rel="apple-touch-icon" sizes="114x114" href="<?php echo CONF_WEBROOT_URL; ?>images/apple-touch-icon-114x114.png">
+        <link rel="shortcut icon" href="<?php echo CommonHelper::generateUrl('Image', 'favicon', [$siteLangId],CONF_WEBROOT_FRONTEND); ?>">
+        <link rel="apple-touch-icon" href="<?php echo CommonHelper::generateUrl('Image', 'appleTouchIcon', [$siteLangId],CONF_WEBROOT_FRONTEND); ?>">
         <?php if (!empty($canonicalUrl)) { ?>
             <link rel="canonical" href="<?php echo $canonicalUrl; ?>" />
         <?php } ?>
