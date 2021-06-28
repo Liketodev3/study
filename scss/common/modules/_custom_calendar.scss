@@ -535,3 +535,7 @@ $dashboard-calendar: "dashboard-calendar";
     align-items: center;
     justify-content: center;
 }
+
+.fc .fc-timegrid-now-indicator-arrow{
+    border-color: theme('color.primary');
+}

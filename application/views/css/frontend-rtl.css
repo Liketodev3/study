@@ -1481,7 +1481,7 @@ p {
       -ms-transform: translateY(-50%);
           transform: translateY(-50%);
   z-index: 2;
-  padding: var(--padding-14) var(--padding-14);
+  padding: var(--padding-14) var(--padding-12);
   text-align: center;
   -webkit-backdrop-filter: saturate(180%) blur(20px);
           backdrop-filter: saturate(180%) blur(20px);
@@ -7829,3 +7829,4 @@ p {
 .form-register .form {
   text-align: left; }
 
+/*# sourceMappingURL=frontend-rtl.css.map */
