@@ -7,7 +7,7 @@ $endDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $class
 $startDateTimeUnix = strtotime($startDateTime);
 $endDateTimeUnix = strtotime($endDateTime);
 $seatsLeft = $class['grpcls_max_learner'] - $class['total_learners'];
-$loggedUserId = UserAuthentication::getLoggedUserId()
+$loggedUserId = UserAuthentication::getLoggedUserId(true);
 ?>
 <title><?php echo Label::getLabel('LBL_Group_Class') . $class['grpcls_title'] . " " . Label::getLabel('LBL_on') . " " . $websiteName; ?></title>
 <!-- [ MAIN BODY ========= -->

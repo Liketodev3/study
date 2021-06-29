@@ -49,7 +49,7 @@ $hourStringLabel = Label::getLabel('LBL_{hourstring}_HRS');
                                 </div>
                             </div>
                             <div class="list__price">
-                                <p><?php echo CommonHelper::displayMoneyFormat($teacher['maxPrice']); ?></p>
+                                <p><?php echo CommonHelper::displayMoneyFormat($teacher['minPrice']); ?></p>
                             </div>
                         </div>
                         <div class="list__body">
