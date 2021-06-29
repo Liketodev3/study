@@ -655,7 +655,6 @@
 
 .profile-secondary {
  
-
     @media(max-width: theme('breakpoints.lg','value')){
         margin: theme('margin.6') 0;
         width: 100%;
@@ -762,14 +761,6 @@
             grid-row-end: 2;
         }
 
-        // @media(min-width: theme('breakpoints.lg','value')) and (max-width: theme('breakpoints.xl','value')){
-        //     width: 630px;
-        // }
-
-        // @media(min-width: theme('breakpoints.xl','value')) and (max-width: theme('breakpoints.xxxl','value')){
-        //     width: 750px;
-        // }
-
         @media(min-width: theme('breakpoints.xl','value')){
             width: calc(100% - 100px);
         }
@@ -811,10 +802,6 @@
             grid-row-start: 1;
             grid-row-end: 3;
         }
-      
-        // @media(min-width: theme('breakpoints.lg','value')) and (max-width: theme('breakpoints.xl','value')){
-        //     width: 300px;
-        // }
 
         @media(min-width: theme('breakpoints.xl','value')){
             width: 400px;
@@ -822,14 +809,6 @@
 
         @media(min-width: theme('breakpoints.lg','value')) and (max-width: theme('breakpoints.xxxl','value')){
             width: 350px;
-        }
-    }
-}
-
-.panel--calendar{
-    .calendar-view__head{
-        h4{
-
         }
     }
 }
