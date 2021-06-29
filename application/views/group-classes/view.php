@@ -64,7 +64,7 @@ $loggedUserId = UserAuthentication::getLoggedUserId(true);
                                 <a href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_CLASS_FULL') ?>" class="btn btn--primary btn--large color-white btn--disabled"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
                             <?php elseif ($class['grpcls_start_datetime'] < date('Y-m-d H:i:s', strtotime('+' . $min_booking_time . ' minutes'))) : ?>
                                 <a href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_Booking_Close_For_This_Class') ?>" class="btn btn--primary btn--large color-white btn--disabled"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
-                            <?php elseif (UserAuthentication::isUserLogged() && $class['grpcls_teacher_id'] == $loggedUserId) : ?>
+                            <?php elseif ($class['grpcls_teacher_id'] == $loggedUserId) : ?>
                                 <a href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_Can_not_join_own_classes') ?>" class="btn btn--primary btn--large color-white btn--disabled"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
                             <?php elseif ($class['grpcls_status'] != TeacherGroupClasses::STATUS_ACTIVE) : ?>
                                 <a href="javascript:void(0);" title="<?php echo Label::getLabel('LBL_Class_Not_active') ?>" class="btn btn--primary btn--large color-white btn--disabled"><?php echo Label::getLabel("LBL_Book_Now") ?></a>
