@@ -44,7 +44,7 @@ $frmSrch->setFormTagAttribute('class', 'd-none');
 							<div class="stat">
 								<div class="stat__amount">
 									<span><?php echo Label::getLabel('LBL_TOTAL_Wallet'); ?></span>
-									<h5><?php echo $userTotalWalletBalance; ?></h5>
+									<h5><?php echo CommonHelper::displayMoneyFormat($userTotalWalletBalance); ?></h5>
 								</div>
 								<div class="stat__media bg-primary">
 									<svg class="icon icon--money icon--40 color-white">

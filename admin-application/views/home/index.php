@@ -24,7 +24,7 @@
 							</h6>
 							<h3 class="counter" data-currency="1" data-count="<?php echo $dashboardInfo["stats"]["totalSales"][4]["totalsales"]; ?>">0</h3>
 							<p>
-								<?php echo Label::getLabel('LBL_This_Month', $adminLangId); ?>- <strong>
+								<?php echo Label::getLabel('LBL_This_Month', $adminLangId); ?> <strong>
 									<?php echo CommonHelper::displayMoneyFormat($dashboardInfo["stats"]["totalSales"][2]["totalsales"]); ?></strong></p>
 							<?php if ($objPrivilege->canViewPurchasedLessons(AdminAuthentication::getLoggedAdminId(), true)) { ?>
 								<a href="<?php echo CommonHelper::generateUrl('purchasedLessons'); ?>" class="stats__link"></a>
@@ -42,7 +42,7 @@
 							</h6>
 							<h3 class="counter" data-currency="1" data-count="<?php echo isset($dashboardInfo["stats"]["totalEarnings"][-1]["totalEarnings"]) ? $dashboardInfo["stats"]["totalEarnings"][-1]["totalEarnings"] : 0; ?>">0</h3>
 							<p>
-								<?php echo Label::getLabel('LBL_This_Month', $adminLangId); ?>- <strong>
+								<?php echo Label::getLabel('LBL_This_Month', $adminLangId); ?> <strong>
 									<?php echo CommonHelper::displayMoneyFormat(isset($dashboardInfo["stats"]["totalEarnings"][30]["totalEarnings"]) ? $dashboardInfo["stats"]["totalEarnings"][30]["totalEarnings"] : 0) ?></span></strong></p>
 							<?php if ($objPrivilege->canViewPurchasedLessons(AdminAuthentication::getLoggedAdminId(), true)) { ?>
 								<a href="<?php echo CommonHelper::generateUrl('salesReport'); ?>" class="stats__link"></a>
@@ -59,7 +59,7 @@
 							</h6>
 							<h3 class="counter" data-currency="0" data-count="<?php echo $dashboardInfo["stats"]["totalUsers"]['-1']; ?>">0</h3>
 							<p>
-								<?php echo Label::getLabel('LBL_This_Month', $adminLangId); ?>- <strong>
+								<?php echo Label::getLabel('LBL_This_Month', $adminLangId); ?> <strong>
 									<?php echo $dashboardInfo["stats"]["totalUsers"]['30']; ?></strong></p>
 							<?php if ($objPrivilege->canViewUsers(AdminAuthentication::getLoggedAdminId(), true)) { ?>
 								<a href="<?php echo CommonHelper::generateUrl('users'); ?>" class="stats__link"></a>
@@ -81,7 +81,7 @@
 							</h6>
 							<h3 class="counter" data-currency="0" data-count="<?php echo $dashboardInfo["stats"]["totalLessons"]['-1'] ?>">0</h3>
 							<p>
-								<?php echo Label::getLabel('LBL_This_Month', $adminLangId); ?>- <strong>
+								<?php echo Label::getLabel('LBL_This_Month', $adminLangId); ?> <strong>
 									<?php echo $dashboardInfo["stats"]["totalLessons"]['30'] ?></strong></p>
 							<?php if ($objPrivilege->canViewPurchasedLessons(AdminAuthentication::getLoggedAdminId(), true)) { ?>
 								<a href="<?php echo CommonHelper::generateUrl('purchasedLessons', 'viewSchedules'); ?>" class="stats__link"></a>
@@ -98,7 +98,7 @@
 							</h6>
 							<h3 class="counter" data-currency="0" data-count="<?php echo $dashboardInfo["stats"]["totalCompletedLessons"]['-1'] ?>">0</h3>
 							<p>
-								<?php echo Label::getLabel('LBL_This_Month', $adminLangId); ?>- <strong>
+								<?php echo Label::getLabel('LBL_This_Month', $adminLangId); ?> <strong>
 									<?php echo $dashboardInfo["stats"]["totalCompletedLessons"]['30'] ?></strong></p>
 							<?php if ($objPrivilege->canViewPurchasedLessons(AdminAuthentication::getLoggedAdminId(), true)) { ?>
 								<a href="<?php echo CommonHelper::generateUrl('purchasedLessons', 'viewSchedules', [ScheduledLesson::STATUS_COMPLETED]); ?>" class="stats__link"></a>
@@ -115,7 +115,7 @@
 							</h6>
 							<h3 class="counter" data-currency="0" data-count="<?php echo $dashboardInfo["stats"]["totalCancelledLessons"]['-1'] ?>">0</h3>
 							<p>
-								<?php echo Label::getLabel('LBL_This_Month', $adminLangId); ?>- <strong>
+								<?php echo Label::getLabel('LBL_This_Month', $adminLangId); ?> <strong>
 									<?php echo $dashboardInfo["stats"]["totalCancelledLessons"]['30'] ?></strong></p>
 							<?php if ($objPrivilege->canViewPurchasedLessons(AdminAuthentication::getLoggedAdminId(), true)) { ?>
 								<a href="<?php echo CommonHelper::generateUrl('purchasedLessons', 'viewSchedules', [ScheduledLesson::STATUS_CANCELLED]) ?>" class="stats__link"></a>
@@ -132,7 +132,7 @@
 							</h6>
 							<h3 class="counter" data-currency="0" data-count="<?php echo $dashboardInfo["stats"]["totalNeedtoScheduleLessons"]['-1'] ?>">0</h3>
 							<p>
-								<?php echo Label::getLabel('LBL_This_Month', $adminLangId); ?>- <strong>
+								<?php echo Label::getLabel('LBL_This_Month', $adminLangId); ?> <strong>
 									<?php echo $dashboardInfo["stats"]["totalNeedtoScheduleLessons"]['30'] ?></strong></p>
 							<?php if ($objPrivilege->canViewPurchasedLessons(AdminAuthentication::getLoggedAdminId(), true)) { ?>
 								<a href="<?php echo CommonHelper::generateUrl('purchasedLessons', 'viewSchedules', [ScheduledLesson::STATUS_NEED_SCHEDULING]); ?>" class="stats__link"></a>

@@ -95,11 +95,11 @@ ALTER TABLE `tbl_extra_pages_lang`
   ADD UNIQUE KEY `epagelang_epage_id` (`epagelang_epage_id`,`epagelang_lang_id`);
 
 INSERT INTO `tbl_extra_pages` (`epage_id`, `epage_identifier`, `epage_type`, `epage_active`, `epage_default_content`) VALUES
-(1, 'Teacher Profile info bar', 1, 1, '<div class=\"infobar__list-content\">\r\n										<ol>\r\n											<li>Profile needs to be 80% completed</li>\r\n											<li>You have to complete lorem ipsum dolar summit text</li>\r\n											<li>After verify all the details you have to mark availbility in calendar section.</li>\r\n										</ol>\r\n									</div>');
+(1, 'Teacher Profile info bar', 1, 1, '<div class=\"infobar__list-content\"><ol><li>You have to provide the mandatory information in order to complete your profile.</li><li>Please verify all the filled information before submitting.</li>\r\n</ol></div>');
 
 INSERT INTO `tbl_extra_pages_lang` (`epagelang_epage_id`, `epagelang_lang_id`, `epage_label`, `epage_content`) VALUES
-(1, 1, 'Teacher Profile info bar', '<div class=\"infobar__list-content\">\r\n										<ol>\r\n											<li>Profile needs to be 80% completed</li>\r\n											<li>You have to complete lorem ipsum dolar summit text</li>\r\n											<li>After verify all the details you have to mark availbility in calendar section.</li>\r\n										</ol>\r\n									</div>'),
-(1, 2, 'Teacher Profile info bar', '<div class=\"infobar__list-content\">\r\n										<ol>\r\n											<li>Profile needs to be 80% completed</li>\r\n											<li>You have to complete lorem ipsum dolar summit text</li>\r\n											<li>After verify all the details you have to mark availbility in calendar section.</li>\r\n										</ol>\r\n									</div>');
+(1, 1, 'Teacher Profile info bar', '<div class=\"infobar__list-content\"><ol><li>You have to provide the mandatory information in order to complete your profile.</li><li>Please verify all the filled information before submitting.</li>\r\n</ol></div>'),
+(1, 2, 'Teacher Profile info bar', '<div class=\"infobar__list-content\"><ol><li>You have to provide the mandatory information in order to complete your profile.</li><li>Please verify all the filled information before submitting.</li>\r\n</ol></div>');
 
 
 REPLACE INTO `tbl_language_labels` (`label_key`, `label_lang_id`, `label_caption`) VALUES 

@@ -4,7 +4,6 @@ if ($controllerName != 'GuestUser' && $controllerName != 'Error' && $controllerN
     $_SESSION['referer_page_url'] = CommonHelper::getCurrUrl();
 }
 ?>
-
 <!DOCTYPE html>
 <html prefix="og: http://ogp.me/ns#" class="<?php echo (FatApp::getConfig('conf_auto_restore_on', FatUtility::VAR_INT, 1) && CommonHelper::demoUrl()) ? 'sticky-demo-header' : '' ?>">
     <head>
@@ -41,4 +40,3 @@ if ($controllerName != 'GuestUser' && $controllerName != 'Error' && $controllerN
 		}
 		
 	</script>' . "\r\n";
-        

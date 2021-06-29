@@ -53,7 +53,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 								<div class="stat">
 									<div class="stat__amount">
 										<span><?php echo Label::getLabel('Lbl_Earnings'); ?></span>
-										<h5><?php echo $earningData['earning']; ?></h5>
+										<h5><?php echo CommonHelper::displayMoneyFormat($earningData['earning']); ?></h5>
 									</div>
 									<div class="stat__media bg-yellow">
 										<svg class="icon icon--money icon--40 color-white"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#stats'; ?>"></use></svg>
@@ -77,7 +77,7 @@ $nowDate = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', date('Y-m-
 								<div class="stat">
 									<div class="stat__amount">
 										<span> <?php echo Label::getLabel('LBL_Wallet'); ?></span>
-										<h5><?php echo $userTotalWalletBalance; ?></h5>
+										<h5><?php echo CommonHelper::displayMoneyFormat($userTotalWalletBalance); ?></h5>
 									</div>
 									<div class="stat__media bg-primary">
 										<svg class="icon icon--money icon--40 color-white"><use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#stats_2'; ?>"></use></svg>

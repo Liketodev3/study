@@ -1974,7 +1974,7 @@ CREATE TABLE `tbl_extra_pages` (
 --
 
 INSERT INTO `tbl_extra_pages` (`epage_id`, `epage_identifier`, `epage_type`, `epage_active`, `epage_default_content`) VALUES
-(1, 'Teacher Profile info bar', 1, 1, '<div class=\"infobar__list-content\">\r\n										<ol>\r\n											<li>Profile needs to be 80% completed</li>\r\n											<li>You have to complete lorem ipsum dolar summit text</li>\r\n											<li>After verify all the details you have to mark availbility in calendar section.</li>\r\n										</ol>\r\n									</div>'),
+(1, 'Teacher Profile info bar', 1, 1, '<div class=\"infobar__list-content\"><ol><li>You have to provide the mandatory information in order to complete your profile.</li><li>Please verify all the filled information before submitting.</li>\r\n</ol></div>'),
 (2, 'Why Us Block', 2, 1, '<section class=\"section section--services\"><div class=\"container container--narrow\"><div class=\"section__head\"><h2>We make language learning easy &amp; simpler</h2></div><div class=\"section__body\"><div class=\"row\"><div class=\"col-md-6\"><div class=\"service\"><div class=\"service__media\"><img src=\"/images/120x120_1.png\" alt=\"\" style=\"float: none; margin: 0px; width: 60px; height: 60px;\" /></div><div class=\"service__content\"><h3>Professional Tutors</h3><p>Choose from over a myriad of professional &amp; experienced teachers to be fluent in any language.</p></div></div></div><div class=\"col-md-6\"><div class=\"service\"><div class=\"service__media\"><img src=\"/images//120x120_2.png\" alt=\"\" style=\"float: none; margin: 0px; width: 60px; height: 60px;\" /></div><div class=\"service__content\"><h3>1-on-1 Live sessions</h3><p>Connect with your teachers via 1-on-1 live chat sessions and build a deeper understanding of a language.</p></div></div></div><div class=\"col-md-6\"><div class=\"service\"><div class=\"service__media\"><img src=\"/images/120x120_3.png\" alt=\"\" style=\"float: none; margin: 0px; width: 60px; height: 60px;\" /></div><div class=\"service__content\"><h3>Group Classes</h3><p>Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo</p></div></div></div><div class=\"col-md-6\"><div class=\"service\"><div class=\"service__media\"><img src=\"/images/120x120_4.png\" alt=\"\" style=\"float: none; margin: 0px; width: 60px; height: 60px;\" /></div><div class=\"service__content\"><h3>Convenience &amp; Flexibility</h3><p>Schedule lessons as per your availability and learn at your own pace with no constraints of time and place.</p></div></div></div></div></div></div></section>'),
 (3, 'Browse tutor section', 3, 1, '    <section class=\"section section--cta\" style=\"background-image:url(images/cta.png);\">\r\n        <div class=\"container container--narrow\">\r\n            <div class=\"cta-content\">\r\n                <h2>Speak any language fluently with the help of professional tutors</h2>\r\n                <a class=\"btn btn--secondary btn--large\" href=\"teachers\">Browse Tutors</a>\r\n            </div>\r\n        </div>\r\n    </section>'),
 (4, 'Contact Banner', 4, 1, '<div class=\"intro-head\"><h6 class=\"small-title\">Contact Us</h6><h2>Want to get in touch?<br> We would love to hear from you.</h2></div><div class=\"about-media\"><div class=\"media\"><img src=\"images/contact_hero.png\" alt=\"\"></div></div>'),
@@ -2002,8 +2002,8 @@ CREATE TABLE `tbl_extra_pages_lang` (
 --
 
 INSERT INTO `tbl_extra_pages_lang` (`epagelang_epage_id`, `epagelang_lang_id`, `epage_label`, `epage_content`) VALUES
-(1, 1, 'Teacher Profile info bar', '<div class=\"infobar__list-content\">\r\n										<ol>\r\n											<li>Profile needs to be 80% completed</li>\r\n											<li>You have to complete lorem ipsum dolar summit text</li>\r\n											<li>After verify all the details you have to mark availbility in calendar section.</li>\r\n										</ol>\r\n									</div>'),
-(1, 2, 'Teacher Profile info bar', '<div class=\"infobar__list-content\">\r\n										<ol>\r\n											<li>Profile needs to be 80% completed</li>\r\n											<li>You have to complete lorem ipsum dolar summit text</li>\r\n											<li>After verify all the details you have to mark availbility in calendar section.</li>\r\n										</ol>\r\n									</div>'),
+(1, 1, 'Teacher Profile info bar', '<div class=\"infobar__list-content\"><ol><li>You have to provide the mandatory information in order to complete your profile.</li><li>Please verify all the filled information before submitting.</li>\r\n</ol></div>'),
+(1, 2, 'Teacher Profile info bar', '<div class=\"infobar__list-content\"><ol><li>You have to provide the mandatory information in order to complete your profile.</li><li>Please verify all the filled information before submitting.</li>\r\n</ol></div>'),
 (2, 1, 'Why Us Block', '<section class=\"section section--services\"><div class=\"container container--narrow\"><div class=\"section__head\"><h2>We make language learning easy &amp; simpler</h2></div><div class=\"section__body\"><div class=\"row\"><div class=\"col-md-6\"><div class=\"service\"><div class=\"service__media\"><img src=\"/images/120x120_1.png\" alt=\"\" style=\"float: none; margin: 0px; width: 60px; height: 60px;\" /></div><div class=\"service__content\"><h3>Professional Tutors</h3><p>Choose from over a myriad of professional &amp; experienced teachers to be fluent in any language.</p></div></div></div><div class=\"col-md-6\"><div class=\"service\"><div class=\"service__media\"><img src=\"/images//120x120_2.png\" alt=\"\" style=\"float: none; margin: 0px; width: 60px; height: 60px;\" /></div><div class=\"service__content\"><h3>1-on-1 Live sessions</h3><p>Connect with your teachers via 1-on-1 live chat sessions and build a deeper understanding of a language.</p></div></div></div><div class=\"col-md-6\"><div class=\"service\"><div class=\"service__media\"><img src=\"/images/120x120_3.png\" alt=\"\" style=\"float: none; margin: 0px; width: 60px; height: 60px;\" /></div><div class=\"service__content\"><h3>Group Classes</h3><p>Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo</p></div></div></div><div class=\"col-md-6\"><div class=\"service\"><div class=\"service__media\"><img src=\"/images/120x120_4.png\" alt=\"\" style=\"float: none; margin: 0px; width: 60px; height: 60px;\" /></div><div class=\"service__content\"><h3>Convenience &amp; Flexibility</h3><p>Schedule lessons as per your availability and learn at your own pace with no constraints of time and place.</p></div></div></div></div></div></div></section>'),
 (3, 1, 'Browse Tutor', '    <section class=\"section section--cta\" style=\"background-image:url(images/cta.png);\">\r\n        <div class=\"container container--narrow\">\r\n            <div class=\"cta-content\">\r\n                <h2>Speak any language fluently with the help of professional tutors</h2>\r\n                <a class=\"btn btn--secondary btn--large\" href=\"teachers\">Browse Tutors</a>\r\n            </div>\r\n        </div>\r\n    </section>'),
 (4, 1, 'Contact Banner', '<div class=\"intro-head\"><h6 class=\"small-title\">Contact Us</h6><h2>Want to get in touch?<br> We would love to hear from you.</h2></div><div class=\"about-media\"><div class=\"media\"><img src=\"images/contact_hero.png\" alt=\"\"></div></div>'),
@@ -6640,7 +6640,7 @@ INSERT INTO `tbl_language_labels` (`label_id`, `label_key`, `label_lang_id`, `la
 (6574, 'LBL_Attachement', 1, 'Attachement'),
 (6575, 'LBL_Visit_My_Account', 1, 'Visit My Account'),
 (6576, 'MSG_Data_uploaded_successfully', 1, 'Data Uploaded Successfully'),
-(6577, 'LBL_Found_the_best_%s_teachers_for_you', 1, 'Found The Best %s Teachers For You'),
+(6577, 'LBL_Found_the_best_%s_teachers_for_you', 1, 'Found the best %s teachers for you'),
 (6578, 'LBL_View_Full_availability', 1, 'View Full Availability'),
 (6579, 'LBL_APPLICATION_HAS_BEEN_APPROVED', 1, 'Application Has Been Approved'),
 (6581, 'LBL_Request_Status_Already_Changed', 1, 'Request Status Already Changed'),
@@ -7035,7 +7035,7 @@ CREATE TABLE `tbl_navigations` (
 --
 
 INSERT INTO `tbl_navigations` (`nav_id`, `nav_identifier`, `nav_active`, `nav_is_multilevel`, `nav_type`, `nav_deleted`) VALUES
-(1, 'More', 1, 0, 1, 0),
+(1, 'Other', 1, 0, 1, 0),
 (2, 'Header', 1, 0, 2, 0),
 (3, 'Header More', 1, 0, 3, 0),
 (4, 'Support', 1, 0, 4, 0),
@@ -7058,7 +7058,7 @@ CREATE TABLE `tbl_navigations_lang` (
 --
 
 INSERT INTO `tbl_navigations_lang` (`navlang_nav_id`, `navlang_lang_id`, `nav_name`) VALUES
-(1, 1, 'More'),
+(1, 1, 'Other'),
 (2, 1, 'Header');
 
 -- --------------------------------------------------------
@@ -9975,7 +9975,7 @@ CREATE TABLE `tbl_users` (
 
 INSERT INTO `tbl_users` (`user_id`, `user_url_name`, `user_first_name`, `user_last_name`, `user_phone_code`, `user_phone`, `user_gender`, `user_dob`, `user_profile_info`, `user_address1`, `user_address2`, `user_zip`, `user_timezone`, `user_country_id`, `user_state_id`, `user_city`, `user_is_learner`, `user_is_teacher`, `user_facebook_id`, `user_googleplus_id`, `user_fb_access_token`, `user_preferred_dashboard`, `user_registered_initially_for`, `user_added_on`, `user_deleted`) VALUES
 (1, 'samantha', 'Samantha', 'Wells', '', '', 1, '0000-00-00', '', '', '', '', 'Asia/Kolkata', 91, 0, '', 1, 1, '', '', '', 2, 2, '2020-11-26 05:59:17', 0),
-(2, NULL, 'Sapna', 'Sahni', '+1', '', 2, '0000-00-00', '', '', '', '', 'Australia/Sydney', 17, 0, '', 1, 1, '', '', '', 2, 1, '2020-11-26 08:05:02', 0),
+(2, NULL, 'Jason', 'Paul', '+1', '', 2, '0000-00-00', '', '', '', '', 'Australia/Sydney', 17, 0, '', 1, 1, '', '', '', 2, 1, '2020-11-26 08:05:02', 0),
 (3, NULL, 'Erika', 'Li', '', '', 2, '0000-00-00', '', '', '', '', 'Asia/Singapore', 167, 0, '', 1, 0, '', '', '', 1, 1, '2020-11-26 08:10:37', 0),
 (4, NULL, 'Jeanette', 'Xie', '', '', 2, '0000-00-00', '', '', '', '', 'Asia/Seoul', 173, 0, '', 1, 0, '', '', '', 1, 1, '2020-11-26 08:13:41', 0),
 (5, NULL, 'Christina', 'Morillo', '', '', 2, '0000-00-00', '', '', '', '', 'America/Sao_Paulo', 34, 0, '', 1, 0, '', '', '', 1, 1, '2020-11-26 09:52:25', 0),
@@ -10018,7 +10018,7 @@ INSERT INTO `tbl_users` (`user_id`, `user_url_name`, `user_first_name`, `user_la
 (42, 'Caleb', 'Caleb', 'Frey', '+1', '', 1, '0000-00-00', 'I have 35 years of experience in education. I  spent her first 31 years as a second-grade teacher, and I am currently a Technology Integration Specialist for grades PS-5 at Edgewood City Schools in Trenton, Ohio.', '', '', '', 'Asia/Kolkata', 91, 0, '', 1, 1, '', '', '', 2, 1, '2021-06-24 04:24:52', 0),
 (43, 'Andrew', 'Andrew', 'Glick', '+1', '', 1, '0000-00-00', 'I have seven years of experience in education, teaching first grade and a K-5 technology class in Naples, Florida. During that time I also trained many instructional staff members in her district on how to use and integrate technology in the classroom.', '', '', '', 'Asia/Kolkata', 91, 0, '', 1, 1, '', '', '', 2, 1, '2021-06-24 04:27:21', 0),
 (44, NULL, 'shjker', '', '', '', 0, '0000-00-00', '', '', '', '', 'Europe/Istanbul', 0, 0, '', 1, 0, '', '', '', 2, 2, '2021-06-24 04:54:42', 0),
-(45, NULL, 'Sapna', 'Sahni', '+1', '', 2, '0000-00-00', '', '', '', '', 'Asia/Kolkata', 0, 0, '', 1, 1, '', '', '', 2, 2, '2021-06-25 14:12:04', 0);
+(45, NULL, 'Sapna', 'Sahni', '+1', '', 2, '0000-00-00', '', '', '', '', 'Asia/Kolkata', 0, 0, '', 1, 1, '', '', '', 2, 2, '2021-06-25 14:12:04', 1);
 
 -- --------------------------------------------------------
 
@@ -10564,7 +10564,7 @@ INSERT INTO `tbl_user_teacher_requests` (`utrequest_id`, `utrequest_user_id`, `u
 (12, 43, '43-1624513199', 1, '2021-06-24 05:39:59', 1, '2021-06-24 05:43:11', '', 0, 5, 1, 'Andrew', 'Glick', 1, '+1', '', 'https://www.youtube.com/embed/q_Fy8DceWZM', 'I have seven years of experience in education, teaching first grade and a K-5 technology class in Naples, Florida. During that time I also trained many instructional staff members in her district on how to use and integrate technology in the classroom.', '[1]', '[37]', '[6]'),
 (13, 42, '42-1624515461', 1, '2021-06-24 06:17:41', 1, '2021-06-24 06:21:50', '', 0, 5, 1, 'Caleb', 'Frey', 1, '+1', '', 'https://www.youtube.com/embed/q_Fy8DceWZM', 'I have 35 years of experience in education. I  spent her first 31 years as a second-grade teacher, and I am currently a Technology Integration Specialist for grades PS-5 at Edgewood City Schools in Trenton, Ohio.', '[17]', '[56]', '[6]'),
 (14, 41, '41-1624516590', 1, '2021-06-24 06:36:30', 1, '2021-06-24 06:39:29', '', 0, 5, 1, 'Andrea', 'Mast', 1, '+1', '', 'https://www.youtube.com/embed/q_Fy8DceWZM', 'I have over 5 years of experience in education. I began my educational career as a Language Arts and Maths teacher. I hold a bachelor\'s degree in Elementary Education from the University of Mississippi, and a master’s degree in Instructional Technology from Lesley University. During the past six years I have been working as an educational technology specialist, assisting schools in Connecticut and Mississippi with technology integration in all subject areas', '[17]', '[39]', '[4]'),
-(15, 2, '2-1624629866', 1, '2021-06-25 14:04:26', 1, '2021-06-25 14:08:44', '', 0, 5, 1, 'Sapna', 'Sahni', 2, '+1', '', '', '', '[14,13,12,1,2]', '[1,3,4]', '[3,3,3]'),
+(15, 2, '2-1624629866', 1, '2021-06-25 14:04:26', 1, '2021-06-25 14:08:44', '', 0, 5, 1, 'Jason', 'Paul', 2, '+1', '', '', '', '[14,13,12,1,2]', '[1,3,4]', '[3,3,3]'),
 (16, 45, '45-1624630337', 1, '2021-06-25 14:12:17', 1, '2021-06-25 14:13:45', '', 0, 5, 1, 'Sapna', 'Sahni', 2, '+1', '', '', '', '[14,13,12,1]', '[3,4,5]', '[1,1,2]');
 
 -- --------------------------------------------------------

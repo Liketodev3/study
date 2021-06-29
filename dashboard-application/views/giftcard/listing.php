@@ -25,7 +25,7 @@
             <td>
                 <div class="flex-cell">
                     <div class="flex-cell__label"><?php echo $giftCardLabel; ?></div>
-                    <div class="flex-cell__content"><?php echo $giftcard['giftcard_amount']; ?></div>
+                    <div class="flex-cell__content"><?php echo CommonHelper::displayMoneyFormat($giftcard['giftcard_amount']); ?></div>
                 </div>
             </td>
             <td>

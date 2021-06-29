@@ -36,7 +36,7 @@ $user_timezone = MyDate::getUserTimeZone();
             <td>
 				<div class="flex-cell">
 					<div class="flex-cell__label"><?php echo $orderAmountLabel; ?></div>
-					<div class="flex-cell__content"><?php echo $order['order_net_amount']; ?></div>
+					<div class="flex-cell__content"><?php echo CommonHelper::displayMoneyFormat($order['order_net_amount']); ?></div>
 				</div>
 			</td>
             <td>
