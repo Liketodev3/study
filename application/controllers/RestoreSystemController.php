@@ -134,6 +134,7 @@ class RestoreSystemController extends MyAppController
         $output .= '// DB' . "\n";
         $output .= 'define(\'CONF_WEBROOT_FRONTEND\', \'' . addslashes(CONF_WEBROOT_URL) . '\');' . "\n";
         $output .= 'define(\'CONF_WEBROOT_BACKEND\', \'' . addslashes(CONF_WEBROOT_URL) . $admin . '\');' . "\n";
+        $output .= 'define(\'CONF_WEBROOT_DASHBOARD\', \'' . addslashes(CONF_WEBROOT_URL) . 'dashboard/\');' . "\n";
         $output .= 'define(\'CONF_DB_SERVER\', \'' . addslashes($hostName) . '\');' . "\n";
         $output .= 'define(\'CONF_DB_USER\', \'' . addslashes($userName) . '\');' . "\n";
         $output .= 'define(\'CONF_DB_PASS\', \'' . addslashes(html_entity_decode($password, ENT_QUOTES, 'UTF-8')) . '\');' . "\n";

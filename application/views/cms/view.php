@@ -108,14 +108,14 @@
     });
 
 
-    $(".settings__trigger-js").click(function() {
-        var t = $(this).parents(".toggle-group").children(".settings__target-js").is(":hidden");
-        $(".toggle-group .settings__target-js").hide();
-        $(".toggle-group .settings__trigger-js").removeClass("is--active");
-        if (t) {
-            $(this).parents(".toggle-group").children(".settings__target-js").toggle().parents(".toggle-group").children(".settings__trigger-js").addClass("is--active")
-        }
-    });
+    // $(".settings__trigger-js").click(function() {
+    //     var t = $(this).parents(".toggle-group").children(".settings__target-js").is(":hidden");
+    //     $(".toggle-group .settings__target-js").hide();
+    //     $(".toggle-group .settings__trigger-js").removeClass("is--active");
+    //     if (t) {
+    //         $(this).parents(".toggle-group").children(".settings__target-js").toggle().parents(".toggle-group").children(".settings__trigger-js").addClass("is--active")
+    //     }
+    // });
 
     /* FOR NAV TOGGLES */
     $('.btn--filters-js').click(function() {
