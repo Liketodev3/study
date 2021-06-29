@@ -6983,7 +6983,7 @@ CREATE TABLE `tbl_meta_tags` (
 INSERT INTO `tbl_meta_tags` (`meta_id`, `meta_controller`, `meta_action`, `meta_type`, `meta_record_id`, `meta_subrecord_id`, `meta_identifier`, `meta_default`, `meta_advanced`) VALUES
 (1, 'Cms', 'view', 0, '1', 0, 'About Us', 0, 0),
 (2, 'Home', 'index', 0, '0', 0, 'Home', 0, 1),
-(4, '', '', -1, '0', 0, 'Yo!Coach Live Demo', 0, 0);
+(4, '', '', -1, '0', 0, 'Yo!Coach Demo', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -7010,10 +7010,10 @@ CREATE TABLE `tbl_meta_tags_lang` (
 INSERT INTO `tbl_meta_tags_lang` (`metalang_meta_id`, `metalang_lang_id`, `meta_title`, `meta_keywords`, `meta_description`, `meta_other_meta_tags`, `meta_og_title`, `meta_og_url`, `meta_og_description`) VALUES
 (1, 1, 'About Us', 'About Us', 'About Us', '<meta name=\"copyright\" content=\"text\">', '', '', ''),
 (1, 2, 'About Us', 'About Us', 'About Us', '<meta name=\"copyright\" content=\"text\">', '', '', ''),
-(2, 1, 'Yo!Coach Live Demo - Readymade Solution To Build Online Learning & Consultation Marketplace', 'Yo!Coach Demo Readymade Solution To Build Online Learning & Consultation Marketplace', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki.', '', '', '', ''),
-(2, 2, 'Yo!Coach Live Demo - Readymade Solution To Build Online Learning & Consultation Marketplace', 'Yo!Coach Demo Readymade Solution To Build Online Learning & Consultation Marketplace', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki.', '', '', '', ''),
-(3, 1, 'Yo!Coach Live Demo - Readymade Solution To Build Online Learning & Consultation Marketplace', 'Yo!Coach Demo Readymade Solution To Build Online Learning & Consultation Marketplace', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki.', '', '', '', ''),
-(3, 2, 'Yo!Coach Live Demo - Readmymade Solution To Build Online Learning & Consultation Marketplace', 'Yo!Coach Demo Readymade Solution To Build Online Learning & Consultation Marketplace', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki.', '', '', '', '');
+(2, 1, 'Yo!Coach Demo - Readymade Solution To Build Online Learning & Consultation Marketplace', 'Yo!Coach Demo Readymade Solution To Build Online Learning & Consultation Marketplace', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki.', '', '', '', ''),
+(2, 2, 'Yo!Coach Demo - Readymade Solution To Build Online Learning & Consultation Marketplace', 'Yo!Coach Demo Readymade Solution To Build Online Learning & Consultation Marketplace', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki.', '', '', '', ''),
+(3, 1, 'Yo!Coach Demo - Readymade Solution To Build Online Learning & Consultation Marketplace', 'Yo!Coach Demo Readymade Solution To Build Online Learning & Consultation Marketplace', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki.', '', '', '', ''),
+(3, 2, 'Yo!Coach Demo - Readmymade Solution To Build Online Learning & Consultation Marketplace', 'Yo!Coach Demo Readymade Solution To Build Online Learning & Consultation Marketplace', 'Check the working and features of Yo!Coach with live demo setup. A FATbit Technologies solution to build an online learning and consultation platform like Verbling , Italki.', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -7035,7 +7035,7 @@ CREATE TABLE `tbl_navigations` (
 --
 
 INSERT INTO `tbl_navigations` (`nav_id`, `nav_identifier`, `nav_active`, `nav_is_multilevel`, `nav_type`, `nav_deleted`) VALUES
-(1, 'Footer', 1, 0, 1, 0),
+(1, 'More', 1, 0, 1, 0),
 (2, 'Header', 1, 0, 2, 0),
 (3, 'Header More', 1, 0, 3, 0),
 (4, 'Support', 1, 0, 4, 0),
@@ -7058,7 +7058,7 @@ CREATE TABLE `tbl_navigations_lang` (
 --
 
 INSERT INTO `tbl_navigations_lang` (`navlang_nav_id`, `navlang_lang_id`, `nav_name`) VALUES
-(1, 1, 'Footer'),
+(1, 1, 'More'),
 (2, 1, 'Header');
 
 -- --------------------------------------------------------
