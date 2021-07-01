@@ -1143,7 +1143,8 @@ p {
 
 .section--footer {
   background: var(--color-dark-blue);
-  color: var(--color-white); }
+  color: var(--color-white);
+  padding: 4rem 0 2rem; }
   @media (max-width: 767px) {
     .section--footer {
       padding: 0 !important; } }
@@ -1153,8 +1154,8 @@ p {
     padding-bottom: 50px; } }
 
 .footer .footer--row {
-  margin-bottom: var(--margin-20);
-  padding-bottom: var(--margin-20);
+  margin-bottom: var(--margin-10);
+  padding-bottom: var(--padding-6);
   border-bottom: 2px solid rgba(255, 255, 255, 0.1); }
   @media (max-width: 1199px) {
     .footer .footer--row {
