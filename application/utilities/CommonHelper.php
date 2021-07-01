@@ -2,7 +2,6 @@
 
 class CommonHelper extends FatUtility
 {
-
     private static $_ip;
     private static $_user_agent;
     private static $_lang_id;
@@ -1614,7 +1613,7 @@ class CommonHelper extends FatUtility
     public static function demoUrl(): bool
     {
         /* return true; */
-        if (false !== strpos($_SERVER['SERVER_NAME'], 'teach.yo-coach.com')) {
+        if (false !== strpos($_SERVER['SERVER_NAME'], 'localhost')) {
             return true;
         }
 
