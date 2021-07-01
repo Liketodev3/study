@@ -3712,7 +3712,7 @@ p {
         bottom: -18px; } }
 
 .box__secondary {
-  border-left: 1px solid var(--color-gray-200); }
+  border-right: 1px solid var(--color-gray-200); }
   @media (min-width: 991px) {
     .box__secondary {
       width: 420px; } }
@@ -7179,7 +7179,9 @@ p {
       background: none; }
       @media (min-width: 767px) {
         .is-registration .header .header-primary {
-          padding: var(--padding-10);
+          padding: var(--padding-10); } }
+      @media (min-width: 991px) {
+        .is-registration .header .header-primary {
           padding-left: var(--padding-16); } }
       @media (max-width: 767px) {
         .is-registration .header .header-primary .header__right .header-dropwown--profile .is-visible {
@@ -7687,6 +7689,13 @@ p {
   color: var(--color-gray-1000); }
   .accept--field label a {
     text-decoration: underline; }
+
+.section--registration {
+  position: relative; }
+  @media (min-width: 767px) {
+    .section--registration .header {
+      background: transparent;
+      border: none; } }
 
 .form-register .form {
   margin-bottom: var(--margin-4); }
