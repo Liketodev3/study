@@ -1249,7 +1249,7 @@ $box__primary: "box__primary";
 }
 
 .box__secondary{
-    border-left: 1px solid theme('color.gray.200');
+    border-#{theme('direction.left','value')}: 1px solid theme('color.gray.200');
 
     @media(min-width: theme('breakpoints.lg','value')){
         width: 420px;

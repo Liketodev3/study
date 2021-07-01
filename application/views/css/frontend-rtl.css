@@ -3711,7 +3711,7 @@ p {
         bottom: -18px; } }
 
 .box__secondary {
-  border-left: 1px solid var(--color-gray-200); }
+  border-right: 1px solid var(--color-gray-200); }
   @media (min-width: 991px) {
     .box__secondary {
       width: 420px; } }
