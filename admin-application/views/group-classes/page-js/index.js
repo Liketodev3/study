@@ -35,14 +35,21 @@ $(function() {
 		}); 
 	};
     
-    removeClass = function(id){
-		if(confirm(langLbl.confirmRemove))
-		{
-			$(dv).html(fcom.getLoader());
-			fcom.ajax(fcom.makeUrl('GroupClasses','removeClass',[id]),'',function(t){
-				searchGroupClasses(document.frmSrch);
-			});
+	removeClass = function (id) {
+		if (!confirm(langLbl.confirmRemove)) {
+			return;
 		}
+		$(dv).html(fcom.getLoader());
+		fcom.ajax(fcom.makeUrl('GroupClasses', 'removeClass', [id]), '', function (t) {
+			try {
+				let res = JSON.parse(t);
+				res.status ? $.systemMessage(t.msg, 'alert--success') : $.systemMessage(t.msg, '');
+			} catch (exc) {
+				console.error(exc);
+			}
+			searchGroupClasses(document.frmSrch);
+		});
+
 	};
 
 	cancelClass = function(id){

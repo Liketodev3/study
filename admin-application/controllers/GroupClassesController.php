@@ -169,19 +169,13 @@ class GroupClassesController extends AdminBaseController
         }
         $db = FatApp::getDb();
         $srch = TeacherGroupClassesSearch::getSearchObj($this->adminLangId);
-        $srch->addMultipleFields(['issrep_id']);
         $srch->doNotCalculateRecords();
         $srch->setPagesize(1);
         $srch->addCondition('grpcls_id', '=', $grpclsId);
         $class_details = $db->fetch($srch->getResultSet());
-
-        if (empty($class_details)) {
+        if (empty($class_details) || ($class_details['grpcls_status'] == TeacherGroupClasses::STATUS_COMPLETED)) {
             FatUtility::dieJsonError(Label::getLabel("LBL_Invalid_Request"));
         }
-        if ($class_details['issrep_id'] > 0 || $class_details['grpcls_status'] == TeacherGroupClasses::STATUS_COMPLETED) {
-            FatUtility::dieJsonError(Label::getLabel("LBL_Invalid_Request"));
-        }
-
         $db->startTransaction();
         /* update all lesson status for this class[ */
         $sLessonSrchObj = new ScheduledLessonSearch();
