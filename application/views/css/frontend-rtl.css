@@ -4040,7 +4040,8 @@ p {
     background: var(--color-primary);
     color: var(--color-white);
     border-radius: 3px;
-    padding: 0 var(--padding-10) 0 var(--padding-3);
+    padding: 0 var(--padding-3);
+    padding-left: var(--padding-10);
     line-height: 30px;
     display: block;
     font-size: var(--font-size-small);

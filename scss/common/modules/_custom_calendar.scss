@@ -216,6 +216,10 @@ $dashboard-calendar: "dashboard-calendar";
     }
 }
 
+.slot_unavailable .fc-event-time{
+    color: #111;
+}
+
 .availability-setting-calendar .slot_available{
     background: #0ab359;
     border-color: #0ab359;
