@@ -4689,7 +4689,7 @@ p {
 
 .group-actions .btn {
   text-transform: uppercase;
-  margin-right: var(--margin-14); }
+  margin-left: var(--margin-14); }
 
 .group-actions .seat-left {
   color: var(--color-secondary);
