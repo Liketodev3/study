@@ -92,8 +92,8 @@ $("document").ready(function () {
     $('select[name="orderBy"]').change(function () {
         var frm = document.frmReviewSearch;
         $(frm.page).val(1);
-        // var dv = '#itemRatings';
-        // $(dv).html('');
+        var dv = '#itemRatings';
+        $(dv).html('');
         reviews(document.frmReviewSearch);
     })
 
