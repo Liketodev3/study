@@ -3,12 +3,12 @@
     <div class="container container--narrow">
         <div class="error">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-5 col-xl-4">
                     <div class="error__media">
                         <img src="<?php echo CONF_WEBROOT_URL; ?>images/404.png">
                     </div>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-7 col-xl-8">
                     <div class="error__content align-left margin-bottom-5">
                         <h3>Sorry! The page cannot be found.</h3>
                         <p>The page you are looking for might have been removed, had its name changed, or is temporarily unavailable. Please try the following::</p>

@@ -3,7 +3,18 @@ $error: "error";
 .#{$error} {
 
     &__media{
-        text-align: center;
+        
+        @media(min-width: theme('breakpoints.lg','value')){
+            text-align: center;
+        }
+
+        img{
+            margin: 0 auto;
+            @media(max-width: theme('breakpoints.md','value')){
+                margin-bottom: theme('margin.8');
+                max-width: 150px;
+            }
+        }
     }
 
     &__content{
