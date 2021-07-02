@@ -3,6 +3,7 @@
 .section--footer{
     background: theme('color.dark-blue');
     color: theme('color.white');
+    padding: 4rem 0 2rem;
     @media(max-width: theme('breakpoints.md','value')) {
         padding: 0 !important;
     }
@@ -13,8 +14,8 @@
         padding-bottom: 50px;
     }
     .footer--row{
-        margin-bottom: theme('margin.20');
-        padding-bottom: theme('margin.20');
+        margin-bottom: theme('margin.10');
+        padding-bottom: theme('padding.6');
         border-bottom: 2px solid rgba(255,255,255,0.1);
 
         @media(max-width: theme('breakpoints.xl','value')) {
