@@ -3451,8 +3451,8 @@ p {
 
 .list__head {
   text-align: center;
-  float: left;
-  clear: left; }
+  float: right;
+  clear: right; }
   @media (min-width: 767px) {
     .list__head {
       max-width: 140px; } }
@@ -3504,12 +3504,12 @@ p {
 
 @media (min-width: 767px) {
   .list__body {
-    float: right;
-    clear: right; } }
+    float: left;
+    clear: left; } }
 
 .list__action {
-  float: left;
-  clear: left; }
+  float: right;
+  clear: right; }
   @media (min-width: 767px) {
     .list__action {
       max-width: 140px; } }
