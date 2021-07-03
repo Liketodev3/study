@@ -3,9 +3,11 @@
     <div class="container container--narrow">
         <div class="copyright">
             <div class="footer__logo">
-                <a href="#">
-                    <img src="<?php echo CommonHelper::generateFullUrl('Image', 'siteLogo', array(CommonHelper::getLangId()), CONF_WEBROOT_FRONT_URL); ?>" alt="">
-                </a>
+                <?php if (CommonHelper::demoUrl()) { ?>
+                    <img src="<?php echo CONF_WEBROOT_FRONTEND . 'images/yocoach-logo.svg'; ?>" alt="" />
+                <?php } else { ?>
+                    <img src="<?php echo CommonHelper::generateFullUrl('Image', 'siteLogo', array(CommonHelper::getLangId()), CONF_WEBROOT_FRONT_URL); ?>" alt="" />
+                <?php } ?>
             </div>
             <p>
                 <?php

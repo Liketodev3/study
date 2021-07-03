@@ -16,13 +16,19 @@ if (null != $btn) {
 
 <div class="payment-page">
     <div class="cc-payment">
-        <div class="logo-payment"><img src="<?php echo CommonHelper::generateFullUrl('Image','paymentPageLogo',array($siteLangId), CONF_WEBROOT_FRONT_URL); ?>" alt="<?php echo FatApp::getConfig('CONF_WEBSITE_NAME_'.$siteLangId) ?>" title="<?php echo FatApp::getConfig('CONF_WEBSITE_NAME_'.$siteLangId) ?>" /></div>
+        <div class="logo-payment">
+            <?php if (CommonHelper::demoUrl()) { ?>
+                <img src="<?php echo CONF_WEBROOT_FRONTEND . 'images/yocoach-logo.svg'; ?>" alt="" />
+            <?php } else { ?>
+                <img src="<?php echo CommonHelper::generateFullUrl('Image', 'paymentPageLogo', array($siteLangId), CONF_WEBROOT_FRONT_URL); ?>" alt="<?php echo FatApp::getConfig('CONF_WEBSITE_NAME_' . $siteLangId) ?>" title="<?php echo FatApp::getConfig('CONF_WEBSITE_NAME_' . $siteLangId) ?>" />
+            <?php } ?>
+        </div>
         <div class="reff row">
             <div class="col-lg-6 col-md-6 col-sm-12">
-                <p class=""><?php echo Label::getLabel('LBL_Payable_Amount', $siteLangId);?> : <strong><?php echo CommonHelper::displayMoneyFormat($paymentAmount)?></strong> </p>
+                <p class=""><?php echo Label::getLabel('LBL_Payable_Amount', $siteLangId); ?> : <strong><?php echo CommonHelper::displayMoneyFormat($paymentAmount) ?></strong> </p>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12">
-                <p class=""><?php echo Label::getLabel('LBL_Order_Invoice', $siteLangId);?>: <strong><?php echo $orderInfo["order_id"] ; ?></strong></p>
+                <p class=""><?php echo Label::getLabel('LBL_Order_Invoice', $siteLangId); ?>: <strong><?php echo $orderInfo["order_id"]; ?></strong></p>
             </div>
         </div>
         <div class="payment-from">      
@@ -44,7 +50,7 @@ if (null != $btn) {
         var action = $(frm).attr('action');
         var submitBtn = $("form#paymentForm-js input[type='submit']");
         $.mbsmessage(langLbl.processing, false, 'alert--process alert');
-        submitBtn.attr('disabled', 'disabled');        
+        submitBtn.attr('disabled', 'disabled');
         window.location.href = $("form#paymentForm-js").attr('action');
     }
 </script>
