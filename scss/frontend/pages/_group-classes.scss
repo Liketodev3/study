@@ -144,7 +144,7 @@
 .group-actions{
     .btn{
         text-transform: uppercase;
-        margin-right: theme('margin.14');
+        margin-#{theme('direction.right','value')}: theme('margin.14');
     }
     .seat-left{
         color: theme('color.secondary');

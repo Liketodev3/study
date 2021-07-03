@@ -1434,7 +1434,10 @@ p {
 .footer_social-links li a {
   display: -webkit-box;
   display: -ms-flexbox;
-  display: flex; }
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center; }
   .footer_social-links li a img {
     opacity: 1;
     width: 24px;
