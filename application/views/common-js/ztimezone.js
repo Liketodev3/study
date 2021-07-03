@@ -1,4 +1,3 @@
-//== function to set and get cookies
 
 function setCookie(key, value) {
     var expires = new Date();
@@ -15,8 +14,6 @@ function getCookie(key) {
     var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
     return keyValue ? keyValue[2] : null;
 }
-
-//=== function to get timezone /== use functions from jstz.min.js file
 
 $(document).ready(function() {
 	var user_timezone  = getCookie('user_timezone');
