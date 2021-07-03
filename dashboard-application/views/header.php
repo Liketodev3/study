@@ -203,7 +203,15 @@ $layoutDirection = CommonHelper::getLayoutDirection();
             <!-- [ SIDE BAR PRIMARY ========= -->
             <div id="sidebar__primary" class="sidebar__primary">
                 <div class="sidebar__head">
-                    <figure class="logo"><a href="<?php echo CommonHelper::generateUrl('', '', [], CONF_WEBROOT_FRONT_URL); ?>"><img src="<?php echo CommonHelper::generateFullUrl('Image', 'siteLogo', array($siteLangId), CONF_WEBROOT_FRONT_URL); ?>" alt="<?php echo $websiteName; ?>"></a></figure>
+                    <figure class="logo">
+                            <a href="<?php echo CommonHelper::generateUrl('', '', [], CONF_WEBROOT_FRONT_URL); ?>">
+                                <?php if (CommonHelper::demoUrl()) { ?>
+                                    <img src="<?php echo CONF_WEBROOT_FRONTEND . 'images/yocoach-logo.svg'; ?>" alt="" />
+                                <?php } else { ?>
+                                    <img src="<?php echo CommonHelper::generateFullUrl('Image', 'siteLogo', array($siteLangId), CONF_WEBROOT_FRONT_URL); ?>" alt="<?php echo $websiteName; ?>">
+                                <?php } ?>
+                            </a>
+                        </figure>
                     <!-- [ PROFILE ========= -->
                     <div class="profile">
 

@@ -17,7 +17,11 @@
                     </a>
                     <div class="header__logo">
                         <a href="<?php echo CommonHelper::generateUrl(); ?>">
-                            <img src="<?php echo CommonHelper::generateFullUrl('Image', 'siteLogo', array($siteLangId), CONF_WEBROOT_FRONT_URL); ?>" alt="">
+                            <?php if (CommonHelper::demoUrl()) { ?>
+                                <img src="<?php echo CONF_WEBROOT_FRONTEND . 'images/yocoach-logo.svg'; ?>" alt="" />
+                            <?php } else { ?>
+                                <img src="<?php echo CommonHelper::generateFullUrl('Image', 'siteLogo', array($siteLangId), CONF_WEBROOT_FRONT_URL); ?>" alt="" />
+                            <?php } ?>
                         </a>
                     </div>
                     <?php $this->includeTemplate('header/explore-subjects.php'); ?>

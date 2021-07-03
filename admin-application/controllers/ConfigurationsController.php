@@ -106,10 +106,10 @@ class ConfigurationsController extends AdminBaseController
         $msg = '';
         $record = new Configurations();
         if (
-            isset($post["CONF_SEND_SMTP_EMAIL"]) &&
-            $post["CONF_SEND_EMAIL"] &&
-            $post["CONF_SEND_SMTP_EMAIL"] &&
-            (
+                isset($post["CONF_SEND_SMTP_EMAIL"]) &&
+                $post["CONF_SEND_EMAIL"] &&
+                $post["CONF_SEND_SMTP_EMAIL"] &&
+                (
                 ($post["CONF_SEND_SMTP_EMAIL"] != FatApp::getConfig("CONF_SEND_SMTP_EMAIL")) ||
                 ($post["CONF_SMTP_HOST"] != FatApp::getConfig("CONF_SMTP_HOST")) ||
                 ($post["CONF_SMTP_PORT"] != FatApp::getConfig("CONF_SMTP_PORT")) ||
@@ -232,6 +232,17 @@ class ConfigurationsController extends AdminBaseController
         if (!$file_type) {
             FatUtility::dieJsonError($this->str_invalid_request);
         }
+        if (CommonHelper::demoUrl()) {
+            $logoTypes = [
+                AttachedFile::FILETYPE_FRONT_LOGO,
+                AttachedFile::FILETYPE_FRONT_WHITE_LOGO,
+                AttachedFile::FILETYPE_PAYMENT_PAGE_LOGO,
+                AttachedFile::FILETYPE_MOBILE_LOGO
+            ];
+            if (in_array($file_type, $logoTypes)) {
+                FatUtility::dieJsonError(Label::getLabel('LBL_YOU_CANNOT_CHANGE_LOGO_ON_DEMO', $this->adminLangId));
+            }
+        }
         $allowedFileTypeArr = [
             AttachedFile::FILETYPE_ADMIN_LOGO,
             AttachedFile::FILETYPE_FRONT_LOGO,
@@ -318,6 +329,9 @@ class ConfigurationsController extends AdminBaseController
     public function removeDesktopLogo($lang_id = 0)
     {
         $this->objPrivilege->canEditGeneralSettings();
+        if (CommonHelper::demoUrl()) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_YOU_CANNOT_CHANGE_LOGO_ON_DEMO', $this->adminLangId));
+        }
         $lang_id = FatUtility::int($lang_id);
         $fileHandlerObj = new AttachedFile();
         if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_FRONT_LOGO, 0, 0, 0, $lang_id)) {
@@ -327,9 +341,13 @@ class ConfigurationsController extends AdminBaseController
         $this->set('msg', Label::getLabel('MSG_Deleted_Successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
+
     public function removeDesktopWhiteLogo($lang_id = 0)
     {
         $this->objPrivilege->canEditGeneralSettings();
+        if (CommonHelper::demoUrl()) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_YOU_CANNOT_CHANGE_LOGO_ON_DEMO', $this->adminLangId));
+        }
         $lang_id = FatUtility::int($lang_id);
         $fileHandlerObj = new AttachedFile();
         if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_FRONT_WHITE_LOGO, 0, 0, 0, $lang_id)) {
@@ -382,6 +400,9 @@ class ConfigurationsController extends AdminBaseController
     public function removePaymentPageLogo($lang_id = 0)
     {
         $this->objPrivilege->canEditGeneralSettings();
+        if (CommonHelper::demoUrl()) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_YOU_CANNOT_CHANGE_LOGO_ON_DEMO', $this->adminLangId));
+        }
         $lang_id = FatUtility::int($lang_id);
         $fileHandlerObj = new AttachedFile();
         if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_PAYMENT_PAGE_LOGO, 0, 0, 0, $lang_id)) {
@@ -421,6 +442,9 @@ class ConfigurationsController extends AdminBaseController
     public function removeMobileLogo($lang_id = 0)
     {
         $this->objPrivilege->canEditGeneralSettings();
+        if (CommonHelper::demoUrl()) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_YOU_CANNOT_CHANGE_LOGO_ON_DEMO', $this->adminLangId));
+        }
         $lang_id = FatUtility::int($lang_id);
         $fileHandlerObj = new AttachedFile();
         if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_MOBILE_LOGO, 0, 0, 0, $lang_id)) {
@@ -571,14 +595,14 @@ class ConfigurationsController extends AdminBaseController
                 $fld = $frm->addCheckBoxes(Label::getLabel("LBL_Lesson_durations", $this->adminLangId), "CONF_PAID_LESSON_DURATION", $bookingSlots, array(), array('class' => 'list-inline'));
                 $fld->htmlAfterField = "<br><small>" . Label::getLabel("htmlAfterField_LESSON_DURATIONS_TEXT", $this->adminLangId) . ".</small>";
 
-                $frm->addRadioButtons(Label::getLabel("LBL_Default_Lesson_duration",  $this->adminLangId), "CONF_DEFAULT_PAID_LESSON_DURATION", $bookingSlots, '', array('class' => 'list-inline'))->requirements()->setRequired();
+                $frm->addRadioButtons(Label::getLabel("LBL_Default_Lesson_duration", $this->adminLangId), "CONF_DEFAULT_PAID_LESSON_DURATION", $bookingSlots, '', array('class' => 'list-inline'))->requirements()->setRequired();
 
                 $frm->addRadioButtons(
-                    Label::getLabel("LBL_Trial_Lesson_duration",  $this->adminLangId),
-                    "CONF_TRIAL_LESSON_DURATION",
-                    $bookingSlots,
-                    '',
-                    array('class' => 'list-inline')
+                        Label::getLabel("LBL_Trial_Lesson_duration", $this->adminLangId),
+                        "CONF_TRIAL_LESSON_DURATION",
+                        $bookingSlots,
+                        '',
+                        array('class' => 'list-inline')
                 )->requirements()->setRequired();
                 $fld3 = $frm->addIntegerField(Label::getLabel("LBL_END_LESSON_DURATION", $this->adminLangId), "CONF_ALLOW_TEACHER_END_LESSON");
                 $fld3->htmlAfterField = "<br><small>" . Label::getLabel("LBL_Duration_After_Teacher_Can_End_Lesson_(In_Minutes)", $this->adminLangId) . ".</small>";
@@ -760,4 +784,5 @@ class ConfigurationsController extends AdminBaseController
             FatUtility::dieJsonError($e->getMessage());
         }
     }
+
 }
