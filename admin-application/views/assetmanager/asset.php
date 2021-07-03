@@ -60,7 +60,7 @@
                 var fileurl = '';
                 var ext = file.split('.').pop().toLowerCase();
                 var filename = file.substr(file.lastIndexOf("/") + 1);
-				var filepath = file.replace('/editor/editor-image','');
+				var filepath = file.replace('/image/editor-image/','');
 				if ($.inArray(ext, ['gif', 'png', 'jpg', 'jpeg']) != -1) {
                     $("#preview_id").html("<table><tr><td><a id='idFile' href='" + file + "' target='_blank' rel='"+filepath+"'><img id='imgFile' src='" + file + "' alt='' style='width:70px;padding:4px;border:#cccccc 1px solid;background:#ffffff;margin-bottom:3px' /></a></td><td style='padding-left:20px;width:100%;text-align:left;'>" + filename + "<br /><a id='lnkDelFile' style='font-weight:normal;font-size:10px;color:#c90000;word-spacing:2px;white-space:nowrap;' href='javascript:deleteFile()'>DELETE FILE</a></td></tr></table>");
                     if (fullpath) { fileurl = window.location.protocol + "//" + window.location.host + file }
@@ -121,6 +121,10 @@
                 $.post('server/delfile.php', { file: $("#idFile").attr("rel") },
                 function (data) {
                     refresh();
+                    data = JSON.parse(data);
+                    if(data.status == 1){
+                        $('#divPreview').slideUp(1000);
+                    }
                 });
             }
         }
@@ -132,7 +136,6 @@
                     var active_folder = data.substr(0, data.lastIndexOf('/'));
                     $("#active_folder").val(active_folder);
                     $("#folder_id").html(active_folder.replace(base, '') + "/   &nbsp;&nbsp;&nbsp; <a id='lnkDelFolder' href='javascript:deleteFolder()' style='display:none;font-weight:normal;font-size:10px;color:#c90000;word-spacing:2px'>DELETE&nbsp;FOLDER</a>");
-
                     refresh();
                 });
             }
