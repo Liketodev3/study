@@ -362,10 +362,12 @@ FatEventCalendar.prototype.TeacherGeneralAvailaibility = function (current_time)
             center: '',
             right: ''
         },
+        firstDay : 0,
         dayHeaderFormat: { weekday: 'short' },
         eventSources: [
             {
                 events: function (fetchInfo, successCallback, failureCallback) {
+                    console.log(fetchInfo);
                     postData = "start=" + moment(fetchInfo.start).format('YYYY-MM-DD HH:mm:ss') + "&end=" + moment(fetchInfo.end).format('YYYY-MM-DD HH:mm:ss');
                     fcom.ajax(fcom.makeUrl('Teachers', 'getTeacherGeneralAvailabilityJsonData', [fecal.teacherId], confFrontEndUrl), postData, function (docs) {
                         successCallback(docs);
