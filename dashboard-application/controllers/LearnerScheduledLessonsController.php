@@ -121,11 +121,7 @@ class LearnerScheduledLessonsController extends LearnerBaseController
             Message::addErrorMessage(Label::getLabel('LBL_Access_Denied'));
             FatApp::redirectUser(CommonHelper::generateUrl('LearnerScheduledLessons'));
         }
-        if ($currentLangCode = strtolower(Language::getLangCode($this->siteLangId))) {
-            if (file_exists(CONF_THEME_PATH . "js/locales/{$currentLangCode}.js")) {
-                $this->_template->addJs("js/locales/{$currentLangCode}.js");
-            }
-        }
+
         $lessonRow['learnerId'] = $lessonDetailRow['sldetail_learner_id'];
         $lessonRow['teacherId'] = $lessonRow['slesson_teacher_id'];
         $flashCardEnabled = FatApp::getConfig('CONF_ENABLE_FLASHCARD', FatUtility::VAR_BOOLEAN, true);
@@ -144,6 +140,11 @@ class LearnerScheduledLessonsController extends LearnerBaseController
         $this->_template->addJs('js/fateventcalendar.js');
         $this->_template->addJs('js/jquery.countdownTimer.min.js');
         $this->_template->addJs(['js/jquery.barrating.min.js']);
+        if ($currentLangCode = strtolower(Language::getLangCode($this->siteLangId))) {
+            if (file_exists(CONF_THEME_PATH . "js/locales/{$currentLangCode}.js")) {
+                $this->_template->addJs("js/locales/{$currentLangCode}.js");
+            }
+        }
         $this->_template->render();
     }
 
