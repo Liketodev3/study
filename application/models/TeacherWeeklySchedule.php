@@ -208,9 +208,10 @@ class TeacherWeeklySchedule extends MyAppModel
         $db = FatApp::getDb();
         $srch = new ScheduledLessonSearch(false);
         $userIds = [$userId];
-        if(UserAuthentication::isUserLogged()){
+        if (UserAuthentication::isUserLogged()) {
             array_push($userIds, UserAuthentication::getLoggedUserId(true));
         }
+
         $srch->checkUserLessonBooking($userIds, $startTime, $endTime);
         $srch->setPageSize(1);
         $getResultSet = $srch->getResultSet();
@@ -219,24 +220,30 @@ class TeacherWeeklySchedule extends MyAppModel
             $this->error = Label::getLabel('LBL_Either_You_or_teacher_not_available_for_this_slot');
             return false;
         }
-        $dateTime = new DateTime($startTime);
-        $weekStartAndEndDate = MyDate::getWeekStartAndEndDate($dateTime);
-        $weekStart = $weekStartAndEndDate['weekStart'];
+
+        $userTimezone = MyDate::getUserTimeZone();
+        $systemTimeZone = MyDate::getTimeZone();
+
+        $startDateTime = MyDate::changeDateTimezone($startTime, $systemTimeZone, $userTimezone);
+        $dateTime = new DateTime($startDateTime, new DateTimeZone($userTimezone));
+
+        $weekStartAndEndDate = MyDate::getWeekStartAndEndDate($dateTime, 'Y-m-d H:i');
+        $weekStart = MyDate::changeDateTimezone($weekStartAndEndDate['weekStart'], $userTimezone, $systemTimeZone);
+        $weekEnd = MyDate::changeDateTimezone($weekStartAndEndDate['weekEnd'], $userTimezone, $systemTimeZone);
 
         $tWsrchC = new TeacherWeeklyScheduleSearch(false, false);
         $tWsrchC->addCondition('twsch_user_id', '=', $userId);
         $tWsrchC->addMultipleFields(['twsch_is_available']);
-        $tWsrchC->addCondition('mysql_func_DATE_FORMAT(twsch_end_date,"%U-%Y")', '=', 'mysql_func_DATE_FORMAT("' . $startTime . '","%U-%Y")', 'AND', true);
+        $tWsrchC->addCondition('mysql_func_CONCAT(twsch_date," ", twsch_start_time)', '<', $weekEnd, 'AND', true);
+        $tWsrchC->addCondition('mysql_func_CONCAT(twsch_end_date," ", twsch_end_time)', '>', $weekStart, 'AND', true);
         $tWsrchC->setPageSize(1);
         $tWRsC = $tWsrchC->getResultSet();
-        $tWcountC = $tWRsC->totalRecords();
 
-        if ($tWcountC > 0) {
+        if ($tWRsC->totalRecords() > 0) {
             $tWsrch = clone $tWsrchC;
             $tWsrch->addCondition('mysql_func_CONCAT(twsch_date," ", twsch_start_time)', '<=', $startTime, 'AND', true);
             $tWsrch->addCondition('mysql_func_CONCAT( twsch_end_date," ", twsch_end_time)', '>=', $endTime, 'AND', true);
             $tWRs = $tWsrch->getResultSet();
-            $tWcount = 0;
             $tWcount = $tWRs->totalRecords();
             $tWRows = $db->fetch($tWRs);
             if ($tWcount > 0) {
@@ -258,16 +265,18 @@ class TeacherWeeklySchedule extends MyAppModel
 
         $generalAvail = 0;
         if ($gaCount > 0) {
-            $weekStartDateDB = TeacherGeneralAvailability::DB_WEEK_STARTDATE;
-            $weekDiff = MyDate::week_between_two_dates($weekStartDateDB, $weekStart);
 
-            $userTimezone = MyDate::getUserTimeZone();
-            $systemTimeZone = MyDate::getTimeZone();
+            $weekStartDateDB = TeacherGeneralAvailability::DB_WEEK_STARTDATE;
+            $teacherTimeZone =  (empty($gARows[0]['user_timezone'])) ? MyDate::getTimeZone() : $gARows[0]['user_timezone'];
+
+            $midPoint = (strtotime($weekStart) + strtotime($weekEnd)) / 2;
+            $dateTime = new DateTime(date('Y-m-d', $midPoint));
+            $weekRange = MyDate::getWeekStartAndEndDate($dateTime);
+
+            $weekDiff = MyDate::week_between_two_dates($weekStartDateDB, $weekRange['weekStart']);
 
             $startTime = MyDate::changeDateTimezone($startTime, $systemTimeZone, $userTimezone);
             $endTime = MyDate::changeDateTimezone($endTime, $systemTimeZone, $userTimezone);
-
-            $teacherTimeZone =  (empty($gARows[0]['user_timezone'])) ? MyDate::getTimeZone() : $gARows[0]['user_timezone'];
 
             foreach ($gARows as $row) {
 
@@ -294,101 +303,5 @@ class TeacherWeeklySchedule extends MyAppModel
         }
         $this->error = Label::getLabel('LBL_NO_SLOT_AVAILABEL_ON_THIS_TIME_RANGE');
         return false;
-    }
-
-    public static function isSlotAvailable($teacherId, $startDateTime, $endDateTime, $weekStart = '')
-    {
-        $teacherId = FatUtility::int($teacherId);
-        if ($teacherId < 1) {
-            trigger_error(Label::getLabel("LBL_Invalid_Teacher_Id_Passed"), E_USER_ERROR);
-        }
-        $startDateTime = date('Y-m-d H:i:s', strtotime($startDateTime));
-        if (!FatDate::validateDateString($startDateTime) || $startDateTime == "1970-01-01 05:30:00" || $startDateTime == "0000-00-00 00:00:00") {
-            trigger_error(Label::getLabel('LBL_Invalid_Date_selected'), E_USER_ERROR);
-        }
-        $endDateTime = date('Y-m-d H:i:s', strtotime($endDateTime));
-        if (!FatDate::validateDateString($endDateTime) || $endDateTime == "1970-01-01 05:30:00" || $endDateTime == "0000-00-00 00:00:00") {
-            trigger_error(Label::getLabel('LBL_Invalid_Date_selected'), E_USER_ERROR);
-        }
-        $dateTime = new DateTime($startDateTime);
-        $weekStartAndEndDate = MyDate::getWeekStartAndEndDate($dateTime);
-        /* [ */
-        $weeklySchSrchObj = new TeacherWeeklyScheduleSearch();
-        $weeklySchSrchObj->addCondition('twsch_user_id', '=', $teacherId);
-        /* ] */
-        /* [ */
-        $weeklySchSrch = clone $weeklySchSrchObj;
-        $weeklySchSrch->addCondition('mysql_func_CONCAT( twsch_date," ",twsch_start_time)', '<=', $startDateTime, 'AND', true);
-        $weeklySchSrch->addCondition('mysql_func_CONCAT(twsch_end_date," ",twsch_end_time)', '>=', $startDateTime, 'AND', true);
-        $weeklySchSrch->setPageSize(1);
-        $weeklySchSrch->addMultipleFields(['twsch_is_available']);
-        $weeklySchRs = $weeklySchSrch->getResultSet();
-        $weeklySchSelectedSlotRow = FatApp::getDb()->fetch($weeklySchRs);
-        /* ] */
-        /* [ */
-        $weeklySchDataAddedSrch = clone $weeklySchSrchObj;
-        $weeklySchDataAddedSrch->addCondition('mysql_func_DATE(twsch_date)', '>=', $weekStartAndEndDate['weekStart'], 'AND', true);
-        $weeklySchDataAddedSrch->addCondition('mysql_func_DATE(twsch_end_date)', '<=', $weekStartAndEndDate['weekEnd'], 'AND', true);
-        $weeklySchDataAddedRs = $weeklySchDataAddedSrch->getResultSet();
-        $isWeeklySchDataAdded = $weeklySchDataAddedRs->totalRecords();
-        /* ] */
-        if ($isWeeklySchDataAdded > 0) {
-            if (!$weeklySchSelectedSlotRow) {
-                return false;
-            }
-            if ($weeklySchSelectedSlotRow['twsch_is_available'] == 1) {
-                return true;
-            }
-            return false;
-        }
-        if (!$weekStart) {
-            $weekStart = $weekStartAndEndDate['weekStart'];
-        }
-        /* Now, start checking in general Availablity[ */
-        $gaSrch = new TeacherGeneralAvailabilitySearch();
-        $gaSrch->joinUser();
-        $gaSrch->addMultipleFields(['tga.*', 'user_timezone']);
-        $gaSrch->addCondition('tgavl_user_id', '=', $userId);
-        $gaRs = $gaSrch->getResultSet();
-        $gARows = FatApp::getDb()->fetchAll($gaRs);
-        $gaCount = $gaRs->totalRecords();
-        $generalAvail = 0;
-        if ($gaCount > 0) {
-            $weekStartDateDB = TeacherGeneralAvailability::DB_WEEK_STARTDATE;
-            $weekDiff = MyDate::week_between_two_dates($weekStartDateDB, $weekStart);
-
-            $userTimezone = MyDate::getUserTimeZone();
-            $systemTimeZone = MyDate::getTimeZone();
-
-            $postStartDateTime = MyDate::changeDateTimezone($startDateTime, $systemTimeZone, $userTimezone);
-            $postEndDateTime = MyDate::changeDateTimezone($endDateTime, $systemTimeZone, $userTimezone);
-
-            $teacherTimeZone =  (empty($gARows[0]['user_timezone'])) ? MyDate::getTimeZone() : $gARows[0]['user_timezone'];
-
-
-            foreach ($gARows as $row) {
-                $dateUnixTime = strtotime($row['tgavl_date'] . ' ' . $row['tgavl_start_time']);
-                $endDateUnixTime = strtotime($row['tgavl_end_date'] . ' ' . $row['tgavl_end_time']);
-
-                $date = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', $dateUnixTime));
-                $endDate = date('Y-m-d H:i:s', strtotime('+ ' . $weekDiff . ' weeks', $endDateUnixTime));
-
-                $removedstTimeFromStartTime =  MyDate::isDateWithDST($date, $teacherTimeZone);
-                $removedstTimeFromEndTime =  MyDate::isDateWithDST($endDate, $teacherTimeZone);
-
-                $startDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $date, true, $userTimezone, $removedstTimeFromStartTime);
-                $endDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $endDate, true, $userTimezone, $removedstTimeFromEndTime);
-
-
-                if (strtotime($startDateTime) <= strtotime($postStartDateTime) && strtotime($endDateTime) >= strtotime($postEndDateTime)) {
-                    $generalAvail++;
-                    break;
-                }
-            }
-        }
-        if ($generalAvail <= 0) {
-            return false;
-        }
-        return true;
     }
 }
