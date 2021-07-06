@@ -31,10 +31,12 @@ class ReportedIssuesController extends AdminBaseController
             FatUtility::dieWithError($this->str_invalid_request);
         }
         $srch = ReportedIssue::getSearchObject();
-        $srch->addMultipleFields(['repiss.repiss_id', 'repiss.repiss_title', 'repiss.repiss_sldetail_id',
+        $srch->addMultipleFields([
+            'repiss.repiss_id', 'repiss.repiss_title', 'repiss.repiss_sldetail_id',
             'repiss.repiss_reported_on', 'repiss.repiss_reported_by', 'repiss.repiss_status',
             'repiss.repiss_comment', 'repiss.repiss_updated_on', 'sldetail.sldetail_order_id',
-            'CONCAT(user.user_first_name, " ", user.user_last_name) AS reporter_username']);
+            'CONCAT(user.user_first_name, " ", user.user_last_name) AS reporter_username'
+        ]);
         if ($post['repiss_status'] > 0) {
             $srch->addCondition('repiss.repiss_status', '=', $post['repiss_status']);
         }
@@ -82,7 +84,8 @@ class ReportedIssuesController extends AdminBaseController
         }
         $logs = ReportedIssue::getIssueLogsById($issueId);
         $lastLog = end($logs);
-        $frm = $this->getActionForm();
+        $isGroupClass = (FatUtility::int($issue['slesson_grpcls_id']) > 0);
+        $frm = $this->getActionForm($isGroupClass);
         $frm->fill([
             'reislo_repiss_id' => $issue['repiss_id'],
             'reislo_action' => $lastLog['reislo_action'] ?? ''
@@ -101,9 +104,20 @@ class ReportedIssuesController extends AdminBaseController
         if (!$post = $frm->getFormDataFromArray(FatApp::getPostedData())) {
             FatUtility::dieJsonError(current($frm->getValidationErrors()));
         }
+
         if (ReportedIssue::ACTION_ESCLATE_TO_ADMIN == $post['reislo_action']) {
             FatUtility::dieJsonError(Label::getLabel('LBL_PLEASE_SELECT_DIFFERENT_ACTION'));
         }
+
+        $issue = ReportedIssue::getIssueById($post['reislo_repiss_id']);
+        if (empty($issue)) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
+        }
+
+        if ($issue['slesson_grpcls_id'] > 0 && $post['reislo_action'] == ReportedIssue::ACTION_RESET_AND_UNSCHEDULED) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
+        }
+
         $reportedIssue = new ReportedIssue($post['reislo_repiss_id'], $this->admin_id, ReportedIssue::USER_TYPE_SUPPORT);
         if (!$reportedIssue->setupIssueAction($post['reislo_action'], $post['reislo_comment'], true)) {
             FatUtility::dieJsonError($reportedIssue->getError());
@@ -129,17 +143,20 @@ class ReportedIssuesController extends AdminBaseController
         return $frm;
     }
 
-    private function getActionForm()
+    private function getActionForm(bool $isGroupClass = false)
     {
         $frm = new Form('actionFrm');
         $repissId = $frm->addHiddenField('', 'reislo_repiss_id');
         $repissId->requirements()->setRequired();
         $repissId->requirements()->setIntPositive();
         $options = ReportedIssue::getActionsArr();
+        unset($options[ReportedIssue::ACTION_ESCLATE_TO_ADMIN]);
+        if ($isGroupClass) {
+            unset($options[ReportedIssue::ACTION_RESET_AND_UNSCHEDULED]);
+        }
         $frm->addSelectBox(Label::getLabel('LBL_TAKE_ACTION', $this->adminLangId), 'reislo_action', $options)->requirements()->setRequired();
         $frm->addTextArea(Label::getLabel('LBL_ADMIN_COMMENT'), 'reislo_comment', '')->requirements()->setRequired();
         $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_Save'));
         return $frm;
     }
-
 }

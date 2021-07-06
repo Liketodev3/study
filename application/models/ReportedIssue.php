@@ -99,6 +99,7 @@ class ReportedIssue extends MyAppModel
             $this->error = Label::getLabel('LBL_PLEASE_TRY_AGAIN');
             return false;
         }
+
         /* Add reported issue log */
         $issueId = $this->getMainTableRecordId();
         $record = new TableRecord(ReportedIssue::DB_TBL_LOG);
@@ -117,19 +118,28 @@ class ReportedIssue extends MyAppModel
         }
         /* Set issue status & refund percentage */
         $status = static::STATUS_RESOLVED;
-        if ($action == static::ACTION_ESCLATE_TO_ADMIN) {
-            $status = static::STATUS_ESCLATED;
+        $refund = 0;
+        $isTeacherPaid = 1;
+        switch ($action) {
+            case static::ACTION_COMPLETE_HALF_REFUND:
+                $refund = 50;
+                break;
+            case static::ACTION_COMPLETE_FULL_REFUND:
+                $refund = 100;
+                break;
+            case static::ACTION_RESET_AND_UNSCHEDULED:
+                $isTeacherPaid = 0;
+                $comment = Label::getLabel('LBL_CLASS_UNSCHEDULED');
+                break;
+            case static::ACTION_ESCLATE_TO_ADMIN:
+                $status = static::STATUS_ESCLATED;
+                break;
         }
+
         if ($closed) {
             $status = static::STATUS_CLOSED;
         }
-        $refund = 0;
-        if ($action == static::ACTION_COMPLETE_HALF_REFUND) {
-            $refund = 50;
-        }
-        if ($action == static::ACTION_COMPLETE_FULL_REFUND) {
-            $refund = 100;
-        }
+
         /* Transaction settlement for refund percentage */
         if ($closed && !$this->executeLessonTransactions($issueId, $refund)) {
             $db->rollbackTransaction();
@@ -146,12 +156,40 @@ class ReportedIssue extends MyAppModel
         if ($status == static::STATUS_CLOSED) {
             $sldetailId = static::getAttributesById($issueId, 'repiss_sldetail_id');
             $whr = ['smt' => 'sldetail_id = ?', 'vals' => [$sldetailId]];
+            $fields = ['sldetail_is_teacher_paid' => $isTeacherPaid];
             $record = new TableRecord(ScheduledLessonDetails::DB_TBL);
-            $record->setFldValue('sldetail_is_teacher_paid', '1');
+            if (static::ACTION_RESET_AND_UNSCHEDULED) {
+                $fields = array_merge($fields, [
+                    'sldetail_learner_join_time' => '0000-00-00 00:00:00',
+                    'sldetail_learner_end_time' => '0000-00-00 00:00:00',
+                    'sldetail_learner_status' => ScheduledLESSON::STATUS_NEED_SCHEDULING
+                ]);
+            }
+            $record->setFlds($fields);
             if (!$record->update($whr)) {
                 $this->error = $record->getError();
                 $db->rollbackTransaction();
                 return false;
+            }
+            if (static::ACTION_RESET_AND_UNSCHEDULED) {
+                $slessonId = ScheduledLessonDetails::getAttributesById($sldetailId, 'sldetail_slesson_id');
+                $whr = ['smt' => 'slesson_id = ?', 'vals' => [$slessonId]];
+                $record = new TableRecord(ScheduledLesson::DB_TBL);
+                $record->setFlds([
+                    'slesson_date' => '0000-00-00',
+                    'slesson_end_date' => '0000-00-00',
+                    'slesson_start_time' => '00:00:00',
+                    'slesson_end_time' => '00:00:00',
+                    'slesson_teacher_join_time' => '00:00:00',
+                    'slesson_teacher_end_time' => '00:00:00',
+                    'slesson_status' => ScheduledLESSON::STATUS_NEED_SCHEDULING,
+                ]);
+                if (!$record->update($whr)) {
+                    $this->error = $record->getError();
+                    $db->rollbackTransaction();
+                    return false;
+                }
+                /* @todo add Rescheduled log*/
             }
         }
         if (!$this->sendUserNotification($this->getMainTableRecordId())) {
@@ -228,7 +266,7 @@ class ReportedIssue extends MyAppModel
             }
             /* 50% Payment to Teaher */
             $teacherPercent = (100 - $issue['op_commission_percentage']) / 2;
-            $teacherPayment = ( $teacherPercent * $issue['op_unit_price']) / 100;
+            $teacherPayment = ($teacherPercent * $issue['op_unit_price']) / 100;
             $txn = new Transaction($issue['slesson_teacher_id']);
             $data = [
                 'utxn_date' => date('Y-m-d H:i:s'),
@@ -318,7 +356,7 @@ class ReportedIssue extends MyAppModel
                 $title = Label::getLabel('LBL_ISSUE_CLOSED_NOTIFICATION_TITLE');
                 $description = Label::getLabel('LBL_ISSUE_CLOSED_NOTIFICATION_DETAIL');
                 break;
-            default :
+            default:
                 $this->error = Label::getLabel('LBL_INVALID_REQUEST');
                 return false;
         }
@@ -346,10 +384,11 @@ class ReportedIssue extends MyAppModel
         $srch->joinTable(TeachingLanguage::DB_TBL_LANG, 'LEFT OUTER JOIN', 'sll.tlanguagelang_tlanguage_id = tlang.tlanguage_id AND sll.tlanguagelang_lang_id = ' . $adminLangId, 'sll');
         $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'sldetail.sldetail_learner_id = ul.user_id', 'ul');
         $srch->joinTable(User::DB_TBL, 'INNER JOIN', 'slesson.slesson_teacher_id = ut.user_id', 'ut');
-        $srch->addMultipleFields(['repiss.repiss_id', 'repiss.repiss_title', 'repiss.repiss_sldetail_id', 'repiss.repiss_reported_on',
+        $srch->addMultipleFields([
+            'repiss.repiss_id', 'repiss.repiss_title', 'repiss.repiss_sldetail_id', 'repiss.repiss_reported_on',
             'repiss.repiss_reported_by', 'repiss.repiss_status', 'repiss.repiss_comment', 'repiss.repiss_updated_on', "us.*",
             'sldetail.sldetail_order_id', 'sldetail.sldetail_learner_id', 'sldetail.sldetail_learner_join_time', 'slesson.slesson_id',
-            'slesson.slesson_teacher_join_time', 'sldetail.sldetail_learner_end_time', 'slesson.slesson_teacher_id',
+            'slesson.slesson_teacher_join_time', 'sldetail.sldetail_learner_end_time', 'slesson.slesson_teacher_id', 'slesson.slesson_grpcls_id',
             'slesson.slesson_teacher_end_time', 'slesson.slesson_ended_by', 'slesson.slesson_ended_on',
             'IFNULL(sll.tlanguage_name, tlang.tlanguage_identifier) as tlanguage_name',
             'CONCAT(user.user_first_name, " ", user.user_last_name) AS reporter_username',
@@ -377,8 +416,10 @@ class ReportedIssue extends MyAppModel
         $srch->joinTable(User::DB_TBL, 'LEFT JOIN', 'user.user_id=reislo.reislo_added_by and reislo.reislo_added_by_type IN (1,2)', 'user');
         $srch->joinTable('tbl_admin', 'LEFT JOIN', 'admin.admin_id=reislo.reislo_added_by and reislo.reislo_added_by_type IN (3)', 'admin');
         $srch->addCondition('reislo_repiss_id', '=', FatUtility::int($issueId));
-        $srch->addMultipleFields(['reislo_repiss_id', 'reislo_action', 'reislo_comment', 'reislo_added_on', 'reislo_added_by', 'reislo_added_by_type',
-            'CASE WHEN reislo_added_by_type = 3 THEN admin.admin_name ELSE CONCAT(user.user_first_name, " ", user.user_last_name) END as user_fullname']);
+        $srch->addMultipleFields([
+            'reislo_repiss_id', 'reislo_action', 'reislo_comment', 'reislo_added_on', 'reislo_added_by', 'reislo_added_by_type',
+            'CASE WHEN reislo_added_by_type = 3 THEN admin.admin_name ELSE CONCAT(user.user_first_name, " ", user.user_last_name) END as user_fullname'
+        ]);
         $srch->addOrder('reislo.reislo_id', 'ASC');
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();
@@ -457,7 +498,8 @@ class ReportedIssue extends MyAppModel
             $srch->setPageSize(1);
             $log = FatApp::getDb()->fetch($srch->getResultSet());
             $repIssue = new ReportedIssue($issue['repiss_id'], 1, ReportedIssue::USER_TYPE_SUPPORT);
-            if (!$repIssue->setupIssueAction($log['reislo_action'], 'Resolved Issue Transaction', true)) {
+            $comment = ($log['reislo_action'] != static::ACTION_RESET_AND_UNSCHEDULED) ? Label::getLabel('RESOLVED_ISSUE_TRANSACTION') : Label::getLabel('LBL_CLASS_UNSCHEDULED');
+            if (!$repIssue->setupIssueAction($log['reislo_action'], $comment, true)) {
                 return false;
             }
         }
@@ -482,8 +524,10 @@ class ReportedIssue extends MyAppModel
         $srch->joinTable(ReportedIssue::DB_TBL, 'LEFT JOIN', 'repiss.repiss_sldetail_id=sldetail.sldetail_id', 'repiss');
         $srch->joinTable(Order::DB_TBL, 'INNER JOIN', 'orders.order_id=sldetail.sldetail_order_id', 'orders');
         $srch->joinTable('tbl_order_products', 'INNER JOIN', 'op.op_order_id=orders.order_id', 'op');
-        $srch->addMultipleFields(['sldetail.sldetail_id', 'sldetail.sldetail_is_teacher_paid', 'orders.order_id',
-            'slesson.slesson_id', 'slesson.slesson_teacher_id', 'op.op_unit_price', 'op.op_commission_percentage']);
+        $srch->addMultipleFields([
+            'sldetail.sldetail_id', 'sldetail.sldetail_is_teacher_paid', 'orders.order_id',
+            'slesson.slesson_id', 'slesson.slesson_teacher_id', 'op.op_unit_price', 'op.op_commission_percentage'
+        ]);
         if ($hours > 0) {
             $srch->addDirectCondition('DATE_ADD(slesson_teacher_end_time, INTERVAL ' . $hours . ' HOUR) < NOW()', 'AND');
         } else {
@@ -503,7 +547,7 @@ class ReportedIssue extends MyAppModel
             }
             /* Add payment to teacher's wallet */
             $teacherPercent = 100 - $lesson['op_commission_percentage'];
-            $teacherAmount = ( $teacherPercent * $lesson['op_unit_price']) / 100;
+            $teacherAmount = ($teacherPercent * $lesson['op_unit_price']) / 100;
             $txn = new Transaction($lesson['slesson_teacher_id']);
             $data = [
                 'utxn_date' => date('Y-m-d H:i:s'),
@@ -578,5 +622,4 @@ class ReportedIssue extends MyAppModel
         }
         return $arr[$key] ?? Label::getLabel('LBL_NA');
     }
-
 }
