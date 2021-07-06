@@ -158,7 +158,7 @@ class ReportedIssue extends MyAppModel
             $whr = ['smt' => 'sldetail_id = ?', 'vals' => [$sldetailId]];
             $fields = ['sldetail_is_teacher_paid' => $isTeacherPaid];
             $record = new TableRecord(ScheduledLessonDetails::DB_TBL);
-            if (static::ACTION_RESET_AND_UNSCHEDULED) {
+            if ($action == static::ACTION_RESET_AND_UNSCHEDULED) {
                 $fields = array_merge($fields, [
                     'sldetail_learner_join_time' => '0000-00-00 00:00:00',
                     'sldetail_learner_end_time' => '0000-00-00 00:00:00',
@@ -171,7 +171,7 @@ class ReportedIssue extends MyAppModel
                 $db->rollbackTransaction();
                 return false;
             }
-            if (static::ACTION_RESET_AND_UNSCHEDULED) {
+            if ($action == static::ACTION_RESET_AND_UNSCHEDULED) {
                 $slessonId = ScheduledLessonDetails::getAttributesById($sldetailId, 'sldetail_slesson_id');
                 $whr = ['smt' => 'slesson_id = ?', 'vals' => [$slessonId]];
                 $record = new TableRecord(ScheduledLesson::DB_TBL);
