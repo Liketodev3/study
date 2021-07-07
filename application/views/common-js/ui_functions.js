@@ -146,14 +146,12 @@ $(function () {
 });
 */
 
-//Common Carousel
 var _carousel = $('.js-carousel');
 _carousel.each(function () {
 
     var _this = $(this),
         _slidesToShow = (_this.data("slides")).toString().split(',');
 
-    //slick common carousel init
     _this.slick({
         slidesToShow: parseInt(_slidesToShow.length > 0 ? _slidesToShow[0] : "3"),
         slidesToScroll: 1,
@@ -185,9 +183,6 @@ _carousel.each(function () {
     });
 
 });
-//End of Common Carousel
-
-
 
 $('.vert-carousel').slick({
     slidesToShow: 3,
@@ -198,8 +193,6 @@ $('.vert-carousel').slick({
     vertical: true
 });
 
-
-//  custom loader js start
 $.loader = {
     selector: '.loading-wrapper',
     show: function() {
@@ -209,4 +202,3 @@ $.loader = {
         $(this.selector).hide();
     }
 };
-//  custom loader js end

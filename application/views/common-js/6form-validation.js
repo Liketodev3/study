@@ -300,7 +300,7 @@
 
             $('.'+clname).remove();
             if(this.settings.summaryElementId != '' && $('#'+this.settings.summaryElementId).length > 0){
-                // $('#'+this.settings.summaryElementId).html('');
+                /* $('#'+this.settings.summaryElementId).html(''); */
             }
             
 
@@ -408,7 +408,7 @@
                     break;
                 case 3:
                 	if(field.attr('type') && field.attr('type').toLowerCase()==='checkbox') {
-                		// field.parent().after(errorlist.empty());
+                		/* field.parent().after(errorlist.empty()); */
                     if(field.parents('.form__list--check').length > 0) {
                         field.parents('.form__list--check').before(errorlist.empty());
                     }else{
@@ -567,7 +567,6 @@
 	};
 
 	checkUniqueErrorNotify = function (caption, value) {
-		//alert(caption + " '" + value + "' is not available");
 		$.mbsmessage(caption + " '" + value + "' is not available", 1, 'alert alert--danger');
 	};
 })();

@@ -96,24 +96,24 @@
                         <td><strong><?php echo Label::getLabel('LBL_Order_Id'); ?>:</strong> <?php echo $issue['sldetail_order_id']; ?></td>
                     </tr>
                     <tr>
-                        <td><strong><?php echo Label::getLabel('LBL_Lesson_Id'); ?>:</strong>  <?php echo $issue['repiss_sldetail_id']; ?></td>
+                        <td><strong><?php echo Label::getLabel('LBL_Learner_Lesson_Id'); ?>:</strong>  <?php echo $issue['repiss_sldetail_id']; ?></td>
+                        <td><strong><?php echo Label::getLabel('LBL_Teacher_Lesson_Id'); ?>:</strong>  <?php echo $issue['slesson_id']; ?></td>
                         <td><strong><?php echo Label::getLabel('LBL_Total_Lesson'); ?>:</strong> <?php echo $issue['op_qty']; ?></td>
-                        <td><strong><?php echo Label::getLabel('LBL_Lesson_Price'); ?>:</strong>   <?php echo CommonHelper::displayMoneyFormat($issue['op_unit_price'], true, true); ?></td>
                     </tr>
                     <tr>
+                        <td><strong><?php echo Label::getLabel('LBL_Lesson_Price'); ?>:</strong>   <?php echo CommonHelper::displayMoneyFormat($issue['op_unit_price'], true, true); ?></td>
                         <td><strong><?php echo Label::getLabel('LBL_Order_Net_Amount'); ?>:</strong>  <?php echo CommonHelper::displayMoneyFormat($issue['order_net_amount'], true, true); ?></td>
                         <td><strong><?php echo Label::getLabel('LBL_Order_Discount_Total'); ?>:</strong>   <?php echo CommonHelper::displayMoneyFormat($issue['order_discount_total'], true, true); ?></td>
-                        <td><strong><?php echo Label::getLabel('LBL_Teacher_Name'); ?>:</strong>  <?php echo $issue['teacher_username']; ?></td>
                     </tr>
                     <tr>
+                        <td><strong><?php echo Label::getLabel('LBL_Teacher_Name'); ?>:</strong>  <?php echo $issue['teacher_username']; ?></td>
                         <td><strong><?php echo Label::getLabel('LBL_Teacher_Join_Time'); ?>:</strong> <?php echo MyDate::format($issue['slesson_teacher_join_time'], true, true, $userTimezone); ?></td>
                         <td><strong><?php echo Label::getLabel('LBL_Teacher_End_Time'); ?>:</strong>  <?php echo MyDate::format($issue['slesson_teacher_end_time'], true, true, $userTimezone); ?></td>
-                        <td><strong><?php echo Label::getLabel('LBL_Learner_Name'); ?>:</strong>  <?php echo $issue['learner_username']; ?></td>
                     </tr>
                     <tr>
+                        <td><strong><?php echo Label::getLabel('LBL_Learner_Name'); ?>:</strong>  <?php echo $issue['learner_username']; ?></td>
                         <td><strong><?php echo Label::getLabel('LBL_Learner_Join_Time'); ?>:</strong>  <?php echo MyDate::format($issue['sldetail_learner_join_time'], true, true, $userTimezone); ?></td>
                         <td><strong><?php echo Label::getLabel('LBL_Learner_end_Time'); ?>:</strong> <?php echo MyDate::format($issue['sldetail_learner_end_time'], true, true, $userTimezone); ?></td>
-                        <td></td>
                     </tr>
                 </tbody>
             </table>

@@ -951,8 +951,8 @@ $box__primary: "box__primary";
 
 .list__head{
     text-align: center;
-    float: left;
-    clear: left;
+    float: #{theme('direction.left','value')};
+    clear: #{theme('direction.left','value')};
     @media(min-width: theme('breakpoints.md','value')){
         max-width: 140px;
     }
@@ -1013,14 +1013,14 @@ $box__primary: "box__primary";
         max-width: calc(100% - 180px); min-width: calc(100% - 180px);
     }
     @media(min-width: theme('breakpoints.md','value')){
-        float: right;
-        clear: right;
+        float: #{theme('direction.right','value')};
+        clear: #{theme('direction.right','value')};
     }
 }
 
 .list__action{
-    float: left;
-    clear: left;
+    float:  #{theme('direction.left','value')};
+    clear: #{theme('direction.left','value')};
     @media(min-width: theme('breakpoints.md','value')){
         max-width: 140px;
     }
@@ -1249,7 +1249,7 @@ $box__primary: "box__primary";
 }
 
 .box__secondary{
-    border-left: 1px solid theme('color.gray.200');
+    border-#{theme('direction.left','value')}: 1px solid theme('color.gray.200');
 
     @media(min-width: theme('breakpoints.lg','value')){
         width: 420px;
@@ -1617,7 +1617,8 @@ $box__primary: "box__primary";
                 background: theme('color.primary');
                 color: theme('color.white');
                 border-radius: 3px;
-                padding: 0 theme('padding.10') 0 theme('padding.3');
+                padding: 0 theme('padding.3');
+                padding-#{theme('direction.right','value')}: theme('padding.10');
                 line-height: 30px;
                 display: block;
                 font-size: theme('font.size.small');

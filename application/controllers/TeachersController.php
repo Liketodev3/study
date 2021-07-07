@@ -22,8 +22,8 @@ class TeachersController extends MyAppController
         $this->_template->addJs('js/fateventcalendar.js');
         $this->_template->addJs('js/ion.rangeSlider.js');
         if ($currentLangCode = strtolower(Language::getLangCode($this->siteLangId))) {
-            if (file_exists(CONF_THEME_PATH . "js/locales/$currentLangCode.js")) {
-                $this->_template->addJs("js/locales/$currentLangCode.js");
+            if (file_exists(CONF_THEME_PATH . "js/locales/{$currentLangCode}.js")) {
+                $this->_template->addJs("js/locales/{$currentLangCode}.js");
             }
         }
         $this->_template->render();
@@ -250,8 +250,8 @@ class TeachersController extends MyAppController
         $this->_template->addJs('js/fullcalendar.min.js');
         $this->_template->addJs('js/fateventcalendar.js');
         if ($currentLangCode = strtolower(Language::getLangCode($this->siteLangId))) {
-            if (file_exists(CONF_THEME_PATH . "js/locales/$currentLangCode.js")) {
-                $this->_template->addJs("js/locales/$currentLangCode.js");
+            if (file_exists(CONF_THEME_PATH . "js/locales/{$currentLangCode}.js")) {
+                $this->_template->addJs("js/locales/{$currentLangCode}.js");
             }
         }
         $this->_template->addJs('js/enscroll-0.6.2.min.js');
@@ -277,26 +277,26 @@ class TeachersController extends MyAppController
         $page = ($page) ? $page : 1;
         $pageSize = 5;
         $srch = new TeacherLessonReviewSearch();
-        $srch->joinTeacher();
+        // $srch->joinTeacher();
         $srch->joinLearner();
         $srch->joinTeacherLessonRating();
-        $srch->joinScheduledLesson();
-        $srch->joinScheduleLessonDetails();
-        $srch->joinLessonLanguage(CommonHelper::getLangId());
-        $srch->addCondition('tlr.tlreview_teacher_user_id', '=', $teacherId);
+        // $srch->joinScheduledLesson();
+        // $srch->joinScheduleLessonDetails();
+        // $srch->joinLessonLanguage(CommonHelper::getLangId());
+        // $srch->addCondition('tlr.tlreview_teacher_user_id', '=', $teacherId);
         $srch->addCondition('tlr.tlreview_status', '=', TeacherLessonReview::STATUS_APPROVED);
-        $srch->addMultipleFields([
-            'tlreview_id', "ROUND(AVG(tlrating_rating),2) as prod_rating",
-            'tlreview_title',
-            'tlreview_description',
-            'tlreview_posted_on',
-            'tlreview_postedby_user_id',
-            'ul.user_first_name as lname',
-            'ut.user_first_name as tname',
-            '(select count(slesson_id) from  ' . ScheduledLesson::DB_TBL . ' where slesson_teacher_id = ut.user_id AND sldetail_learner_id = ul.user_id ) as lessonCount',
-            'IFNULL(tlanguage_name, tlanguage_identifier) as lessonLanguage'
-        ]);
-        $srch->addGroupBy('tlr.tlreview_id');
+        // $srch->addMultipleFields([
+        //     'tlreview_id', "ROUND(AVG(tlrating_rating),2) as prod_rating",
+        //     'tlreview_title',
+        //     'tlreview_description',
+        //     'tlreview_posted_on',
+        //     'tlreview_postedby_user_id',
+        //     'ul.user_first_name as lname',
+        //     'ut.user_first_name as tname',
+        //     '(select count(slesson_id) from  ' . ScheduledLesson::DB_TBL . ' where slesson_teacher_id = ut.user_id AND sldetail_learner_id = ul.user_id ) as lessonCount',
+        //     'IFNULL(tlanguage_name, tlanguage_identifier) as lessonLanguage'
+        // ]);
+        // $srch->addGroupBy('tlr.tlreview_id');
         $srch->setPageNumber($page);
         $srch->setPageSize($pageSize);
         switch ($orderBy) {
@@ -318,9 +318,9 @@ class TeachersController extends MyAppController
         $this->set('pageCount', $srch->pages());
         foreach ($records as $key => $record) {
             $records[$key]['img'] = (User::isProfilePicUploaded($record['tlreview_postedby_user_id'])) ? CommonHelper::generateUrl('Image', 'user', array($record['tlreview_postedby_user_id'])) : '';
-            $records[$key]['fChar'] = CommonHelper::getFirstChar($record['lname']);
+            $records[$key]['fChar'] = '';
             $records[$key]['tlreview_posted_on'] = FatDate::format($record['tlreview_posted_on']);
-            $records[$key]['lessonCount'] = '(' . $record['lessonCount'] . Label::getLabel('LBL_Lessons', $this->siteLangId) . ')';
+            // $records[$key]['lessonCount'] = '(' . $record['lessonCount'] . Label::getLabel('LBL_Lessons', $this->siteLangId) . ')';
             $records[$key]['iconSrc'] = CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#rating';
             $records[$key]['tlreview_description'] = nl2br($record['tlreview_description']);
         }

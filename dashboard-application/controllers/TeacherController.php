@@ -431,6 +431,11 @@ class TeacherController extends TeacherBaseController
         $this->_template->addJs('js/moment.min.js');
         $this->_template->addJs('js/fullcalendar.min.js');
         $this->_template->addJs('js/fateventcalendar.js');
+        if ($currentLangCode) {
+            if (file_exists(CONF_THEME_PATH . "js/locales/{$currentLangCode}.js")) {
+                $this->_template->addJs("js/locales/{$currentLangCode}.js");
+            }
+        }
         $this->_template->render();
     }
 

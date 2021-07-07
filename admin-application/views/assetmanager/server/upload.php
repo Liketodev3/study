@@ -33,11 +33,14 @@ if (!empty($_FILES)) {
 //	$targetPath = WEBSITEROOT_LOCALPATH . $_REQUEST['folder'] . '/';
 	//$targetPath = WEBSITEROOT_LOCALPATH ."/user-uploads/backend" . '/';
 	$targetPath = WEBSITEROOT_LOCALPATH .$path_for_images . '/';
+    $targetPath =  str_replace('//', '/', $targetPath);
 	
-	$targetFile =  str_replace('//','/',$targetPath) . $_FILES['Filedata']['name'];
+	$fileName = time() . '-' . preg_replace('/[^a-zA-Z0-9.]/', '', $_FILES['Filedata']['name']);
 
+	$targetFile =  $targetPath. $fileName;
+   
+   
      $allowedExt = UPLOAD_FILE_TYPES;
-
 	 $fileTypes = str_replace('*.','',$allowedExt);
 	 $fileTypes  = str_replace(';','|',$fileTypes);
 	 $typesArray = explode('|',$fileTypes);
@@ -46,7 +49,10 @@ if (!empty($_FILES)) {
 	 if ($allowedExt=="" || in_array(strtolower($fileParts['extension']),$typesArray)) {
 		// Uncomment the following line if you want to make the directory if it doesn't exist
 		// mkdir(str_replace('//','/',$targetPath), 0755, true);
-
+		if (!file_exists($targetPath)) {
+            mkdir($targetPath, 0777, true);
+        }
+       
 		move_uploaded_file($tempFile,$targetFile);
 		echo str_replace(WEBSITEROOT_LOCALPATH,'', urlencode($targetFile));
 		echo "<script>parent.refresh();</script>";
@@ -54,4 +60,3 @@ if (!empty($_FILES)) {
 	 	echo 'Invalid file type.';
 	 }
 }
-?>

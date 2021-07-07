@@ -53,7 +53,7 @@ class ReportIssueController extends LoggedUserController
         $esclateDate = strtotime($issue['repiss_updated_on'] . " +" . $esclateHours . " hour");
         $canEsclate = false;
         if (($esclateDate > strtotime(date('Y-m-d H:i:s')) && ($issue['repiss_status'] == ReportedIssue::STATUS_RESOLVED) &&
-                (($log['reislo_added_by_type'] ?? 0) == ReportedIssue::USER_TYPE_TEACHER) && (($log['reislo_added_by'] ?? 0) != $userId))) {
+            (($log['reislo_added_by_type'] ?? 0) == ReportedIssue::USER_TYPE_TEACHER) && (($log['reislo_added_by'] ?? 0) != $userId))) {
             $canEsclate = true;
         }
         $this->set('logs', $logs);
@@ -88,7 +88,8 @@ class ReportIssueController extends LoggedUserController
         if ($issue['repiss_status'] > ReportedIssue::STATUS_PROGRESS) {
             FatUtility::dieJsonError(Label::getLabel('LBL_RESOLUTION_PROVIDED_ALREADY'));
         }
-        $frm = $this->getResolveForm();
+        $isGroupClass = (FatUtility::int($issue['slesson_grpcls_id']) > 0);
+        $frm = $this->getResolveForm($isGroupClass);
         $frm->fill(['reislo_repiss_id' => $issue['repiss_id']]);
         $this->set('frm', $frm);
         $this->set("issue", $issue);
@@ -110,6 +111,11 @@ class ReportIssueController extends LoggedUserController
         if ($issue['repiss_status'] > ReportedIssue::STATUS_PROGRESS) {
             FatUtility::dieJsonError(Label::getLabel('LBL_RESOLUTION_PROVIDED_ALREADY'));
         }
+
+        if ($issue['slesson_grpcls_id'] > 0 && $post['reislo_action'] == ReportedIssue::ACTION_RESET_AND_UNSCHEDULED) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
+        }
+
         $reportedIssue = new ReportedIssue($post['reislo_repiss_id'], $userId, ReportedIssue::USER_TYPE_TEACHER);
         if (!$reportedIssue->setupIssueAction($post['reislo_action'], $post['reislo_comment'], false)) {
             FatUtility::dieJsonError($reportedIssue->getError());
@@ -117,7 +123,7 @@ class ReportIssueController extends LoggedUserController
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_ACTION_PERFORMED_SUCCESSFULLY'));
     }
 
-    private function getResolveForm()
+    private function getResolveForm(bool $isGroupClass = false)
     {
         $frm = new Form('actionFrm');
         $repissId = $frm->addHiddenField('', 'reislo_repiss_id');
@@ -125,10 +131,13 @@ class ReportIssueController extends LoggedUserController
         $repissId->requirements()->setIntPositive();
         $options = ReportedIssue::getActionsArr();
         unset($options[ReportedIssue::ACTION_ESCLATE_TO_ADMIN]);
+        if ($isGroupClass) {
+            unset($options[ReportedIssue::ACTION_RESET_AND_UNSCHEDULED]);
+        }
         $frm->addSelectBox(Label::getLabel('LBL_TAKE_ACTION'), 'reislo_action', $options)
-                ->requirements()->setRequired(true);
+            ->requirements()->setRequired(true);
         $frm->addTextArea(Label::getLabel('LBL_YOUR_COMMENT'), 'reislo_comment', '')
-                ->requirements()->setRequired(true);
+            ->requirements()->setRequired(true);
         $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_Submit'));
         return $frm;
     }
@@ -137,8 +146,10 @@ class ReportIssueController extends LoggedUserController
     {
         $issue = ReportedIssue::getIssueById($issueId);
         $userId = UserAuthentication::getLoggedUserId();
-        if (empty($issue) || $userId != $issue['sldetail_learner_id'] ||
-                $issue['repiss_status'] != ReportedIssue::STATUS_RESOLVED) {
+        if (
+            empty($issue) || $userId != $issue['sldetail_learner_id'] ||
+            $issue['repiss_status'] != ReportedIssue::STATUS_RESOLVED
+        ) {
             FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
         }
         $logs = ReportedIssue::getIssueLogsById($issue['repiss_id']);
@@ -156,8 +167,10 @@ class ReportIssueController extends LoggedUserController
         $this->set('frm', $frm);
         $this->set("issue", $issue);
         $this->set('statusArr', ReportedIssue::getStatusArr());
-        $this->_template->render(false,
-                false);
+        $this->_template->render(
+            false,
+            false
+        );
     }
 
     public function esclateSetup()
@@ -168,7 +181,7 @@ class ReportIssueController extends LoggedUserController
         }
         $userId = UserAuthentication::getLoggedUserId();
         $issue = ReportedIssue::getIssueById($post['reislo_repiss_id']);
-        if (empty($issue) || $userId != $issue['sldetail_learner_id'] || $issue ['repiss_status'] != ReportedIssue::STATUS_RESOLVED) {
+        if (empty($issue) || $userId != $issue['sldetail_learner_id'] || $issue['repiss_status'] != ReportedIssue::STATUS_RESOLVED) {
             FatUtility::dieJsonError(Label::getLabel('LBL_INVALID_REQUEST'));
         }
         $logs = ReportedIssue::getIssueLogsById($issue['repiss_id']);
@@ -182,7 +195,7 @@ class ReportIssueController extends LoggedUserController
             FatUtility::dieJsonError(Label::getLabel('LBL_ISSUE_ESCALATION_TIME_HAS_PASSED'));
         }
         $reportedIssue = new ReportedIssue($post['reislo_repiss_id'], $userId, ReportedIssue::USER_TYPE_LEARNER);
-        if (!$reportedIssue->setupIssueAction(ReportedIssue:: ACTION_ESCLATE_TO_ADMIN, $post['reislo_comment'], false)) {
+        if (!$reportedIssue->setupIssueAction(ReportedIssue::ACTION_ESCLATE_TO_ADMIN, $post['reislo_comment'], false)) {
             FatUtility::dieJsonError($reportedIssue->getError());
         }
         FatUtility::dieJsonSuccess(Label::getLabel('LBL_ACTION_PERFORMED_SUCCESSFULLY'));
@@ -199,5 +212,4 @@ class ReportIssueController extends LoggedUserController
 
         return $frm;
     }
-
 }

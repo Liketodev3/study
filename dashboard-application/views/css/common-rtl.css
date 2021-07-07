@@ -1417,6 +1417,9 @@ ul {
   .fc-event.slot_unavailable .fc-event-time {
     display: none; }
 
+.slot_unavailable .fc-event-time {
+  color: #111; }
+
 .availability-setting-calendar .slot_available {
   background: #0ab359;
   border-color: #0ab359; }
@@ -1701,8 +1704,16 @@ ul {
 .fc .fc-timegrid-now-indicator-arrow {
   border-color: var(--color-primary); }
 
-.error__media {
-  text-align: center; }
+@media (min-width: 991px) {
+  .error__media {
+    text-align: center; } }
+
+.error__media img {
+  margin: 0 auto; }
+  @media (max-width: 767px) {
+    .error__media img {
+      margin-bottom: var(--margin-8);
+      max-width: 150px; } }
 
 .error__content h3 {
   color: var(--color-dark);

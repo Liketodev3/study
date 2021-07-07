@@ -32,8 +32,8 @@ class LearnerController extends LearnerBaseController
         $this->_template->addJs('js/fateventcalendar.js');
         $this->_template->addJs('js/jquery.countdownTimer.min.js');
         if ($currentLangCode = strtolower(Language::getLangCode($this->siteLangId))) {
-            if (file_exists(CONF_THEME_PATH . "js/locales/$currentLangCode.js")) {
-                $this->_template->addJs("js/locales/$currentLangCode.js");
+            if (file_exists(CONF_THEME_PATH . "js/locales/{$currentLangCode}.js")) {
+                $this->_template->addJs("js/locales/{$currentLangCode}.js");
             }
         }
         $this->_template->render();

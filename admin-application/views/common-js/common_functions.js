@@ -667,7 +667,6 @@ function getNotifications() {
 
 })();
 
-//  custom loader js start
 $.loader = {
     selector: '.loading-wrapper',
     show: function () {
@@ -677,7 +676,6 @@ $.loader = {
         $(this.selector).hide();
     }
 };
-//  custom loader js end
 
 function selectAll(obj) {
     var parentForm = obj.closest('form').attr('id');

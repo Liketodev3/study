@@ -22,6 +22,9 @@ $is-registration: 'is-registration';
 
             @media(min-width: theme('breakpoints.md','value')) {
                 padding: theme('padding.10');
+                
+            }
+            @media(min-width: theme('breakpoints.lg','value')) {
                 padding-left: theme('padding.16');
             }
 
@@ -621,4 +624,16 @@ $profile-media: "profile-media";
             text-decoration: underline;
         }
     }
+}
+
+.section--registration {
+    position: relative;
+    
+    .header{
+        @media(min-width:theme('breakpoints.md','value')){
+            background: transparent;
+            border: none;
+        }
+    }
+    
 }

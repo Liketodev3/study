@@ -16,7 +16,7 @@ foreach( $qualifications as $qualification ){
 			<div class="col-4 col-sm-4">
 				<div class="resume__primary"><b><?php echo $qualification['uqualification_start_year'] ?> - <?php echo $qualification['uqualification_end_year'] ?></b></div>
 			</div>
-			<div class="col-7 col-ms-7 offset-1">
+			<div class="col-7 col-sm-7 offset-1">
 				<div class="resume__secondary">
 					<b><?php echo $qualification['uqualification_title']; ?></b>
 					<p><?php echo $qualification['uqualification_institute_name']; ?></p>
