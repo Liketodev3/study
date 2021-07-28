@@ -5,6 +5,9 @@ class DummyController extends MyAppController
 
     public function __construct($action)
     {
+        if (strpos($_SERVER['SERVER_NAME'], '4livedemo.com') === false) {
+            FatUtility::exitWithErrorCode(404);
+        }
         parent::__construct($action);
     }
 
@@ -165,8 +168,8 @@ class DummyController extends MyAppController
 
     public function index()
     {
-//        var_dump(ReportedIssue::resolvedIssueSettlement());
-//        var_dump(ReportedIssue::completedLessonSettlement());
+        //        var_dump(ReportedIssue::resolvedIssueSettlement());
+        //        var_dump(ReportedIssue::completedLessonSettlement());
     }
 
 }
