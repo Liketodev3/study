@@ -4,7 +4,7 @@ ini_set('display_errors', CONF_DEVELOPMENT_MODE);
 error_reporting(CONF_DEVELOPMENT_MODE ? E_ALL : E_ALL & ~E_NOTICE & ~E_WARNING);
 
 require_once CONF_INSTALLATION_PATH . 'library/autoloader.php';
-require_once CONF_INSTALLATION_PATH . 'vendor/autoload.php';
+// require_once CONF_INSTALLATION_PATH . 'vendor/autoload.php';
 AttachedFile::registerS3ClientStream();
 
 /* --- Redirect SSL --- */
