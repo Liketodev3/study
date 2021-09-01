@@ -4,7 +4,7 @@
         You will receive a commission for every lesson.
     </p>
     <p id="link-box" class="link-box"><?php echo $u_link ? $_SERVER['SERVER_NAME'] . '?promo='. $u_link : ' please refresh page ' ?></p>
-    <a target="_blank" href="https://google.com"><button class="btn btn-success d-block mb-2" style="width: 250px">Share via email</button></a>
+    <a target="_blank" href="https://accounts.google.com/"><button class="btn btn-success d-block mb-2" style="width: 250px">Share via email</button></a>
     <button onclick="copyToClipboard('#link-box')" class="btn btn-success d-block" style="width: 250px">Copy line</button>
 </div>
 
