@@ -504,6 +504,36 @@ class AccountController extends LoggedUserController
         return $frm;
     }
 
+    function generateRandomString($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+
+    public function recomendationForm()
+    {
+        $link = $this->generateRandomString();
+
+        $userId = UserAuthentication::getLoggedUserId();
+        $user = new User($userId);
+        $user_info = $user->getUserInfo(['link'], false, false);
+
+
+        if($user_info['link'] == null){
+            $user->assignValues(['link' => $link]);
+            $user->save();
+        }
+
+        $this->set("u_link", $user_info['link']);
+        $this->_template->render(false, false,'account/link.php');
+
+
+    }
+
 
     public function profileImageForm()
     {
@@ -543,6 +573,7 @@ class AccountController extends LoggedUserController
         }
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE_CHANGES'));
         $frm->addButton('', 'btn_next', Label::getLabel('LBL_Next'));
+
         return $frm;
     }
 

@@ -134,11 +134,14 @@ class GuestUserController extends MyAppController
     public function setUpSignUp()
     {
         $frm = $this->getSignUpForm();
+
         $post = FatApp::getPostedData();
+
         if (!isset($post['user_first_name'])) {
             $post['user_first_name'] = strstr($post['user_email'], '@', true);
         }
         $post = $frm->getFormDataFromArray($post);
+
         if ($post == false) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
             if (FatUtility::isAjaxCall()) {
@@ -169,6 +172,12 @@ class GuestUserController extends MyAppController
         $post['user_timezone'] = $_COOKIE['user_timezone'] ?? MyDate::getTimeZone();;
         $post['user_preferred_dashboard'] = $user_preferred_dashboard;
         $post['user_registered_initially_for'] = $user_registered_initially_for;
+
+        $check_promo = User::getAttributesByLink($post['used_link']);
+        if(!$check_promo){
+            unset($post['used_link']);
+        }
+
         $user->assignValues($post);
         if (true !== $user->save()) {
             $db->rollbackTransaction();
@@ -314,9 +323,11 @@ class GuestUserController extends MyAppController
             'credential_password',
             'user_first_name',
             'user_last_name',
-            'credential_active'
+            'credential_active',
+            'used_link'
         ], false);
         if (1 === FatApp::getConfig('CONF_WELCOME_EMAIL_REGISTRATION', FatUtility::VAR_INT, 1)) {
+
             $data['user_email'] = $userdata['credential_email'];
             $data['user_first_name'] = $userdata['user_first_name'];
             $data['user_last_name'] = $userdata['user_last_name'];
@@ -379,6 +390,7 @@ class GuestUserController extends MyAppController
         $fld->setRequiredStarPosition(Form::FORM_REQUIRED_STAR_POSITION_NONE);
         $fld->requirements()->setRegularExpressionToValidate(applicationConstants::PASSWORD_REGEX);
         $fld->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Please_Enter_8_Digit_AlphaNumeric_Password'));
+        $fld = $frm->addTextBox('Promo', 'used_link');
         $termsConditionLabel = Label::getLabel('LBL_I_accept_to_the');
         $fld = $frm->addCheckBox($termsConditionLabel, 'agree', 1);
         $fld->requirements()->setRequired();

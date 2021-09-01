@@ -130,6 +130,58 @@ class MyAppModel extends FatModel
         return $row;
     }
 
+    public static function getAttributesByLink($recordId, $attr = null)
+    {
+
+        $db = FatApp::getDb();
+        $srch = new SearchBase(static::DB_TBL);
+        $srch->setPagesize(1);
+
+        $srch->addCondition('link', '=', $recordId);
+        if (null != $attr) {
+            if (is_array($attr)) {
+                $srch->addMultipleFields($attr);
+            } elseif (is_string($attr)) {
+                $srch->addFld($attr);
+            }
+        }
+        $rs = $srch->getResultSet();
+        $row = $db->fetch($rs);
+        if (!is_array($row)) {
+            return false;
+        }
+        if (is_string($attr)) {
+            return $row[$attr];
+        }
+        return $row;
+    }
+
+    public static function getAttributesByUsedLink($recordId, $attr = null)
+    {
+
+        $db = FatApp::getDb();
+        $srch = new SearchBase(static::DB_TBL);
+        $srch->setPagesize(1);
+
+        $srch->addCondition('used_link', '=', $recordId);
+        if (null != $attr) {
+            if (is_array($attr)) {
+                $srch->addMultipleFields($attr);
+            } elseif (is_string($attr)) {
+                $srch->addFld($attr);
+            }
+        }
+        $rs = $srch->getResultSet();
+        $row = $db->fetch($rs);
+        if (!is_array($row)) {
+            return false;
+        }
+        if (is_string($attr)) {
+            return $row[$attr];
+        }
+        return $row;
+    }
+
     public static function getAttributesById($recordId, $attr = null)
     {
         $recordId = FatUtility::convertToType($recordId, FatUtility::VAR_INT);

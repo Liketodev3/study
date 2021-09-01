@@ -607,6 +607,16 @@ $(document).ready(function () {
 		});
 	};
 
+	recomendationForm = function () {
+		$(profileInfoFormDiv).html(fcom.getLoader());
+
+
+		fcom.ajax(fcom.makeUrl('Account', 'recomendationForm'), '', function (t) {
+			console.log(t);
+			$(profileInfoFormDiv).html(t);
+		});
+	};
+
 	removeProfileImage = function () {
 		$.loader.show();
 		fcom.ajax(fcom.makeUrl('Account', 'removeProfileImage'), '', function (t) {

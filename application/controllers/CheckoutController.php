@@ -411,11 +411,30 @@ class CheckoutController extends LoggedUserController
         $this->_template->render(false, false, '', false, false);
     }
 
+    public function promoControl($amount){
+
+        $promo_price = 0;
+        $userId = UserAuthentication::getLoggedUserId();
+
+        $user = new User($userId);
+
+        $user_info = $user->getUserInfo(['used_link'], false, false);
+
+        $check_promo = User::getAttributesByLink($user_info['used_link']);
+        var_dump($check_promo) ;die;
+        if($check_promo){
+            $promo_price = $amount * 3 / 100;
+        }
+
+
+    }
+
     public function confirmOrder()
     {
         $order_type = FatApp::getPostedData('order_type', FatUtility::VAR_INT, 0);
         $pmethodId = FatApp::getPostedData('pmethod_id', FatUtility::VAR_INT, 0);
         $order_id = FatApp::getPostedData('order_id', FatUtility::VAR_STRING, '');
+
         // [
         if ($pmethodId > 0) {
             $pmSrch = PaymentMethods::getSearchObject($this->siteLangId);
@@ -495,10 +514,12 @@ class CheckoutController extends LoggedUserController
         $orderNetAmount = $cartData['orderNetAmount'];
         $walletAmountCharge = $cartData['walletAmountCharge'];
 
+
         $orderNetAmount = $cartData["orderNetAmount"];
         $walletAmountCharge = $cartData["walletAmountCharge"];
 
         $coupon_discount_total = FatUtility::float($cartData['cartDiscounts']['coupon_discount_total'] ?? 0);
+
         $orderData = [
             'order_id' => $order_id,
             'order_type' => Order::TYPE_LESSON_BOOKING,
@@ -515,6 +536,7 @@ class CheckoutController extends LoggedUserController
             'order_discount_total' => $coupon_discount_total,
             'order_discount_info' => $cartData['cartDiscounts']['coupon_info'] ?? '',
         ];
+
         $languageRow = Language::getAttributesById($this->siteLangId);
         $orderData['order_language_id'] = $languageRow['language_id'];
         $orderData['order_language_code'] = $languageRow['language_code'];
@@ -526,12 +548,17 @@ class CheckoutController extends LoggedUserController
             $op_lesson_duration = FatApp::getConfig('conf_trial_lesson_duration', FatUtility::VAR_INT, 30);
         } else {
             $commissionDetails = Commission::getTeacherCommission($cartData['teacherId'], $cartData['grpclsId']);
+
             if ($commissionDetails) {
                 $cartData['op_commission_percentage'] = $commissionDetails['commsetting_fees'];
                 $teacherCommission = ((100 - $commissionDetails['commsetting_fees']) * $cartData['itemPrice']) / 100;
+
             } else {
                 $teacherCommission = $cartData['itemPrice'];
             }
+
+            $this->promoControl($cartData['itemPrice'] - $teacherCommission);
+
             $teacherCommission = $teacherCommission;
             $cartData['op_commission_charged'] = $teacherCommission;
         }
