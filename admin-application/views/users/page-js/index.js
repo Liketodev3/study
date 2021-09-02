@@ -92,6 +92,16 @@ $(document).ready(function(){
 		var frm = document.frmUserSearchPaging;
 		$.facebox(function() {
 			fcom.ajax(fcom.makeUrl('Users', 'view', [id]), '', function(t) {
+				console.log(t);
+				fcom.updateFaceboxContent(t);
+			});
+		});
+	};
+
+	promoList = function(id) {
+		var frm = document.frmUserSearchPaging;
+		$.facebox(function() {
+			fcom.ajax(fcom.makeUrl('Users', 'promoList', [id]), '', function(t) {
 				fcom.updateFaceboxContent(t);
 			});
 		});

@@ -220,6 +220,20 @@ class UsersController extends AdminBaseController
         $this->_template->render(false, false);
     }
 
+    public function promoList($user_id = 0)
+    {
+        $user_id = FatUtility::int($user_id);
+
+
+        $user = new User($user_id);
+        $user_info = $user->getUserInfo(['link'], false, false);
+        $promo_users = User::getMyPromos($user_info['link']);
+
+        $this->set('promo_users', $promo_users);
+
+        $this->_template->render(false, false,'users/promo.php');
+    }
+
     public function transaction($userId = 0)
     {
         $userId = FatUtility::int($userId);

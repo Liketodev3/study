@@ -112,7 +112,8 @@ foreach ($arr_listing as $sn=>$row){
 					$innerLi=$innerUl->appendElement('li');
 					$innerLi->appendElement('a', array('href'=>"javascript:void(0)",'onClick'=>"userLogin(".$row['user_id'].")",'class'=>'button small green redirect--js','title'=>Label::getLabel('LBL_Log_into_store',$adminLangId)),Label::getLabel('LBL_Log_into_Profile',$adminLangId), true);
 
-
+					$innerLi=$innerUl->appendElement('li');
+					$innerLi->appendElement('a', array('href'=>"javascript:void(0)",'onClick'=>"promoList(".$row['user_id'].")",'class'=>'button small green redirect--js','title'=>'Promo list'), 'Promo list');
 
 				}
 			break;

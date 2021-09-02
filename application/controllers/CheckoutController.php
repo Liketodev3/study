@@ -418,10 +418,10 @@ class CheckoutController extends LoggedUserController
 
         $user = new User($userId);
 
-        $user_info = $user->getUserInfo(['used_link'], false, false);
+        $user_info = $user->getUserInfo(['used_link','user_is_learner','user_is_teacher'], false, false);
 
         $check_promo = User::getAttributesByLink($user_info['used_link']);
-        var_dump($check_promo) ;die;
+
         if($check_promo){
             $promo_price = $amount * 3 / 100;
         }

@@ -182,6 +182,17 @@ class MyAppModel extends FatModel
         return $row;
     }
 
+    public static function getMyPromos($recordId, $attr = null)
+    {
+
+        $orderProductSearch = new SearchBase(User::DB_TBL);
+        $orderProductSearch->addCondition('used_link', '=', $recordId);
+        $res = FatApp::getDb()->fetchAll($orderProductSearch->getResultSet());
+
+        return $res;
+
+    }
+
     public static function getAttributesById($recordId, $attr = null)
     {
         $recordId = FatUtility::convertToType($recordId, FatUtility::VAR_INT);
