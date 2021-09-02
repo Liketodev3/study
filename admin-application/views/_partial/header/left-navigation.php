@@ -257,6 +257,9 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
                         <?php if ($objPrivilege->canViewEmailTemplates($adminLoggedId, true)) { ?>
                             <li><a href="<?php echo CommonHelper::generateUrl('EmailTemplates'); ?>"><?php echo Label::getLabel('LBL_Email_Templates_Management', $adminLangId); ?></a></li>
                         <?php } ?>
+                        <?php if ($objPrivilege->canViewEmailTemplates($adminLoggedId, true)) { ?>
+                            <li><a href="<?php echo CommonHelper::generateUrl('Affilate'); ?>">AFFILATE SETTINGS</a></li>
+                        <?php } ?>
                     </ul>
                 </li>
             <?php } ?>
