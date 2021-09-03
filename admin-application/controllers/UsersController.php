@@ -220,20 +220,6 @@ class UsersController extends AdminBaseController
         $this->_template->render(false, false);
     }
 
-    public function promoList($user_id = 0)
-    {
-        $user_id = FatUtility::int($user_id);
-
-
-        $user = new User($user_id);
-        $user_info = $user->getUserInfo(['link'], false, false);
-        $promo_users = User::getMyPromos($user_info['link']);
-
-        $this->set('promo_users', $promo_users);
-
-        $this->_template->render(false, false,'users/promo.php');
-    }
-
     public function transaction($userId = 0)
     {
         $userId = FatUtility::int($userId);
@@ -352,7 +338,7 @@ class UsersController extends AdminBaseController
         if (false === $post) {
             FatUtility::dieJsonError(current($pwdFrm->getValidationErrors()));
         }
-        
+
         if (!$user->setLoginPassword($post['new_password'])) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Password_could_not_be_set ', $this->adminLangId) . ' ' . $user->getError());
         }
@@ -365,17 +351,17 @@ class UsersController extends AdminBaseController
             '{user_email}' => $data['credential_email'],
             '{user_password}' => $post['new_password'],
         ];
-        
+
         if(!EmailHandler::sendMailTpl($data['credential_email'],'user_password_changed_successfully',FatApp::getConfig('conf_default_site_lang'),$vars)){
             Message::addErrorMessage(Label::getLabel('LBL_Mail_not_sent!',$this->adminLangId));
             FatUtility::dieJsonError(Message::getHtml());
-            
+
         }
-        
+
         $this->set('msg', $this->str_setup_successful);
         $this->_template->render(false, false, 'json-success.php');
     }
-    
+
     public function autoCompleteJson()
     {
         $pagesize = 20;
@@ -391,7 +377,7 @@ class UsersController extends AdminBaseController
             'u.user_id',
             'credential_username',
             'credential_email'
-                ], false, $skipDeletedUser);
+        ], false, $skipDeletedUser);
         if (!$skipDeletedUser) {
             $srch->addCondition('user_deleted', '=', applicationConstants::YES);
         }

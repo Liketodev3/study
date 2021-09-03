@@ -2,11 +2,11 @@ var isRuningTeacherQualificationFormAjax = false;
 
 var teachLangs = [];
 $(document).ready(function () {
-    profileInfoForm();
-    $('body').on('click', '.tab-ul-js li a', function () {
-        $('.tab-ul-js li').removeClass('is-active');
-        $(this).parent('li').addClass('is-active');
-    });
+	profileInfoForm();
+	$('body').on('click', '.tab-ul-js li a', function () {
+		$('.tab-ul-js li').removeClass('is-active');
+		$(this).parent('li').addClass('is-active');
+	});
 });
 
 (function () {
@@ -58,7 +58,7 @@ $(document).ready(function () {
 				}
 				tpp = data.teacherProfileProgress;
 				$.each(tpp, function (key, value) {
-					
+
 					switch (key) {
 
 						case 'isProfileCompleted':
@@ -69,10 +69,10 @@ $(document).ready(function () {
 							}else{
 								$('.is-profile-complete-js').removeClass('infobar__media-icon--tick').addClass('infobar__media-icon--alert');
 								$('.is-profile-complete-js').html('!');
-								
+
 							}
-						break;
-						
+							break;
+
 						case 'generalAvailabilityCount':
 							value = parseInt(value);
 							if (0 >= value) {
@@ -81,12 +81,12 @@ $(document).ready(function () {
 							} else {
 								$('.general-availability-js').parent('li').addClass('is-completed');
 								$('.availability-setting-js').addClass('is-completed');
-								
+
 							}
 							break;
 						// case 'userCountryId':
 						case 'userProfile':
-							
+
 							// case 'userTimeZone':
 							value = parseInt(value);
 							if (0 >= value) {
@@ -144,9 +144,9 @@ $(document).ready(function () {
 							}else{
 								$('.profile-setting-js').removeClass('is-completed');
 							}
-							
+
 							break;
-						
+
 					}
 				});
 			}
@@ -165,7 +165,7 @@ $(document).ready(function () {
 		$(dv).html(fcom.getLoader());
 		fcom.ajax(fcom.makeUrl('Teacher', 'bankInfoForm'), '', function (t) {
 			$(dv).html(t);
-		
+
 		});
 	};
 
@@ -246,7 +246,7 @@ $(document).ready(function () {
 			if (userIsTeacher) {
 				getTeacherProfileProgress();
 			}
-			
+
 			if(gotoProfileImageForm){
 				$('.profile-imag-li').click();
 			}
@@ -281,8 +281,8 @@ $(document).ready(function () {
 			}else if(userIsTeacher){
 				getTeacherProfileProgress();
 			}
-			
-			
+
+
 		});
 	};
 
@@ -337,7 +337,7 @@ $(document).ready(function () {
 		jQuery.grep(newTeachLangs, function (el) {
 			if (jQuery.inArray(el, teachLangs) == -1) difference.push(el);
 		});
-		
+
 		if (difference.length <= 0) {
 			$.loader.show();
 			fcom.updateWithAjax(fcom.makeUrl('Teacher', 'setupTeacherLanguages'), data, function (t) {
@@ -516,7 +516,7 @@ $(document).ready(function () {
 		fcom.updateWithAjax(fcom.makeUrl('Account', 'setUpGdprDeleteAcc'),data, function (t) {
 			$.loader.hide();
 			$.facebox.close();
-						
+
 		});
 
 	};
@@ -607,16 +607,6 @@ $(document).ready(function () {
 		});
 	};
 
-	recomendationForm = function () {
-		$(profileInfoFormDiv).html(fcom.getLoader());
-
-
-		fcom.ajax(fcom.makeUrl('Account', 'recomendationForm'), '', function (t) {
-			console.log(t);
-			$(profileInfoFormDiv).html(t);
-		});
-	};
-
 	removeProfileImage = function () {
 		$.loader.show();
 		fcom.ajax(fcom.makeUrl('Account', 'removeProfileImage'), '', function (t) {
@@ -633,9 +623,9 @@ $(document).ready(function () {
 
 	sumbmitProfileImage = function (goToLangForm) {
 		if(!$("#frmProfile").validate()){
-            return;
-        }
-        $.loader.show();
+			return;
+		}
+		$.loader.show();
 		$("#frmProfile").ajaxSubmit({
 			delegation: true,
 			success: function (json) {
@@ -648,7 +638,7 @@ $(document).ready(function () {
 						userSeoUrl = userSeoBaseUrl + userData.user_url_name;
 						updateCometChatUser(userData.user_id, name, userImage, userSeoUrl);
 					}
-						
+
 					$.mbsmessage(json.msg, true, 'alert alert--success');
 					if(goToLangForm && $('.profile-lang-li').length > 0){
 						$('.profile-lang-li').first().click();
@@ -659,7 +649,7 @@ $(document).ready(function () {
 					$.mbsmessage(json.msg, true, 'alert alert--danger');
 					return false;
 				}
-				
+
 			}
 		});
 	};
@@ -785,24 +775,24 @@ $(document).ready(function () {
 		});
 	};
 
-    validateVideolink = function (field) {
-        let frm = field.form;
-        $(frm).validate();
-        let url = field.value.trim();
-        if (url == '') {
-            return false;
-        }
-        let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
-        let matches = url.match(regExp);
-        if (!matches || matches[2].length != 11) {
-            $(field).val('');
-            return false;
-        }
-        let validUrl = "https://www.youtube.com/embed/";
-        validUrl += matches[2];
-        $(field).val(validUrl);
-        $(frm).validate();
-        return matches[1];
-    };
+	validateVideolink = function (field) {
+		let frm = field.form;
+		$(frm).validate();
+		let url = field.value.trim();
+		if (url == '') {
+			return false;
+		}
+		let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
+		let matches = url.match(regExp);
+		if (!matches || matches[2].length != 11) {
+			$(field).val('');
+			return false;
+		}
+		let validUrl = "https://www.youtube.com/embed/";
+		validUrl += matches[2];
+		$(field).val(validUrl);
+		$(frm).validate();
+		return matches[1];
+	};
 
 })();

@@ -1,5 +1,5 @@
 <!--left panel start here-->
-<?php 
+<?php
 $adminLoggedId = AdminAuthentication::getLoggedAdminId();
 ?>
 <span class="leftoverlay"></span>
@@ -30,10 +30,10 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
 
             <?php
             if (
-                    $objPrivilege->canViewUsers($adminLoggedId, true) ||
-                    $objPrivilege->canViewTeacherApprovalRequests($adminLoggedId, true) ||
-                    $objPrivilege->canViewWithdrawRequests($adminLoggedId, true) ||
-                    $objPrivilege->canViewTeacherReviews($adminLoggedId, true)
+                $objPrivilege->canViewUsers($adminLoggedId, true) ||
+                $objPrivilege->canViewTeacherApprovalRequests($adminLoggedId, true) ||
+                $objPrivilege->canViewWithdrawRequests($adminLoggedId, true) ||
+                $objPrivilege->canViewTeacherReviews($adminLoggedId, true)
             ) {
                 ?>
                 <li class="haschild"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_Users', $adminLangId); ?></a>
@@ -85,7 +85,7 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
                     </ul>
                 </li>
             <?php } ?>
-            
+
 
             <?php if ($objPrivilege->canViewPreferences($adminLoggedId, true)) { ?>
                 <li class="haschild"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_Teacher_Preferences', $adminLangId); ?></a>
@@ -124,20 +124,20 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
             <!--CMS[-->
             <?php
             if (
-                    $objPrivilege->canViewContentPages($adminLoggedId, true) ||
-                    $objPrivilege->canViewContentBlocks($adminLoggedId, true) ||
-                    $objPrivilege->canViewNavigationManagement($adminLoggedId, true) ||
-                    $objPrivilege->canViewTimezones($adminLoggedId, true) ||
-                    $objPrivilege->canViewCountries($adminLoggedId, true) ||
-                    $objPrivilege->canViewStates($adminLoggedId, true) ||
-                    $objPrivilege->canViewSocialPlatforms($adminLoggedId, true) ||
-                    $objPrivilege->canViewDiscountCoupons($adminLoggedId, true) ||
-                    $objPrivilege->canViewPriceSlab($adminLoggedId, true) ||
-                    $objPrivilege->canViewSpokenLanguage($adminLoggedId, true) ||
-                    $objPrivilege->canViewLessonPackages($adminLoggedId, true) ||
-                    $objPrivilege->canViewLanguageLabel($adminLoggedId, true) ||
-                    $objPrivilege->canViewBibleContent($adminLoggedId, true) ||
-                    $objPrivilege->canViewFaq($adminLoggedId, true) || $objPrivilege->canViewFaqCategory($adminLoggedId, true)
+                $objPrivilege->canViewContentPages($adminLoggedId, true) ||
+                $objPrivilege->canViewContentBlocks($adminLoggedId, true) ||
+                $objPrivilege->canViewNavigationManagement($adminLoggedId, true) ||
+                $objPrivilege->canViewTimezones($adminLoggedId, true) ||
+                $objPrivilege->canViewCountries($adminLoggedId, true) ||
+                $objPrivilege->canViewStates($adminLoggedId, true) ||
+                $objPrivilege->canViewSocialPlatforms($adminLoggedId, true) ||
+                $objPrivilege->canViewDiscountCoupons($adminLoggedId, true) ||
+                $objPrivilege->canViewPriceSlab($adminLoggedId, true) ||
+                $objPrivilege->canViewSpokenLanguage($adminLoggedId, true) ||
+                $objPrivilege->canViewLessonPackages($adminLoggedId, true) ||
+                $objPrivilege->canViewLanguageLabel($adminLoggedId, true) ||
+                $objPrivilege->canViewBibleContent($adminLoggedId, true) ||
+                $objPrivilege->canViewFaq($adminLoggedId, true) || $objPrivilege->canViewFaqCategory($adminLoggedId, true)
             ) {
                 ?>
                 <li class="haschild"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_Cms', $adminLangId); ?></a>
@@ -146,8 +146,8 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
                             <li><a href="<?php echo CommonHelper::generateUrl('ContentPages'); ?>"><?php echo Label::getLabel('LBL_Content_Pages', $adminLangId); ?></a></li>
                         <?php } ?>
                         <?php if($objPrivilege->canViewContentBlocks($adminLoggedId, true)){?>
-						<li><a href="<?php echo CommonHelper::generateUrl('ContentBlock'); ?>"><?php echo Label::getLabel('LBL_Content_Blocks',$adminLangId);?></a></li>
-						<?php } ?>
+                            <li><a href="<?php echo CommonHelper::generateUrl('ContentBlock'); ?>"><?php echo Label::getLabel('LBL_Content_Blocks',$adminLangId);?></a></li>
+                        <?php } ?>
                         <?php if ($objPrivilege->canViewBibleContent($adminLoggedId, true)) { ?>
                             <li><a href="<?php echo CommonHelper::generateUrl('BibleContent'); ?>"><?php echo Label::getLabel('LBL_Bible_Content', $adminLangId); ?></a></li>
                         <?php } ?>
@@ -199,9 +199,9 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
             <!-- ] -->
             <?php
             if ($objPrivilege->canViewBlogPostCategories($adminLoggedId, true) ||
-                    $objPrivilege->canViewBlogPosts($adminLoggedId, true) ||
-                    $objPrivilege->canViewBlogContributions($adminLoggedId, true) ||
-                    $objPrivilege->canViewBlogComments($adminLoggedId, true)
+                $objPrivilege->canViewBlogPosts($adminLoggedId, true) ||
+                $objPrivilege->canViewBlogContributions($adminLoggedId, true) ||
+                $objPrivilege->canViewBlogComments($adminLoggedId, true)
             ) {
                 ?>
                 <li class="haschild"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_Blog', $adminLangId); ?></a>
@@ -230,11 +230,11 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
             <!--Settings-->
             <?php
             if (
-                    $objPrivilege->canViewGeneralSettings($adminLoggedId, true) ||
-                    $objPrivilege->canViewPaymentMethods($adminLoggedId, true) ||
-                    $objPrivilege->canViewCurrencyManagement($adminLoggedId, true) ||
-                    $objPrivilege->canViewCommissionSettings($adminLoggedId, true) ||
-                    $objPrivilege->canViewEmailTemplates($adminLoggedId, true)
+                $objPrivilege->canViewGeneralSettings($adminLoggedId, true) ||
+                $objPrivilege->canViewPaymentMethods($adminLoggedId, true) ||
+                $objPrivilege->canViewCurrencyManagement($adminLoggedId, true) ||
+                $objPrivilege->canViewCommissionSettings($adminLoggedId, true) ||
+                $objPrivilege->canViewEmailTemplates($adminLoggedId, true)
             ) {
                 ?>
                 <li class="haschild"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_Settings', $adminLangId); ?></a>
@@ -257,17 +257,14 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
                         <?php if ($objPrivilege->canViewEmailTemplates($adminLoggedId, true)) { ?>
                             <li><a href="<?php echo CommonHelper::generateUrl('EmailTemplates'); ?>"><?php echo Label::getLabel('LBL_Email_Templates_Management', $adminLangId); ?></a></li>
                         <?php } ?>
-                        <?php if ($objPrivilege->canViewEmailTemplates($adminLoggedId, true)) { ?>
-                            <li><a href="<?php echo CommonHelper::generateUrl('Affilate'); ?>">AFFILATE SETTINGS</a></li>
-                        <?php } ?>
                     </ul>
                 </li>
             <?php } ?>
             <?php
             if (
-                    $objPrivilege->canViewMetaTags($adminLoggedId, true) ||
-                    $objPrivilege->canViewUrlRewrites($adminLoggedId, true)
-            || $objPrivilege->canViewImageAttributes($adminLoggedId, true)
+                $objPrivilege->canViewMetaTags($adminLoggedId, true) ||
+                $objPrivilege->canViewUrlRewrites($adminLoggedId, true)
+                || $objPrivilege->canViewImageAttributes($adminLoggedId, true)
             ) {
                 ?>
                 <li class="haschild"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_SEO', $adminLangId); ?></a>
@@ -290,9 +287,9 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
             <!-- Report [ -->
             <?php
             if (
-                    $objPrivilege->canViewTopLangReport($adminLoggedId, true) ||
-                    $objPrivilege->canViewTeacherPerformanceReport($adminLoggedId, true) ||
-                    $objPrivilege->canViewCommissionReport($adminLoggedId, true)
+                $objPrivilege->canViewTopLangReport($adminLoggedId, true) ||
+                $objPrivilege->canViewTeacherPerformanceReport($adminLoggedId, true) ||
+                $objPrivilege->canViewCommissionReport($adminLoggedId, true)
             ) {
                 ?>
                 <li class="haschild">
@@ -329,8 +326,8 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
                 </ul>
             </li>
             <?php if($objPrivilege->canViewGdprRequests(AdminAuthentication::getLoggedAdminId(), true)){ ?>
-        <li><a href="<?php echo CommonHelper::generateUrl('GdprRequests')?>"><?php echo Label::getLabel('LBL_User_Gdpr_Requests',$adminLangId);?></a></li>
-		<?php } ?>
+                <li><a href="<?php echo CommonHelper::generateUrl('GdprRequests')?>"><?php echo Label::getLabel('LBL_User_Gdpr_Requests',$adminLangId);?></a></li>
+            <?php } ?>
         </ul>
     </div>
 </aside>

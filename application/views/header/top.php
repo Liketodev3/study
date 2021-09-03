@@ -26,7 +26,7 @@
                     </div>
                     <?php $this->includeTemplate('header/explore-subjects.php'); ?>
                 </div>
-                <div class="header__middle">                
+                <div class="header__middle">
                     <?php $this->includeTemplate('header/navigation.php'); ?>
                 </div>
                 <div class="header__right">
@@ -37,21 +37,3 @@
     </div>
 </header>
 <div id="body" class="body">
-    <script>
-
-            var url_string = window.location.href;
-            var url = new URL(url_string);
-            var c = url.searchParams.get("promo");
-
-            if(typeof c == 'string'){
-                setTimeout(function () {
-                    $('input[name="used_link"]').val(c);
-                }, 1000);
-                signUpFormPopUp();
-            }
-
-
-
-
-
-    </script>

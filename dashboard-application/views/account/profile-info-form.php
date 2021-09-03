@@ -44,356 +44,355 @@ $user_gender->setOptionListTagAttribute('class', 'list-inline list-inline--oneha
 $jsonUserRow = FatUtility::convertToJson($userRow);
 ?>
 <script>
-	var userData = <?php echo $jsonUserRow; ?>;
-	var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>';
-	var userSeoBaseUrl = '<?php echo CommonHelper::generateFullUrl('teachers', 'profile') . '/'; ?>';
-	var userImage = '<?php echo CommonHelper::generateFullUrl('Image', 'user', array($userRow['user_id'])); ?>';
+    var userData = <?php echo $jsonUserRow; ?>;
+    var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>';
+    var userSeoBaseUrl = '<?php echo CommonHelper::generateFullUrl('teachers', 'profile') . '/'; ?>';
+    var userImage = '<?php echo CommonHelper::generateFullUrl('Image', 'user', array($userRow['user_id'])); ?>';
 </script>
 <div class="content-panel__head">
-	<div class="d-flex align-items-center justify-content-between">
-			<div>
-				<h5><?php echo Label::getLabel('LBL_Manage_Profile'); ?></h5>
-			</div>
-	</div>
+    <div class="d-flex align-items-center justify-content-between">
+        <div>
+            <h5><?php echo Label::getLabel('LBL_Manage_Profile'); ?></h5>
+        </div>
+    </div>
 </div>
 <div class="content-panel__body">
-	<div class="form" id="langForm">
-		<div class="form__body padding-0">
-			<nav class="tabs tabs--line padding-left-6 padding-right-6">
-				<ul class="tab-ul-js">
-					<li class="is-active"><a href="javascript:void(0)" onclick="profileInfoForm();"><?php echo Label::getLabel('LBL_General'); ?></a></li>
-					<li><a href="javascript:void(0)" onclick="profileImageForm();" class="profile-imag-li"><?php echo Label::getLabel('LBL_Photos_&_Videos'); ?></a></li>
+    <div class="form" id="langForm">
+        <div class="form__body padding-0">
+            <nav class="tabs tabs--line padding-left-6 padding-right-6">
+                <ul class="tab-ul-js">
+                    <li class="is-active"><a href="javascript:void(0)" onclick="profileInfoForm();"><?php echo Label::getLabel('LBL_General'); ?></a></li>
+                    <li><a href="javascript:void(0)" onclick="profileImageForm();" class="profile-imag-li"><?php echo Label::getLabel('LBL_Photos_&_Videos'); ?></a></li>
                     <?php foreach ($languages as $langId => $language) { ?>
-						<li class="profile-lang-tab"><a href="javascript:void(0)"  class="profile-lang-li" onclick="getLangProfileInfoForm(<?php echo $langId; ?>);"><?php echo $language['language_name']; ?></a></li>
-					<?php } ?>
-                    <li><a href="javascript:void(0)" onclick="recomendationForm();" class="profile-imag-li">Recomendation Link</a></li>
-				</ul>
-			</nav>
-			<div class="tabs-data">
+                        <li class="profile-lang-tab"><a href="javascript:void(0)"  class="profile-lang-li" onclick="getLangProfileInfoForm(<?php echo $langId; ?>);"><?php echo $language['language_name']; ?></a></li>
+                    <?php } ?>
+                </ul>
+            </nav>
+            <div class="tabs-data">
 
-				<div id="profileInfoFrmBlock">
+                <div id="profileInfoFrmBlock">
 
-					<div class="action-bar border-top-0">
-						<div class="row justify-content-between align-items-center">
-							<div class="col-sm-6">
-								<div class="d-flex align-items-center">
+                    <div class="action-bar border-top-0">
+                        <div class="row justify-content-between align-items-center">
+                            <div class="col-sm-6">
+                                <div class="d-flex align-items-center">
 
-									<div class="action-bar__media margin-right-5">
-										<div class="g-circle">
-											<svg xmlns="http://www.w3.org/2000/svg" width="31" height="31" viewBox="0 0 31 31">
-												<path fill="#fbbb00" d="M6.87,148.63l-1.079,4.028-3.944.083a15.527,15.527,0,0,1-.114-14.474h0l3.511.644,1.538,3.49a9.25,9.25,0,0,0,.087,6.228Z" transform="translate(0 -129.896)" />
-												<path fill="#518ef8" d="M276.516,208.176a15.494,15.494,0,0,1-5.525,14.983h0l-4.423-.226-.626-3.907a9.238,9.238,0,0,0,3.975-4.717h-8.288v-6.132h14.888Z" transform="translate(-245.787 -195.572)" />
-												<path fill="#28b446" d="M53.865,318.262h0a15.5,15.5,0,0,1-23.356-4.742l5.023-4.112a9.219,9.219,0,0,0,13.284,4.72Z" transform="translate(-28.662 -290.675)" />
-												<path fill="#f14336" d="M52.285,3.568,47.263,7.679a9.217,9.217,0,0,0-13.589,4.826L28.625,8.372h0a15.5,15.5,0,0,1,23.661-4.8Z" transform="translate(-26.891)" />
-											</svg>
-										</div>
-									</div>
-									<div class="action-bar__content">
-										<p class="margin-bottom-0"><?php echo Label::getLabel('Lbl_To_Sync_with_google_calendar'); ?></p>
-									</div>
+                                    <div class="action-bar__media margin-right-5">
+                                        <div class="g-circle">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="31" height="31" viewBox="0 0 31 31">
+                                                <path fill="#fbbb00" d="M6.87,148.63l-1.079,4.028-3.944.083a15.527,15.527,0,0,1-.114-14.474h0l3.511.644,1.538,3.49a9.25,9.25,0,0,0,.087,6.228Z" transform="translate(0 -129.896)" />
+                                                <path fill="#518ef8" d="M276.516,208.176a15.494,15.494,0,0,1-5.525,14.983h0l-4.423-.226-.626-3.907a9.238,9.238,0,0,0,3.975-4.717h-8.288v-6.132h14.888Z" transform="translate(-245.787 -195.572)" />
+                                                <path fill="#28b446" d="M53.865,318.262h0a15.5,15.5,0,0,1-23.356-4.742l5.023-4.112a9.219,9.219,0,0,0,13.284,4.72Z" transform="translate(-28.662 -290.675)" />
+                                                <path fill="#f14336" d="M52.285,3.568,47.263,7.679a9.217,9.217,0,0,0-13.589,4.826L28.625,8.372h0a15.5,15.5,0,0,1,23.661-4.8Z" transform="translate(-26.891)" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="action-bar__content">
+                                        <p class="margin-bottom-0"><?php echo Label::getLabel('Lbl_To_Sync_with_google_calendar'); ?></p>
+                                    </div>
 
-								</div>
-							</div>
-							<div class="col-sm-auto">
-								<a href="<?php echo CommonHelper::generateUrl('Account', 'GoogleCalendarAuthorize'); ?>" class="btn social-button social-button--google">
-									<span class="social-button__media"><img src="<?php echo CONF_WEBROOT_URL.'images/google.svg'; ?>" alt="<?php echo Label::getLabel('LBL_Connect_Google_Calendar'); ?>"></span>
-									<span class="social-button__label"><?php echo Label::getLabel('LBL_Connect_Google_Calendar'); ?></span>
-								</a>
-							</div>
-						</div>
-					</div>
-					<div class="padding-6">
-						<div class="max-width-80">
-							<?php 
-								echo $profileFrm->getFormTag();
-								echo $profileFrm->getFieldHtml('user_phone_code');
-								if($profileFrm->getField('user_id')) {
-									echo $profileFrm->getFieldHtml('user_id');
-								}
-							?>
-								<?php if(isset($user_url_name)) { ?>
-								<div class="row">
-									<div class="col-md-12">
-										<div class="field-set">
-											<div class="caption-wraper">
-												<label class="field_label">
-													<?php echo $user_url_name->getCaption(); ?>
-													<?php if($user_url_name->requirement->isRequired()) { ?>
-														<span class="spn_must_field">*</span>
-													<?php } ?>
-											</label>
-											</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-auto">
+                                <a href="<?php echo CommonHelper::generateUrl('Account', 'GoogleCalendarAuthorize'); ?>" class="btn social-button social-button--google">
+                                    <span class="social-button__media"><img src="<?php echo CONF_WEBROOT_URL.'images/google.svg'; ?>" alt="<?php echo Label::getLabel('LBL_Connect_Google_Calendar'); ?>"></span>
+                                    <span class="social-button__label"><?php echo Label::getLabel('LBL_Connect_Google_Calendar'); ?></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="padding-6">
+                        <div class="max-width-80">
+                            <?php
+                            echo $profileFrm->getFormTag();
+                            echo $profileFrm->getFieldHtml('user_phone_code');
+                            if($profileFrm->getField('user_id')) {
+                                echo $profileFrm->getFieldHtml('user_id');
+                            }
+                            ?>
+                            <?php if(isset($user_url_name)) { ?>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="field-set">
+                                            <div class="caption-wraper">
+                                                <label class="field_label">
+                                                    <?php echo $user_url_name->getCaption(); ?>
+                                                    <?php if($user_url_name->requirement->isRequired()) { ?>
+                                                        <span class="spn_must_field">*</span>
+                                                    <?php } ?>
+                                                </label>
+                                            </div>
 
-											<div class="field-wraper">
-												<div class="field_cover">
-													<?php echo $user_url_name->getHTML(); ?>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<?php } ?>
-								<div class="row">
-									<div class="col-md-12">
-										<div class="field-set">
-											<div class="caption-wraper">
-												<label class="field_label"><?php echo Label::getLabel('LBL_Name'); ?>   
-													<?php if($firstNameField->requirement->isRequired()) { ?>
-														<span class="spn_must_field">*</span>
-													<?php } ?>
-												</label>
-											</div>
+                                            <div class="field-wraper">
+                                                <div class="field_cover">
+                                                    <?php echo $user_url_name->getHTML(); ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php } ?>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="field-set">
+                                        <div class="caption-wraper">
+                                            <label class="field_label"><?php echo Label::getLabel('LBL_Name'); ?>
+                                                <?php if($firstNameField->requirement->isRequired()) { ?>
+                                                    <span class="spn_must_field">*</span>
+                                                <?php } ?>
+                                            </label>
+                                        </div>
 
-											<div class="field-wraper">
-												<div class="field_cover">
-													<div class="custom-cols custom-cols--onehal">
-														<ul>
-															<li><?php echo $firstNameField->getHTML('user_first_name'); ?></li>
-															<li><?php echo $lastNameField->getHTML('user_last_name'); ?></li>
-														</ul>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
+                                        <div class="field-wraper">
+                                            <div class="field_cover">
+                                                <div class="custom-cols custom-cols--onehal">
+                                                    <ul>
+                                                        <li><?php echo $firstNameField->getHTML('user_first_name'); ?></li>
+                                                        <li><?php echo $lastNameField->getHTML('user_last_name'); ?></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-								<div class="row">
-									<div class="col-md-12">
-										<div class="field-set">
-											<div class="caption-wraper">
-												<label class="field_label"><?php echo $genderField->getCaption(); ?>
-												<?php if($genderField->requirement->isRequired()) { ?>
-														<span class="spn_must_field">*</span>
-												<?php } ?>
-											</label>
-											</div>
-											<div class="field-wraper">
-												<div class="field_cover">
-													<div class="custom-cols custom-cols--onehal">
-														<ul class="list-inline list-inline--onehalf">
-														<?php foreach ($genderField->options as $id => $name)  { ?>
-															<li class="<?php echo ($genderField->value == $id) ? 'is-active' : ''; ?>"><label><span class="radio"><input type="radio" name="<?php echo $genderField->getName(); ?>" value="<?php echo $id; ?>"  <?php echo ($genderField->value == $id) ? 'checked' : ''; ?>><i class="input-helper"></i></span><?php echo $name; ?></label></li>
-														<?php }?>
-														
-														</ul>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-12">
-										<div class="field-set">
-											<div class="caption-wraper">
-												<label class="field_label">
-													<?php echo $phoneField->getCaption(); ?>
-													<?php if($phoneField->requirement->isRequired()) { ?>
-														<span class="spn_must_field">*</span>
-													<?php } ?>
-											</label>
-											</div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="field-set">
+                                        <div class="caption-wraper">
+                                            <label class="field_label"><?php echo $genderField->getCaption(); ?>
+                                                <?php if($genderField->requirement->isRequired()) { ?>
+                                                    <span class="spn_must_field">*</span>
+                                                <?php } ?>
+                                            </label>
+                                        </div>
+                                        <div class="field-wraper">
+                                            <div class="field_cover">
+                                                <div class="custom-cols custom-cols--onehal">
+                                                    <ul class="list-inline list-inline--onehalf">
+                                                        <?php foreach ($genderField->options as $id => $name)  { ?>
+                                                            <li class="<?php echo ($genderField->value == $id) ? 'is-active' : ''; ?>"><label><span class="radio"><input type="radio" name="<?php echo $genderField->getName(); ?>" value="<?php echo $id; ?>"  <?php echo ($genderField->value == $id) ? 'checked' : ''; ?>><i class="input-helper"></i></span><?php echo $name; ?></label></li>
+                                                        <?php }?>
 
-											<div class="field-wraper">
-												<div class="field_cover">
-												<?php echo $phoneField->getHTML(); ?>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-12">
-										<div class="field-set">
-											<div class="caption-wraper">
-												<label class="field_label"> <?php echo $countryField->getCaption(); ?> 
-												<?php if($countryField->requirement->isRequired()) { ?>
-													<span class="spn_must_field">*</span>
-												<?php } ?>
-												</label>
-											</div>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="field-set">
+                                        <div class="caption-wraper">
+                                            <label class="field_label">
+                                                <?php echo $phoneField->getCaption(); ?>
+                                                <?php if($phoneField->requirement->isRequired()) { ?>
+                                                    <span class="spn_must_field">*</span>
+                                                <?php } ?>
+                                            </label>
+                                        </div>
 
-											<div class="field-wraper">
-												<div class="field_cover">
-													<?php echo $countryField->getHTML(); ?>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
+                                        <div class="field-wraper">
+                                            <div class="field_cover">
+                                                <?php echo $phoneField->getHTML(); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="field-set">
+                                        <div class="caption-wraper">
+                                            <label class="field_label"> <?php echo $countryField->getCaption(); ?>
+                                                <?php if($countryField->requirement->isRequired()) { ?>
+                                                    <span class="spn_must_field">*</span>
+                                                <?php } ?>
+                                            </label>
+                                        </div>
 
-								<div class="row">
-									<div class="col-md-12">
-										<div class="field-set">
-											<div class="caption-wraper">
-												<label class="field_label"> <?php echo $timeZoneField->getCaption(); ?>
-												<?php if($timeZoneField->requirement->isRequired()) { ?>
-													<span class="spn_must_field">*</span>
-												<?php } ?>
-											</label>
-											</div>
+                                        <div class="field-wraper">
+                                            <div class="field_cover">
+                                                <?php echo $countryField->getHTML(); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-											<div class="field-wraper">
-												<div class="field_cover">
-													<?php echo $timeZoneField->getHTML(); ?>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="field-set">
+                                        <div class="caption-wraper">
+                                            <label class="field_label"> <?php echo $timeZoneField->getCaption(); ?>
+                                                <?php if($timeZoneField->requirement->isRequired()) { ?>
+                                                    <span class="spn_must_field">*</span>
+                                                <?php } ?>
+                                            </label>
+                                        </div>
 
-								<?php if($bookingBeforeField){ ?>					
-								<div class="row">
-									<div class="col-md-12">
-										<div class="field-set">
-											<div class="caption-wraper">
-												<label class="field_label"> <?php echo $bookingBeforeField->getCaption(); ?>
-												<?php if ($bookingBeforeField->requirement->isRequired()) { ?>
-													<span class="spn_must_field">*</span>
-												<?php } ?>
-											</label>
-											</div>
+                                        <div class="field-wraper">
+                                            <div class="field_cover">
+                                                <?php echo $timeZoneField->getHTML(); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-											<div class="field-wraper">
-												<div class="field_cover">
-													<?php echo $bookingBeforeField->getHTML(); ?>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<?php } ?>
+                            <?php if($bookingBeforeField){ ?>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="field-set">
+                                            <div class="caption-wraper">
+                                                <label class="field_label"> <?php echo $bookingBeforeField->getCaption(); ?>
+                                                    <?php if ($bookingBeforeField->requirement->isRequired()) { ?>
+                                                        <span class="spn_must_field">*</span>
+                                                    <?php } ?>
+                                                </label>
+                                            </div>
 
-								<div class="row">
-									<div class="col-md-12">
-										<div class="field-set">
-											<div class="caption-wraper">
-												<label class="field_label"> <?php echo $siteLangField->getCaption(); ?>
-												<?php if($siteLangField->requirement->isRequired()) { ?>
-													<span class="spn_must_field">*</span>
-												<?php } ?>
-											</label>
-											</div>
+                                            <div class="field-wraper">
+                                                <div class="field_cover">
+                                                    <?php echo $bookingBeforeField->getHTML(); ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php } ?>
 
-											<div class="field-wraper">
-												<div class="field_cover">
-													<?php echo $siteLangField->getHTML(); ?>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="field-set">
+                                        <div class="caption-wraper">
+                                            <label class="field_label"> <?php echo $siteLangField->getCaption(); ?>
+                                                <?php if($siteLangField->requirement->isRequired()) { ?>
+                                                    <span class="spn_must_field">*</span>
+                                                <?php } ?>
+                                            </label>
+                                        </div>
 
-								 <?php if($freeTrialField){ ?>
-								<div class="row">
-									<div class="col-md-12">
-										<div class="field-set">
-											<div class="caption-wraper">
-												<label class="field_label"> <?php echo $freeTrialField->getCaption(); ?>
-													<?php if ($freeTrialField->requirement->isRequired()) { ?>
-														<span class="spn_must_field">*</span>
-													<?php } ?>
-												</label>
-											</div>
-											<div class="field-wraper">
-												<div class="field_cover">
-													<label class="switch-group d-flex align-items-center justify-content-between">
-														<span class="switch-group__label free-trial-status-js"><?php echo ($freeTrialField->checked) ? Label::getLabel('LBL_Active') : Label::getLabel('LBL_In-active'); ?></span>
-														<span class="switch switch--small">
+                                        <div class="field-wraper">
+                                            <div class="field_cover">
+                                                <?php echo $siteLangField->getHTML(); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <?php if($freeTrialField){ ?>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="field-set">
+                                            <div class="caption-wraper">
+                                                <label class="field_label"> <?php echo $freeTrialField->getCaption(); ?>
+                                                    <?php if ($freeTrialField->requirement->isRequired()) { ?>
+                                                        <span class="spn_must_field">*</span>
+                                                    <?php } ?>
+                                                </label>
+                                            </div>
+                                            <div class="field-wraper">
+                                                <div class="field_cover">
+                                                    <label class="switch-group d-flex align-items-center justify-content-between">
+                                                        <span class="switch-group__label free-trial-status-js"><?php echo ($freeTrialField->checked) ? Label::getLabel('LBL_Active') : Label::getLabel('LBL_In-active'); ?></span>
+                                                        <span class="switch switch--small">
 															<input class="switch__label" type="<?php echo $freeTrialField->fldType; ?>" name="<?php echo $freeTrialField->getName(); ?>" value="<?php echo $freeTrialField->value; ?>" <?php echo ($freeTrialField->checked) ? 'checked' : ''; ?>>
 															<i class="switch__handle bg-green"></i>
 														</span>
 
-													</label>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<?php } ?>
-								<div class="row submit-row">
-									<div class="col-sm-auto">
-										<div class="field-set">
-											<div class="field-wraper">
-												<div class="field_cover">
-													<?php echo $profileFrm->getFieldHtml('btn_submit'); ?>
-													<?php echo $profileFrm->getFieldHtml('btn_next'); ?>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</form>
-							<?php echo $profileFrm->getExternalJS(); ?>
-						</div>
-					</div>
-				</div>
-			</div>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php } ?>
+                            <div class="row submit-row">
+                                <div class="col-sm-auto">
+                                    <div class="field-set">
+                                        <div class="field-wraper">
+                                            <div class="field_cover">
+                                                <?php echo $profileFrm->getFieldHtml('btn_submit'); ?>
+                                                <?php echo $profileFrm->getFieldHtml('btn_next'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </form>
+                            <?php echo $profileFrm->getExternalJS(); ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-		</div>
-	</div>
+        </div>
+    </div>
 </div>
 <script>
-	var statusActive =  '<?php  echo Label::getLabel('LBL_Active'); ?>';
-	var statusInActive =  '<?php  echo Label::getLabel('LBL_In-active'); ?>';
-	var countryData = window.intlTelInputGlobals.getCountryData();
-        for (var i = 0; i < countryData.length; i++) {
-            var country = countryData[i];
-            country.name = country.name.replace(/ *\([^)]*\) */g, "");
+    var statusActive =  '<?php  echo Label::getLabel('LBL_Active'); ?>';
+    var statusInActive =  '<?php  echo Label::getLabel('LBL_In-active'); ?>';
+    var countryData = window.intlTelInputGlobals.getCountryData();
+    for (var i = 0; i < countryData.length; i++) {
+        var country = countryData[i];
+        country.name = country.name.replace(/ *\([^)]*\) */g, "");
+    }
+
+    var input = document.querySelector("#user_phone");
+    $("#user_phone").inputmask();
+    input.addEventListener("countrychange",function() {
+        var dial_code = $.trim($('.iti__selected-dial-code').text());
+        setPhoneNumberMask();
+        $('#user_phone_code').val(dial_code);
+    });
+
+    var telInput =  window.intlTelInput(input, {
+        separateDialCode: true,
+        initialCountry: "us",
+        utilsScript: siteConstants.webroot+"js/utils.js",
+    });
+
+    setPhoneNumberMask =  function(){
+        let placeholder = $("#user_phone").attr("placeholder");
+        if(placeholder){
+            placeholderlength = placeholder.length;
+            placeholder = placeholder.replace(/[0-9.]/g, '9');
+            $("#user_phone").inputmask({"mask": placeholder});
+            // dataFatreq = JSON.parse($("#user_phone").attr('data-fatreq'));
+            // dataFatreq.lengthrange = [placeholderlength,placeholderlength];
+            // dataFatreq.range.maxval = placeholderlength;
+            // $("#user_phone").attr('data-fatreq', JSON.stringify(dataFatreq));
         }
-
-		var input = document.querySelector("#user_phone");
-		$("#user_phone").inputmask();
-		input.addEventListener("countrychange",function() {
-			var dial_code = $.trim($('.iti__selected-dial-code').text());
-			setPhoneNumberMask();
-            $('#user_phone_code').val(dial_code);
+    };
+    $(document).ready(function() {
+        var dial_code = $.trim($('.iti__selected-dial-code').text());
+        $('#user_phone_code').val(dial_code);
+        setTimeout(() => {
+            setPhoneNumberMask();
+        }, 100);
+        $("[name='user_timezone'], [name='user_country_id']").select2();
+        $('input[name="user_url_name"]').on('keypress', function(e) {
+            if (e.which == 32) {
+                return false;
+            }
         });
-      
-		var telInput =  window.intlTelInput(input, {
-            separateDialCode: true,
-			initialCountry: "us",
-            utilsScript: siteConstants.webroot+"js/utils.js",
+        $('input[name="user_url_name"]').on('change', function(e) {
+            var user_name = $(this).val();
+            user_name = user_name.replace(/ /g, "");
+            $(this).val(user_name);
+            $('.user_url_name_span').html(user_name);
         });
-
-		setPhoneNumberMask =  function(){
-			let placeholder = $("#user_phone").attr("placeholder");
-			if(placeholder){
-                placeholderlength = placeholder.length;
-				placeholder = placeholder.replace(/[0-9.]/g, '9');
-				$("#user_phone").inputmask({"mask": placeholder});
-				// dataFatreq = JSON.parse($("#user_phone").attr('data-fatreq'));
-				// dataFatreq.lengthrange = [placeholderlength,placeholderlength];
-				// dataFatreq.range.maxval = placeholderlength;
-				// $("#user_phone").attr('data-fatreq', JSON.stringify(dataFatreq));
-			}
-		};
-	$(document).ready(function() {
-		var dial_code = $.trim($('.iti__selected-dial-code').text());
-        	$('#user_phone_code').val(dial_code);
-			setTimeout(() => {
-				setPhoneNumberMask();
-			}, 100);
-		$("[name='user_timezone'], [name='user_country_id']").select2();
-		$('input[name="user_url_name"]').on('keypress', function(e) {
-			if (e.which == 32) {
-				return false;
-			}
-		});
-		$('input[name="user_url_name"]').on('change', function(e) {
-			var user_name = $(this).val();
-			user_name = user_name.replace(/ /g, "");
-			$(this).val(user_name);
-			$('.user_url_name_span').html(user_name);
-		});
-		$('input[name="user_url_name"]').on('keyup', function() {
-			var user_name = $(this).val();
-			$('.user_url_name_span').html(user_name);
-		});
-		$('input[name="us_is_trial_lesson_enabled"]').on('change', function() {
-			let status =  ($(this).is(':checked')) ? statusActive : statusInActive;
-			$('.free-trial-status-js').text(status);
-		});
-	});
+        $('input[name="user_url_name"]').on('keyup', function() {
+            var user_name = $(this).val();
+            $('.user_url_name_span').html(user_name);
+        });
+        $('input[name="us_is_trial_lesson_enabled"]').on('change', function() {
+            let status =  ($(this).is(':checked')) ? statusActive : statusInActive;
+            $('.free-trial-status-js').text(status);
+        });
+    });
 </script>
