@@ -195,6 +195,10 @@ class CommonHelper extends FatUtility
     {
         $langId = self::$_lang_id;
 
+            if(empty($use_root_url)){
+                $use_root_url = CONF_WEBROOT_URL;
+            }
+
         if ($useLangCode == true && FatApp::getConfig('CONF_LANG_SPECIFIC_URL', FatUtility::VAR_INT, 0) && count(LANG_CODES_ARR) > 1 && $langId != FatApp::getConfig('CONF_DEFAULT_SITE_LANG', FatUtility::VAR_INT, 1)) {
             $use_root_url = rtrim($use_root_url, '/') . '/' . strtolower(LANG_CODES_ARR[$langId]) . '/';
         }

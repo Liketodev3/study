@@ -29,10 +29,10 @@
 					<?php foreach ($faqDetails as $ques) { ?>
 						<div class="faq-row faq-group-js">
 							<a href="javascript:void(0)" class="faq-title faq__trigger faq__trigger-js">
-								<h5><?php echo $ques['faq_title']; ?></h5>
+								<h5><?php echo CommonHelper::htmlEntitiesDecode($ques['faq_title']); ?></h5>
 							</a>
 							<div class="faq-answer faq__target faq__target-js">
-								<p><?php echo $ques['faq_description']; ?></p>
+								<p><?php echo CommonHelper::htmlEntitiesDecode($ques['faq_description']); ?></p>
 							</div>
 						</div>
 					<?php } ?>
