@@ -582,6 +582,7 @@ class CheckoutController extends LoggedUserController
 
 
             foreach ($affilates_u as $user){
+                var_dump($user);
                 $transObj = new Transaction($user['user_id']);
                 $txnDataArr = [
                     'utxn_user_id' => $user['user_id'],
@@ -597,6 +598,8 @@ class CheckoutController extends LoggedUserController
                     'utxn_comments' => 'Affilate amount',
                     'utxn_type' => Transaction::TYPE_LESSON_BOOKING
                 ];
+
+                exit;
 
                 $transObj->assignValues($txnDataArr);
                 $transObj->save();
