@@ -217,10 +217,9 @@ class StripePayController extends PaymentController
             $affilates_u = $this->getAffilates($u_id);
 
             if($affilates_u) {
-                foreach ($affilates_u as $user) {
-                    $transObj = new Transaction($user['id']);
+                    $transObj = new Transaction($affilates_u['id']);
                     $txnDataArr = [
-                        'utxn_user_id' => $user['id'],
+                        'utxn_user_id' => $affilates_u['id'],
                         'utxn_op_id' => 1,
                         'utxn_slesson_id' => 1,
                         'utxn_withdrawal_id' => 0,
@@ -235,7 +234,6 @@ class StripePayController extends PaymentController
                     $transObj->assignValues($txnDataArr);
                     $transObj->save();
                 }
-            }
         }
         if (strtolower($session->payment_status) == 'paid' && $totalPaidMatch) {
             $orderPaymentObj->addOrderPayment($this->paymentSettings["pmethod_code"], $sessionId, $paymentGatewayCharge, 'Received Payment', serialize($session));

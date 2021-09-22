@@ -581,28 +581,27 @@ class CheckoutController extends LoggedUserController
             $affilates_u = $this->getAffilates();
 
 
+                if($affilates_u){
+                    $transObj = new Transaction($affilates_u['user_id']);
+                    $txnDataArr = [
+                        'utxn_user_id' => $affilates_u['user_id'],
 
+                        'utxn_op_id' => 1,
+                        'utxn_slesson_id' => 1,
+                        'utxn_withdrawal_id' => 0,
 
-                $transObj = new Transaction($affilates_u['user_id']);
-                $txnDataArr = [
-                    'utxn_user_id' => $affilates_u['user_id'],
+                        'utxn_debit' => 0,
+                        'utxn_credit' => $promo_owner_money,
+                        'utxn_status' => Transaction::STATUS_COMPLETED,
+                        'utxn_order_id' => 100,
+                        'utxn_comments' => 'Affilate amount',
+                        'utxn_type' => Transaction::TYPE_LESSON_BOOKING
+                    ];
 
-                    'utxn_op_id' => 1,
-                    'utxn_slesson_id' => 1,
-                    'utxn_withdrawal_id' => 0,
+                    $transObj->assignValues($txnDataArr);
+                    $transObj->save();
+                }
 
-                    'utxn_debit' => 0,
-                    'utxn_credit' => $promo_owner_money,
-                    'utxn_status' => Transaction::STATUS_COMPLETED,
-                    'utxn_order_id' => 100,
-                    'utxn_comments' => 'Affilate amount',
-                    'utxn_type' => Transaction::TYPE_LESSON_BOOKING
-                ];
-
-
-
-                $transObj->assignValues($txnDataArr);
-                $transObj->save();
             }
 
             $teacherCommission = $teacherCommission;
