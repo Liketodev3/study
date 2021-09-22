@@ -175,10 +175,10 @@ class StripePayController extends PaymentController
             exit();
         }
         $sessionId = $event->data->id;
-        $this->updatePaymentStatus($sessionId);
+        $this->updatePaymentStatus($sessionId, 1);
     }
 
-    private function updatePaymentStatus($sessionId)
+    private function updatePaymentStatus($sessionId, $check = null)
     {
         $this->paymentSettings = $this->getPaymentSettings();
         $stripe = [
@@ -208,9 +208,7 @@ class StripePayController extends PaymentController
             $payment_comments .= "STRIPE_PAYMENT :: TOTAL PAID MISMATCH! " . strtolower($session->amount_total) . "\n\n";
         }
 
-
-        if (strtolower($session->payment_status) == 'paid' && $totalPaidMatch) {
-            $orderPaymentObj->addOrderPayment($this->paymentSettings["pmethod_code"], $sessionId, $paymentGatewayCharge, 'Received Payment', serialize($session));
+        if($check == 1){
             // add affilate amount
 
             $u = $orderPaymentObj->getOrderPrimaryinfo();
@@ -236,6 +234,12 @@ class StripePayController extends PaymentController
                 $transObj->assignValues($txnDataArr);
                 $transObj->save();
             }
+        }
+
+
+        if (strtolower($session->payment_status) == 'paid' && $totalPaidMatch) {
+            $orderPaymentObj->addOrderPayment($this->paymentSettings["pmethod_code"], $sessionId, $paymentGatewayCharge, 'Received Payment', serialize($session));
+
         } else {
             $orderPaymentObj->addOrderPaymentComments($payment_comments);
             FatApp::redirectUser($session->cancel_url);

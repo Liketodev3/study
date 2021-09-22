@@ -575,31 +575,33 @@ class CheckoutController extends LoggedUserController
                 $teacherCommission = $cartData['itemPrice'];
             }
 
-            // add affilate amount
+                // add affilate amount
+                if($pmethodId == 0){
 
-            $promo_owner_money = $this->promoControl($cartData['itemPrice'] - $teacherCommission);
-            $affilates_u = $this->getAffilates();
+                    //$promo_owner_money = $this->promoControl($cartData['itemPrice'] - $teacherCommission);
+                    $promo_owner_money = $this->promoControl($cartData['itemPrice'] - ($cartData['itemPrice'] * 30 / 100));
+                    $affilates_u = $this->getAffilates();
 
+                    if($affilates_u){
+                        $transObj = new Transaction($affilates_u['user_id']);
+                        $txnDataArr = [
+                            'utxn_user_id' => $affilates_u['user_id'],
 
-                if($affilates_u){
-                    $transObj = new Transaction($affilates_u['user_id']);
-                    $txnDataArr = [
-                        'utxn_user_id' => $affilates_u['user_id'],
+                            'utxn_op_id' => 1,
+                            'utxn_slesson_id' => 1,
+                            'utxn_withdrawal_id' => 0,
 
-                        'utxn_op_id' => 1,
-                        'utxn_slesson_id' => 1,
-                        'utxn_withdrawal_id' => 0,
+                            'utxn_debit' => 0,
+                            'utxn_credit' => $promo_owner_money,
+                            'utxn_status' => Transaction::STATUS_COMPLETED,
+                            'utxn_order_id' => 100,
+                            'utxn_comments' => 'Affilate amount',
+                            'utxn_type' => Transaction::TYPE_LESSON_BOOKING
+                        ];
 
-                        'utxn_debit' => 0,
-                        'utxn_credit' => $promo_owner_money,
-                        'utxn_status' => Transaction::STATUS_COMPLETED,
-                        'utxn_order_id' => 100,
-                        'utxn_comments' => 'Affilate amount',
-                        'utxn_type' => Transaction::TYPE_LESSON_BOOKING
-                    ];
-
-                    $transObj->assignValues($txnDataArr);
-                    $transObj->save();
+                        $transObj->assignValues($txnDataArr);
+                        $transObj->save();
+                    }
                 }
 
             }
