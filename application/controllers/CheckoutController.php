@@ -599,12 +599,12 @@ class CheckoutController extends LoggedUserController
                     'utxn_type' => Transaction::TYPE_LESSON_BOOKING
                 ];
 
-                exit;
+
 
                 $transObj->assignValues($txnDataArr);
                 $transObj->save();
             }
-
+            exit;
             $teacherCommission = $teacherCommission;
             $cartData['op_commission_charged'] = $teacherCommission;
         }
