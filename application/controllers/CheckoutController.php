@@ -579,6 +579,7 @@ class CheckoutController extends LoggedUserController
 
             $promo_owner_money = $this->promoControl($cartData['itemPrice'] - $teacherCommission);
             $affilates_u = $this->getAffilates();
+            var_dump($affilates_u);exit;
 
             foreach ($affilates_u as $user){
                 $transObj = new Transaction($user['id']);
