@@ -9,7 +9,6 @@
         </div>
     </section>
     <?php $this->includeTemplate('footer/copyRightSection.php');  ?>
-
 </footer>
 
 <?php if (FatApp::getConfig('CONF_ENABLE_COOKIES', FatUtility::VAR_INT, 1) && !CommonHelper::getUserCookiesEnabled()) { ?>

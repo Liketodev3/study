@@ -64,7 +64,7 @@ class AccountController extends LoggedUserController
         }
         if (true !== CommonHelper::validatePassword($post['new_password'])) {
             Message::addErrorMessage(
-                Label::getLabel('MSG_PASSWORD_MUST_BE_EIGHT_CHARACTERS_LONG_AND_ALPHANUMERIC')
+                    Label::getLabel('MSG_PASSWORD_MUST_BE_EIGHT_CHARACTERS_LONG_AND_ALPHANUMERIC')
             );
             FatUtility::dieWithError(Message::getHtml());
         }
@@ -175,17 +175,17 @@ class AccountController extends LoggedUserController
         //$profileImgFrm = $this->getProfileImageForm();
         $stateId = 0;
         $userRow = User::getAttributesById(UserAuthentication::getLoggedUserId(), [
-            'user_id',
-            'user_url_name',
-            'user_first_name',
-            'user_last_name',
-            'user_gender',
-            'user_phone',
-            'user_phone_code',
-            'user_country_id',
-            'user_is_teacher',
-            'user_timezone',
-            'user_profile_info'
+                    'user_id',
+                    'user_url_name',
+                    'user_first_name',
+                    'user_last_name',
+                    'user_gender',
+                    'user_phone',
+                    'user_phone_code',
+                    'user_country_id',
+                    'user_is_teacher',
+                    'user_timezone',
+                    'user_profile_info'
         ]);
         $userRow['user_phone'] = ($userRow['user_phone'] == 0) ? '' : $userRow['user_phone'];
         // $profileFrm = $this->getProfileInfoForm($userRow['user_is_teacher']);
@@ -236,8 +236,8 @@ class AccountController extends LoggedUserController
     }
 
     public function GoogleCalendarAuthorize()
-    {
-
+    {   
+     
         require_once CONF_INSTALLATION_PATH . 'library/third-party/GoogleAPI/vendor/autoload.php'; // include the required calss files for google login
         $client = new Google_Client();
         $client->setApplicationName(FatApp::getConfig('CONF_WEBSITE_NAME_' . $this->siteLangId)); // Set your applicatio name
@@ -403,7 +403,7 @@ class AccountController extends LoggedUserController
         $this->_template->render(false, false, 'json-success.php');
     }
 
-
+ 
 
     public function deleteAccountForm()
     {
@@ -411,7 +411,7 @@ class AccountController extends LoggedUserController
         if(!empty($reqData)){
             Message::addErrorMessage(Label::getLabel('LBL_You_already_Requested_Delete_Account', $this->siteLangId));
             FatUtility::dieWithError(Message::getHtml());
-
+        
         }
         $frm =  $this->getDeleteAccountForm($this->siteLangId);
         $this->set('frm', $frm);
@@ -431,7 +431,7 @@ class AccountController extends LoggedUserController
             'gdprdatareq_updated_on' => date('Y-m-d H:i:s'),
             'gdprdatareq_status'=>GdprRequest::STATUS_PENDING,
         ];
-
+        
         $gdprRequest = new GdprRequest();
         $gdprRequest->assignValues($data);
         $gdprRequest->save() && FatUtility::dieJsonSuccess(Label::getLabel("LBL_GDPR_Request_Added_Successfully!"));
@@ -504,6 +504,37 @@ class AccountController extends LoggedUserController
         return $frm;
     }
 
+    function generateRandomString($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+
+    public function recomendationForm()
+    {
+        $link = $this->generateRandomString();
+
+
+        $userId = UserAuthentication::getLoggedUserId();
+        $user = new User($userId);
+        $user_info = $user->getUserInfo(['link'], false, false);
+
+
+        if($user_info['link'] == null){
+            $user->assignValues(['link' => $link]);
+            $user->save();
+        }
+
+        $this->set("u_link", $user_info['link']);
+        $this->_template->render(false, false,'account/link.php');
+
+
+    }
+
 
     public function profileImageForm()
     {
@@ -539,10 +570,11 @@ class AccountController extends LoggedUserController
         if ($teacher) {
             $vidoLinkfield = $frm->addTextBox(Label::getLabel('M_Introduction_Video_Link'), 'us_video_link', '');
             $vidoLinkfield->requirements()->setRegularExpressionToValidate(applicationConstants::INTRODUCTION_VIDEO_LINK_REGEX);
-            $vidoLinkfield->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Please_Enter_Valid_Video_Link'));
+			$vidoLinkfield->requirements()->setCustomErrorMessage(Label::getLabel('MSG_Please_Enter_Valid_Video_Link'));
         }
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE_CHANGES'));
         $frm->addButton('', 'btn_next', Label::getLabel('LBL_Next'));
+
         return $frm;
     }
 

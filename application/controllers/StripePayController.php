@@ -27,6 +27,37 @@ class StripePayController extends PaymentController
         return ['BIF', 'CLP', 'DJF', 'GNF', 'JPY', 'KMF', 'KRW', 'MGA', 'PYG', 'RWF', 'UGX', 'VND', 'VUV', 'XAF', 'XOF', 'XPF'];
     }
 
+    public function promoControl($amount, $u_id){
+
+        $promo_price = 0;
+
+        $user = new User($u_id);
+
+        $user_info = $user->getUserInfo(['used_link','user_is_learner','user_is_teacher'], false, false);
+        $check_promo = User::getAttributesByLink($user_info['used_link']);
+
+        if($check_promo){
+
+            /*           $affilate_commision = new SearchBase(Affilate::DB_TBL);
+                       $affilate_commision = FatApp::getDb()->fetchAll($affilate_commision->getResultSet());
+                       $user_type = $user->getUserTypesArr();*/
+
+            $promo_price = $amount * 3 / 100;
+        }
+
+        return $promo_price;
+
+    }
+
+    public function getAffilates($u_id){
+        $user = new User($u_id);
+
+        $user_info = $user->getUserInfo(['used_link','user_is_learner','user_is_teacher'], false, false);
+        $check_promo = User::getAttributesByLink($user_info['used_link']);
+
+        return $check_promo;
+    }
+
     public function charge($orderId)
     {
         if (empty(trim($orderId))) {
@@ -62,6 +93,7 @@ class StripePayController extends PaymentController
             'order_language_code'
         ]);
         $orderRs = $orderSrch->getResultSet();
+
         $orderInfo = FatApp::getDb()->fetch($orderRs);
         if (!$orderInfo['order_id']) {
             FatUtility::exitWithErrorCode(404);
@@ -175,8 +207,39 @@ class StripePayController extends PaymentController
         if (!$totalPaidMatch) {
             $payment_comments .= "STRIPE_PAYMENT :: TOTAL PAID MISMATCH! " . strtolower($session->amount_total) . "\n\n";
         }
+
+        if (strtolower($session->payment_status) == 'paid'){
+            // add affilate amount
+
+            $u = $orderPaymentObj->getOrderPrimaryinfo();
+            $u_id = $u['order_user_id'];
+            $promo_owner_money = $this->promoControl($payableAmount - ($payableAmount * 30 / 100), $u_id);
+            $affilates_u = $this->getAffilates($u_id);
+
+            if($affilates_u) {
+                foreach ($affilates_u as $user) {
+                    $transObj = new Transaction($user['id']);
+                    $txnDataArr = [
+                        'utxn_user_id' => $user['id'],
+                        'utxn_op_id' => 1,
+                        'utxn_slesson_id' => 1,
+                        'utxn_withdrawal_id' => 0,
+                        'utxn_debit' => 0,
+                        'utxn_credit' => $promo_owner_money,
+                        'utxn_status' => Transaction::STATUS_COMPLETED,
+                        'utxn_order_id' => 100,
+                        'utxn_comments' => 'Affilate amount',
+                        'utxn_type' => Transaction::TYPE_LESSON_BOOKING
+                    ];
+
+                    $transObj->assignValues($txnDataArr);
+                    $transObj->save();
+                }
+            }
+        }
         if (strtolower($session->payment_status) == 'paid' && $totalPaidMatch) {
             $orderPaymentObj->addOrderPayment($this->paymentSettings["pmethod_code"], $sessionId, $paymentGatewayCharge, 'Received Payment', serialize($session));
+
         } else {
             $orderPaymentObj->addOrderPaymentComments($payment_comments);
             FatApp::redirectUser($session->cancel_url);

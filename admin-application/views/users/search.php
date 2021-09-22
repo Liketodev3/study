@@ -26,16 +26,16 @@ foreach ($arr_listing as $sn=>$row){
 		switch ($key){
 			case 'listserial':
 				$td->appendElement('plaintext', array(), $sr_no);
-				break;
+			break;
 			case 'user':
 				$userDetail = '<strong>'.Label::getLabel('LBL_N:', $adminLangId).' </strong>'.$row['user_first_name'].' '.$row['user_last_name'].'<br/>';
 				$userDetail .= '<strong>'.Label::getLabel('LBL_Email:', $adminLangId).' </strong>'.$row['credential_email'].'<br/>';
 				$userDetail .= '<strong>'.Label::getLabel('LBL_User_ID:', $adminLangId).' </strong>'.$row['user_id'].'<br/>';
 				$td->appendElement( 'plaintext', array(), $userDetail, true );
-				break;
+			break;
 			case 'credential_active':
 				$active = "active";
-				$strTxt = Label::getLabel('LBL_Active', $adminLangId);
+                $strTxt = Label::getLabel('LBL_Active', $adminLangId);
 				$statusAct='';
 				if( $row['credential_active'] ==applicationConstants::ACTIVE ) {
 					$active = 'active';
@@ -43,23 +43,23 @@ foreach ($arr_listing as $sn=>$row){
 				}
 				if( $row['credential_active'] ==applicationConstants::INACTIVE ) {
 					$active = '';
-					$strTxt = Label::getLabel('LBL_Inactive', $adminLangId);
+                    $strTxt = Label::getLabel('LBL_Inactive', $adminLangId);
 					$statusAct =  'activeStatus(this)';
 				}
 				if($canEdit === true){
-					$str='<label id="'.$row['user_id'].'" class="statustab status_'.$row['user_id'].' '.$active.'" onclick="'.$statusAct.'">
+				$str='<label id="'.$row['user_id'].'" class="statustab status_'.$row['user_id'].' '.$active.'" onclick="'.$statusAct.'">
 				  <span data-off="'. Label::getLabel('LBL_Active', $adminLangId) .'" data-on="'. Label::getLabel('LBL_Inactive', $adminLangId) .'" class="switch-labels"></span>
 				  <span class="switch-handles"></span>
 				</label>';
-				}else{
-					$str = $strTxt;
-				}
+                }else{
+                    $str = $strTxt;
+                }
 				$td->appendElement('plaintext', array(), $str,true);
-				break;
+			break;
 			case 'user_regdate':
 			case 'user_added_on':
 				$td->appendElement('plaintext',array(), MyDate::format($row[$key], true, true, Admin::getAdminTimeZone()) );
-				break;
+			break;
 			case 'type':
 				$str = '';
 				$arr = User::getUserTypesArr($adminLangId);
@@ -82,17 +82,17 @@ foreach ($arr_listing as $sn=>$row){
 
 				$td->appendElement('plaintext', array(), $str  ,true);
 
-				break;
+			break;
 			case 'credential_verified':
 				$yesNoArr = applicationConstants::getYesNoArr($adminLangId);
 				$str = isset($row[$key])?$yesNoArr[$row[$key]]:'';
 				$td->appendElement('plaintext',array(),$str, true);
-				break;
+			break;
 			case 'action':
 				$ul = $td->appendElement("ul",array("class"=>"actions actions--centered"));
 				if($canEdit){
 					$li = $ul->appendElement("li",array('class'=>'droplink'));
-					$li->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),'<i class="ion-android-more-horizontal icon"></i>', true);
+    			    $li->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green','title'=>Label::getLabel('LBL_Edit',$adminLangId)),'<i class="ion-android-more-horizontal icon"></i>', true);
 					$innerDiv=$li->appendElement('div',array('class'=>'dropwrap'));
 					$innerUl=$innerDiv->appendElement('ul',array('class'=>'linksvertical'));
 
@@ -104,7 +104,7 @@ foreach ($arr_listing as $sn=>$row){
 
 					$innerLi=$innerUl->appendElement("li");
 					$innerLi->appendElement('a', array('href'=>'javascript:void(0)', 'class'=>'button small green',
-						'title'=>Label::getLabel('LBL_Transactions',$adminLangId),"onclick"=>"transactions(".$row['user_id'].")"),Label::getLabel('LBL_Transactions',$adminLangId), true);
+					'title'=>Label::getLabel('LBL_Transactions',$adminLangId),"onclick"=>"transactions(".$row['user_id'].")"),Label::getLabel('LBL_Transactions',$adminLangId), true);
 
 					$innerLi=$innerUl->appendElement('li');
 					$innerLi->appendElement('a', array('href'=>"javascript:void(0)",'onClick'=>"changePassword(".$row['user_id'].")",'class'=>'button small green redirect--js','title'=>Label::getLabel('LBL_Change_Password',$adminLangId)),Label::getLabel('LBL_Change_Password',$adminLangId), true);
@@ -112,13 +112,14 @@ foreach ($arr_listing as $sn=>$row){
 					$innerLi=$innerUl->appendElement('li');
 					$innerLi->appendElement('a', array('href'=>"javascript:void(0)",'onClick'=>"userLogin(".$row['user_id'].")",'class'=>'button small green redirect--js','title'=>Label::getLabel('LBL_Log_into_store',$adminLangId)),Label::getLabel('LBL_Log_into_Profile',$adminLangId), true);
 
-
+					$innerLi=$innerUl->appendElement('li');
+					$innerLi->appendElement('a', array('href'=>"javascript:void(0)",'onClick'=>"promoList(".$row['user_id'].")",'class'=>'button small green redirect--js','title'=>'Promo list'), 'Promo list');
 
 				}
-				break;
+			break;
 			default:
 				$td->appendElement('plaintext', array(), $row[$key], true);
-				break;
+			break;
 		}
 	}
 }
@@ -128,7 +129,7 @@ if (count($arr_listing) == 0){
 echo $tbl->getHtml();
 $postedData['page']=$page;
 echo FatUtility::createHiddenFormFromData ( $postedData, array (
-	'name' => 'frmUserSearchPaging'
+		'name' => 'frmUserSearchPaging'
 ) );
 $pagingArr=array('pageCount'=>$pageCount,'page'=>$page,'pageSize'=>$pageSize,'recordCount'=>$recordCount,'adminLangId'=>$adminLangId);
 $this->includeTemplate('_partial/pagination.php', $pagingArr,false);

@@ -55,7 +55,7 @@ $(document).ready(function(){
 		fcom.updateWithAjax(fcom.makeUrl('Users', 'login', [userId]), '', function(t) {
 			if(t.status == 1) {
 				$.systemMessage.close();
-				window.open(fcom.makeUrl('account', '', [], SITE_ROOT_DASHBOARD_URL),"_blank");
+                window.open(fcom.makeUrl('account', '', [], SITE_ROOT_DASHBOARD_URL),"_blank");
 			}
 		});
 	};
@@ -92,6 +92,16 @@ $(document).ready(function(){
 		var frm = document.frmUserSearchPaging;
 		$.facebox(function() {
 			fcom.ajax(fcom.makeUrl('Users', 'view', [id]), '', function(t) {
+				console.log(t);
+				fcom.updateFaceboxContent(t);
+			});
+		});
+	};
+
+	promoList = function(id) {
+		var frm = document.frmUserSearchPaging;
+		$.facebox(function() {
+			fcom.ajax(fcom.makeUrl('Users', 'promoList', [id]), '', function(t) {
 				fcom.updateFaceboxContent(t);
 			});
 		});
@@ -158,7 +168,7 @@ $(document).ready(function(){
 		if (!$(frm).validate()) return;
 		var data = fcom.frmData(frm);
 		fcom.updateWithAjax(fcom.makeUrl('Users', 'setupUserTransaction'), data, function(t) {
-			if(t.userId > 0) {
+ 			if(t.userId > 0) {
 				addTransaction(t.userId);
 			}
 		});
@@ -182,7 +192,7 @@ $(document).ready(function(){
 		data='userId='+userId+'&status='+active;
 		fcom.displayProcessing();
 		fcom.ajax(fcom.makeUrl('users','changeStatus'),data,function(res){
-			var ans =$.parseJSON(res);
+		var ans =$.parseJSON(res);
 			if(ans.status == 1){
 				$(obj).removeClass("inactive");
 				$(obj).addClass("active");
@@ -205,7 +215,7 @@ $(document).ready(function(){
 		data='userId='+userId+'&status='+inActive;
 		fcom.displayProcessing();
 		fcom.ajax(fcom.makeUrl('users','changeStatus'),data,function(res){
-			var ans =$.parseJSON(res);
+		var ans =$.parseJSON(res);
 			if(ans.status == 1){
 				$(obj).removeClass("active");
 				$(obj).addClass("inactive");
