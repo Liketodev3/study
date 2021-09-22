@@ -581,11 +581,11 @@ class CheckoutController extends LoggedUserController
             $affilates_u = $this->getAffilates();
 
 
-            foreach ($affilates_u as $user){
-                var_dump($user);exit;
-                $transObj = new Transaction($user['user_id']);
+
+
+                $transObj = new Transaction($affilates_u['user_id']);
                 $txnDataArr = [
-                    'utxn_user_id' => $user['user_id'],
+                    'utxn_user_id' => $affilates_u['user_id'],
 
                     'utxn_op_id' => 1,
                     'utxn_slesson_id' => 1,
@@ -604,10 +604,10 @@ class CheckoutController extends LoggedUserController
                 $transObj->assignValues($txnDataArr);
                 $transObj->save();
             }
-            exit;
+
             $teacherCommission = $teacherCommission;
             $cartData['op_commission_charged'] = $teacherCommission;
-        }
+
 
         $products = [
             'op_grpcls_id' => $cartData['grpclsId'],
