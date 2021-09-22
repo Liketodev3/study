@@ -178,7 +178,7 @@ class StripePayController extends PaymentController
         $this->updatePaymentStatus($sessionId, 1);
     }
 
-    private function updatePaymentStatus($sessionId, $check = null)
+    private function updatePaymentStatus($sessionId)
     {
         $this->paymentSettings = $this->getPaymentSettings();
         $stripe = [
@@ -203,12 +203,7 @@ class StripePayController extends PaymentController
         $totalPaidMatch = $session->amount_total == $payableAmount;
         if (strtolower($session->payment_status) != 'paid') {
             $payment_comments .= "STRIPE_PAYMENT :: Status is: " . strtolower($session->payment_status) . "\n\n";
-        }
-        if (!$totalPaidMatch) {
-            $payment_comments .= "STRIPE_PAYMENT :: TOTAL PAID MISMATCH! " . strtolower($session->amount_total) . "\n\n";
-        }
 
-        if($check == 1){
             // add affilate amount
 
             $u = $orderPaymentObj->getOrderPrimaryinfo();
@@ -235,7 +230,9 @@ class StripePayController extends PaymentController
                 $transObj->save();
             }
         }
-
+        if (!$totalPaidMatch) {
+            $payment_comments .= "STRIPE_PAYMENT :: TOTAL PAID MISMATCH! " . strtolower($session->amount_total) . "\n\n";
+        }
 
         if (strtolower($session->payment_status) == 'paid' && $totalPaidMatch) {
             $orderPaymentObj->addOrderPayment($this->paymentSettings["pmethod_code"], $sessionId, $paymentGatewayCharge, 'Received Payment', serialize($session));
