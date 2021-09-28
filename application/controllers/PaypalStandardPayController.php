@@ -128,6 +128,38 @@ class PaypalStandardPayController extends PaymentController
         return $new;
     }
 
+
+    public function promoControl($amount, $u_id){
+
+        $promo_price = 0;
+
+        $user = new User($u_id);
+
+        $user_info = $user->getUserInfo(['used_link','user_is_learner','user_is_teacher'], false, false);
+        $check_promo = User::getAttributesByLink($user_info['used_link']);
+
+        if($check_promo){
+
+            /*           $affilate_commision = new SearchBase(Affilate::DB_TBL);
+                       $affilate_commision = FatApp::getDb()->fetchAll($affilate_commision->getResultSet());
+                       $user_type = $user->getUserTypesArr();*/
+
+            $promo_price = $amount * 3 / 100;
+        }
+
+        return $promo_price;
+
+    }
+
+    public function getAffilates($u_id){
+        $user = new User($u_id);
+
+        $user_info = $user->getUserInfo(['used_link','user_is_learner','user_is_teacher'], false, false);
+        $check_promo = User::getAttributesByLink($user_info['used_link']);
+
+        return $check_promo;
+    }
+
     public function callback()
     {
         $pmObj = new PaymentSettings($this->keyName);
@@ -149,6 +181,7 @@ class PaypalStandardPayController extends PaymentController
         curl_setopt($curl, CURLOPT_TIMEOUT, 30);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         $response = curl_exec($curl);
+        $check = false;
         if ((strcmp($response, 'VERIFIED') == 0 || strcmp($response, 'UNVERIFIED') == 0) && isset($post['payment_status'])) {
             $orderPaymentStatus = $paymentSettings['order_status_initial'];
             switch (strtoupper($post['payment_status'])) {
@@ -159,11 +192,40 @@ class PaypalStandardPayController extends PaymentController
                     $orderPaymentStatus = $paymentSettings['order_status_processed'];
                     break;
                 case 'COMPLETED':
+                    $check = true;
                     $orderPaymentStatus = $paymentSettings['order_status_completed'];
                     break;
                 default:
                     $orderPaymentStatus = $paymentSettings['order_status_others'];
                     break;
+            }
+
+            if($check){
+                // add affilate amount
+
+                $u = $orderPaymentObj->getOrderPrimaryinfo();
+                $u_id = $u['order_user_id'];
+                $promo_owner_money = $this->promoControl($orderPaymentObj['opayment_amount'] - ($orderPaymentObj['opayment_amount'] * 30 / 100), $u_id);
+                $affilates_u = $this->getAffilates($u_id);
+
+                if($affilates_u) {
+                    $transObj = new Transaction($affilates_u['id']);
+                    $txnDataArr = [
+                        'utxn_user_id' => $affilates_u['id'],
+                        'utxn_op_id' => 1,
+                        'utxn_slesson_id' => 1,
+                        'utxn_withdrawal_id' => 0,
+                        'utxn_debit' => 0,
+                        'utxn_credit' => $promo_owner_money,
+                        'utxn_status' => Transaction::STATUS_COMPLETED,
+                        'utxn_order_id' => 100,
+                        'utxn_comments' => 'Affilate amount',
+                        'utxn_type' => Transaction::TYPE_LESSON_BOOKING
+                    ];
+
+                    $transObj->assignValues($txnDataArr);
+                    $transObj->save();
+                }
             }
             $receiverMatch = (strtolower($post['receiver_email']) == strtolower($paymentSettings['merchant_email']));
             $totalPaidMatch = ((float) $post['mc_gross'] == $paymentGatewayCharge);
