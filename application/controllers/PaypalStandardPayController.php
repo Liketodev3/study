@@ -128,36 +128,57 @@ class PaypalStandardPayController extends PaymentController
         return $new;
     }
 
-
-    public function promoControl($amount, $u_id){
+    public function promoControl($amount, $affilates){
 
         $promo_price = 0;
+        $data = [];
+        $data['level1'] = false;
+        $data['level2'] = false;
 
-        $user = new User($u_id);
+        $affilate_commision = new SearchBase(Affilate::DB_TBL);
+        $affilate_commision = FatApp::getDb()->fetchAll($affilate_commision->getResultSet());
+        $affilate_commision = $affilate_commision[0];
 
-        $user_info = $user->getUserInfo(['used_link','user_is_learner','user_is_teacher'], false, false);
-        $check_promo = User::getAttributesByLink($user_info['used_link']);
-
-        if($check_promo){
-
-            /*           $affilate_commision = new SearchBase(Affilate::DB_TBL);
-                       $affilate_commision = FatApp::getDb()->fetchAll($affilate_commision->getResultSet());
-                       $user_type = $user->getUserTypesArr();*/
-
-            $promo_price = $amount * 3 / 100;
+        if( $affilates['level1']){
+            $level = $affilates['level1']['user_registered_initially_for'];
+            if($level == 1){
+                $promo_price = $amount * ($affilate_commision['student_1'] / 100);
+            }else{
+                $promo_price = $amount * ($affilate_commision['teacher_1'] / 100);
+            }
+            $data['level1'] = $promo_price;
         }
 
-        return $promo_price;
+        if( $affilates['level2']){
+            $level = $affilates['level2']['user_registered_initially_for'];
+            if($level == 1){
+                $promo_price = $amount * ($affilate_commision['student_2'] / 100);
+            }else{
+                $promo_price = $amount * ($affilate_commision['teacher_2'] / 100);
+            }
+            $data['level2'] = $promo_price;
+        }
+
+        return $data;
 
     }
 
     public function getAffilates($u_id){
+
+        $data = [];
         $user = new User($u_id);
 
         $user_info = $user->getUserInfo(['used_link','user_is_learner','user_is_teacher'], false, false);
         $check_promo = User::getAttributesByLink($user_info['used_link']);
 
-        return $check_promo;
+        $user2 =  new User($check_promo['user_id']);
+        $user_info_2 = $user2->getUserInfo(['used_link','user_is_learner','user_is_teacher'], false, false);
+        $check_promo_2 = User::getAttributesByLink($user_info_2['used_link']);
+
+        $data['level1'] = $check_promo;
+        $data['level2'] = $check_promo_2;
+
+        return $data;
     }
 
     public function callback()
@@ -202,21 +223,38 @@ class PaypalStandardPayController extends PaymentController
 
             if($check){
                 // add affilate amount
-
                 $u = $orderPaymentObj->getOrderPrimaryinfo();
                 $u_id = $u['order_user_id'];
-                $promo_owner_money = $this->promoControl($orderPaymentObj['opayment_amount'] - ($orderPaymentObj['opayment_amount'] * 30 / 100), $u_id);
                 $affilates_u = $this->getAffilates($u_id);
+                $promo_owner_money = $this->promoControl($orderPaymentObj['opayment_amount'], $affilates_u);
 
-                if($affilates_u) {
-                    $transObj = new Transaction($affilates_u['id']);
+                if($affilates_u['level1']){
+                    $transObj = new Transaction($affilates_u['level1']['user_id']);
                     $txnDataArr = [
-                        'utxn_user_id' => $affilates_u['id'],
+                        'utxn_user_id' => $affilates_u['level1']['user_id'],
                         'utxn_op_id' => 1,
                         'utxn_slesson_id' => 1,
                         'utxn_withdrawal_id' => 0,
                         'utxn_debit' => 0,
-                        'utxn_credit' => $promo_owner_money,
+                        'utxn_credit' => $promo_owner_money['level1'],
+                        'utxn_status' => Transaction::STATUS_COMPLETED,
+                        'utxn_order_id' => 100,
+                        'utxn_comments' => 'Affilate amount',
+                        'utxn_type' => Transaction::TYPE_LESSON_BOOKING
+                    ];
+
+                    $transObj->assignValues($txnDataArr);
+                    $transObj->save();
+                }
+                if($affilates_u['level2']){
+                    $transObj = new Transaction($affilates_u['level2']['user_id']);
+                    $txnDataArr = [
+                        'utxn_user_id' => $affilates_u['level2']['user_id'],
+                        'utxn_op_id' => 1,
+                        'utxn_slesson_id' => 1,
+                        'utxn_withdrawal_id' => 0,
+                        'utxn_debit' => 0,
+                        'utxn_credit' => $promo_owner_money['level2'],
                         'utxn_status' => Transaction::STATUS_COMPLETED,
                         'utxn_order_id' => 100,
                         'utxn_comments' => 'Affilate amount',
