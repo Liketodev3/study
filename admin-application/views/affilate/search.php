@@ -14,10 +14,10 @@
             <?php if($records){ ?>
                 <?php foreach($records as $record): ?>
                     <tr>
-                        <td><input type="number" onchange="updateAffilate(this)" step="any" name="teacher_1" min="0" max="100" value="<?= $record['teacher_1']; ?>"></td>
-                        <td><input type="number" onchange="updateAffilate(this)" step="any" name="teacher_2" min="0" max="100" value="<?= $record['teacher_2']; ?>"></td>
-                        <td><input type="number" onchange="updateAffilate(this)" step="any" name="student_1" min="0" max="100" value="<?= $record['student_1']; ?>"></td>
-                        <td><input type="number" onchange="updateAffilate(this)" step="any" name="student_2" min="0" max="100" value="<?= $record['student_2']; ?>"></td>
+                        <td><input type="number" step="0.01" onchange="updateAffilate(this)" step="any" name="teacher_1" min="0" max="100" value="<?= $record['teacher_1']; ?>"></td>
+                        <td><input type="number" step="0.01" onchange="updateAffilate(this)" step="any" name="teacher_2" min="0" max="100" value="<?= $record['teacher_2']; ?>"></td>
+                        <td><input type="number" step="0.01" onchange="updateAffilate(this)" step="any" name="student_1" min="0" max="100" value="<?= $record['student_1']; ?>"></td>
+                        <td><input type="number" step="0.01" onchange="updateAffilate(this)" step="any" name="student_2" min="0" max="100" value="<?= $record['student_2']; ?>"></td>
                     </tr>
                 <?php endforeach; ?>
             <?php }else{  ?>
