@@ -638,10 +638,10 @@ class CheckoutController extends LoggedUserController
 
                 }
 
-            }
-
             $teacherCommission = $teacherCommission;
             $cartData['op_commission_charged'] = $teacherCommission;
+            }
+
 
 
         $products = [
