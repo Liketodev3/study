@@ -11,6 +11,7 @@ if ($controllerName != 'GuestUser' && $controllerName != 'Error' && $controllerN
         <meta name="author" content="">
         <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no, maximum-scale=1.0,user-scalable=0"/>
+        <meta name="facebook-domain-verification" content="7rkfa7h6cm7wfjb3jhgk0lel21hma6" />
         <link rel="shortcut icon" href="<?php echo CommonHelper::generateUrl('Image', 'favicon', [$siteLangId],CONF_WEBROOT_FRONTEND); ?>">
         <link rel="apple-touch-icon" href="<?php echo CommonHelper::generateUrl('Image', 'appleTouchIcon', [$siteLangId],CONF_WEBROOT_FRONTEND); ?>">
         <?php if (!empty($canonicalUrl)) { ?>

@@ -11,7 +11,8 @@ if (isset($includeEditor) && $includeEditor) { ?>
         }
     </script>
 <?php } ?>
-</head>
+    <meta name="facebook-domain-verification" content="7rkfa7h6cm7wfjb3jhgk0lel21hma6" />
+    </head>
 <?php
 $layoutDirection = CommonHelper::getLayoutDirection();
 ?>
