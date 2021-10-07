@@ -273,12 +273,12 @@ class PaypalStandardPayController extends PaymentController
             if (!$totalPaidMatch) {
                 $request .= "\n\n PP_STANDARD :: TOTAL PAID MISMATCH! " . strtolower($post['mc_gross']) . "\n\n";
             }
-            //   if ($orderPaymentStatus == Order::ORDER_IS_PAID && $receiverMatch && $totalPaidMatch) {
-            if ($orderPaymentStatus == Order::ORDER_IS_PAID  ) {
+    /*        if ($orderPaymentStatus == Order::ORDER_IS_PAID && $receiverMatch && $totalPaidMatch) {
                 $orderPaymentObj->addOrderPayment($paymentSettings["pmethod_code"], $post["txn_id"], $paymentGatewayCharge, 'Received Payment', $request . "#" . $response);
             } else {
                 $orderPaymentObj->addOrderPaymentComments($request);
-            }
+            }*/
+            $orderPaymentObj->addOrderPayment($paymentSettings["pmethod_code"], $post["txn_id"], $paymentGatewayCharge, 'Received Payment', $request . "#" . $response);
         }
         curl_close($curl);
     }
