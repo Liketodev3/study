@@ -12,6 +12,7 @@ $user_timezone = MyDate::getUserTimeZone();
 			<th><?php echo $orderStatusLabel =  Label::getLabel('LBL_Order_Status'); ?></th>
 			<th><?php echo $orderDateLabel = Label::getLabel('LBL_Order_Date'); ?></th>
 			<th><?php echo $actionLabel = Label::getLabel('LBL_Actions'); ?></th>
+			<th>Files</th>
 		</tr>
 		<?php foreach ($ordersData['Orders'] as $order) { ?>
 		<tr>
@@ -67,13 +68,40 @@ $user_timezone = MyDate::getUserTimeZone();
 								<div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel('LBL_Message'); ?></div>
 							</a>
 						</div>
+                        <div id="imgFileUpload" class="btn btn--shadow" style="width: 60px;">
+                            <img  alt="Select File" title="Select File" src="/upload-icon.png" style="cursor: pointer; width: 20px" />
+                        </div>
 					</div>
 				</div>
 			</td>
+            <td>
+
+                <span id="spnFilePath"><?php if($order['invoice_path']){ ?> <a style="text-decoration: underline" target="_blank" href="/images/invoice/<?php echo $order['invoice_path'] ?>"> <?php echo $order['invoice_path'] ?> </a> <?php } ?></span>
+                <form method="post" action="/dashboard/teacher/upload-invoice" enctype="multipart/form-data" class="upload-file-form" >
+                    <input id="FileUpload1" type="file" name="file" style="display: none">
+                    <input type="hidden" name="order_id" value="<?php echo $order['order_id']; ?>">
+                    <button class="mt-2 upload-btn" style="display: none">Upload</button>
+                </form>
+
+            </td>
 		</tr>
 		<?php } ?>
 	</table>
 </div>
+    <script type="text/javascript">
+            var fileupload = document.getElementById("FileUpload1");
+            var filePath = document.getElementById("spnFilePath");
+            var image = document.getElementById("imgFileUpload");
+            image.onclick = function () {
+                fileupload.click();
+            };
+            fileupload.onchange = function () {
+                $(fileupload).next().next().show();
+                var fileName = fileupload.value.split('\\')[fileupload.value.split('\\').length - 1];
+                filePath.innerHTML = "<b>Selected File: </b>" + fileName;
+
+            };
+    </script>
 <?php
 echo FatUtility::createHiddenFormFromData($postedData, array(
 	'name' => 'frmOrderSearchPaging'
@@ -81,4 +109,4 @@ echo FatUtility::createHiddenFormFromData($postedData, array(
 $this->includeTemplate('_partial/pagination.php', $ordersData['pagingArr'], false);
 if(empty($ordersData['Orders'])){
 $this->includeTemplate('_partial/no-record-found.php');
-} 
+}

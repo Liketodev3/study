@@ -343,7 +343,8 @@ class Order extends MyAppModel
             'order_currency_code',
             'order_language_id',
             'order_date_added',
-            'op_lpackage_is_free_trial'
+            'op_lpackage_is_free_trial',
+            'invoice_path'
         ]);
         $srch->addOrder('order_date_added', 'desc');
         $srch->setPageNumber($page);

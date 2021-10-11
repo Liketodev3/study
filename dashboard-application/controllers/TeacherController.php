@@ -56,6 +56,29 @@ class TeacherController extends TeacherBaseController
         $this->_template->render();
     }
 
+    public function uploadInvoice(){
+
+        if($_FILES['file']['name']){
+
+            $uploaddir = 'images/invoice/';
+            $path_parts = pathinfo($_FILES['file']['name']);
+
+            if(isset($path_parts['extension']) && $path_parts['extension'] == 'pdf' || $path_parts['extension'] == 'jpg' || $path_parts['extension'] == 'png' || $path_parts['extension'] == 'jpeg'){
+                $name = uniqid().'.'.$path_parts['extension'];
+
+                $uploadfile = $uploaddir . basename($name);
+
+                move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile);
+
+                $orderObj = new Order();
+                $orderObj->updateOrderInfo($_POST['order_id'], ['invoice_path' => $name]);
+            }
+
+
+        }
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+    }
+
     public function settingsInfoForm()
     {
         $showAdminSlab = FatApp::getPostedData('showAdminSlab', FatUtility::VAR_BOOLEAN, false);

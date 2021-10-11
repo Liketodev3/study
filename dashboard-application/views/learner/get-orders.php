@@ -15,6 +15,7 @@ $user_timezone = MyDate::getUserTimeZone();
 			<th><?php echo $orderStatusLabel =  Label::getLabel('LBL_Order_Status'); ?></th>
 			<th><?php echo $orderDateLabel = Label::getLabel('LBL_Order_Date'); ?></th>
 			<th><?php echo $actionLabel = Label::getLabel('LBL_Actions'); ?></th>
+            <th>Files</th>
 		</tr>
 		<?php foreach ($ordersData['Orders'] as $order) { ?>
 		<tr>
@@ -73,6 +74,17 @@ $user_timezone = MyDate::getUserTimeZone();
 					</div>
 				</div>
 			</td>
+            <td>
+                <?php if($order['invoice_path']){ ?>
+                <a target="_blank" href="/images/invoice/<?php echo $order['invoice_path'] ?>">
+                    <div id="imgFileUpload" class="btn btn--shadow" style="width: 60px;">
+                        <img  alt="Select File" title="Select File" src="/download-icon.png" style="cursor: pointer; width: 20px" />
+                    </div>
+                </a>
+                <?php } else { ?>
+                    <div style="text-align: center">-</div>
+                <?php } ?>
+            </td>
 		</tr>
 		<?php } ?>
 	</table>

@@ -62,6 +62,13 @@ class LearnerController extends LearnerBaseController
         $this->_template->render();
     }
 
+    public function downloadInvoice($path){
+
+        $filepath = $path;
+        readfile('images/invoice/'.$filepath);
+
+    }
+
     private function getOrderSearchForm($langId)
     {
         $frm = new Form('frmOrderSrch');
