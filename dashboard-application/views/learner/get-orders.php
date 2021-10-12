@@ -62,23 +62,24 @@ $user_timezone = MyDate::getUserTimeZone();
             <td>
                 <div class="flex-cell">
                         <div class="flex-cell__label"><?php echo $actionLabel; ?></div>
-					<div class="flex-cell__content">
-						<div class="actions-group">
-							<a href="javascript:void(0);" onClick="generateThread(<?php echo $order['op_teacher_id']; ?>);" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
-								<svg class="icon icon--messaging">
-									<use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#message'; ?>"></use>
-								</svg>
-								<div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel('LBL_Message'); ?></div>
-							</a>
-						</div>
-					</div>
+                        <div class="flex-cell__content">
+                            <div class="actions-group">
+                                <a href="javascript:void(0);" onClick="generateThread(<?php echo $order['op_teacher_id']; ?>);" class="btn btn--bordered btn--shadow btn--equal margin-1 is-hover">
+                                    <svg class="icon icon--messaging">
+                                        <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#message'; ?>"></use>
+                                    </svg>
+                                    <div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel('LBL_Message'); ?></div>
+                                </a>
+                            </div>
+                        </div>
 				</div>
 			</td>
-            <td>
+            <td >
                 <?php if($order['invoice_path']){ ?>
                 <a target="_blank" href="/images/invoice/<?php echo $order['invoice_path'] ?>">
-                    <div id="imgFileUpload" class="btn btn--shadow" style="width: 60px;">
-                        <img  alt="Select File" title="Select File" src="/download-icon.png" style="cursor: pointer; width: 20px" />
+                    <div id="imgFileUpload" class="btn btn--shadow is-hover" style="width: 60px;">
+                        <img  alt="Select File"  src="/download-icon.png" style="cursor: pointer; width: 20px" />
+                        <div class="tooltip tooltip--top bg-black">DOWNLOAD Invoice</div>
                     </div>
                 </a>
                 <?php } else { ?>

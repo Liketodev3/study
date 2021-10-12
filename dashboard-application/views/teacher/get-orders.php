@@ -68,8 +68,9 @@ $user_timezone = MyDate::getUserTimeZone();
 								<div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel('LBL_Message'); ?></div>
 							</a>
 						</div>
-                        <div id="imgFileUpload" class="btn btn--shadow" style="width: 60px;">
-                            <img  alt="Select File" title="Select File" src="/upload-icon.png" style="cursor: pointer; width: 20px" />
+                        <div id="imgFileUpload" class="btn btn--shadow is-hover" style="width: 60px;">
+                            <img  alt="Select File"  src="/upload-icon.png" style="cursor: pointer; width: 20px" />
+                            <div class="tooltip tooltip--top bg-black">UPLOAD Invoice</div>
                         </div>
 					</div>
 				</div>
