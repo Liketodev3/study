@@ -33,7 +33,7 @@ class TeachersController extends MyAppController
     {
         $post = FatApp::getPostedData();
         $page = FatApp::getPostedData('page', FatUtility::VAR_INT, 1);
-        $pageSize = FatApp::getPostedData('pageSize', FatUtility::VAR_INT, 12);
+        $pageSize = FatApp::getPostedData('pageSize', FatUtility::VAR_INT, 50);
         $sortOrder = FatApp::getPostedData('sortOrder', FatUtility::VAR_STRING, '');
         $userId = UserAuthentication::isUserLogged() ? UserAuthentication::getLoggedUserId() : 0;
         $langId = CommonHelper::getLangId();
