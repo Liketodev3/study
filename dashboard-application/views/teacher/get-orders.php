@@ -68,7 +68,7 @@ $user_timezone = MyDate::getUserTimeZone();
 								<div class="tooltip tooltip--top bg-black"><?php echo Label::getLabel('LBL_Message'); ?></div>
 							</a>
 						</div>
-                        <div id="imgFileUpload" class="btn btn--shadow is-hover" style="width: 60px;">
+                        <div id="imgFileUpload" data-id="<?php echo $order['order_id'] ?>" class="btn btn--shadow is-hover imgFileUpload" style="width: 60px;">
                             <img  alt="Select File"  src="/upload-icon.png" style="cursor: pointer; width: 20px" />
                             <div class="tooltip tooltip--top bg-black">UPLOAD Invoice</div>
                         </div>
@@ -77,9 +77,9 @@ $user_timezone = MyDate::getUserTimeZone();
 			</td>
             <td>
 
-                <span id="spnFilePath"><?php if($order['invoice_path']){ ?> <a style="text-decoration: underline" target="_blank" href="/images/invoice/<?php echo $order['invoice_path'] ?>"> <?php echo $order['invoice_path'] ?> </a> <?php } ?></span>
+                <span id="spnFilePath" class="spnFilePath" data-id="<?php echo $order['order_id'] ?>"><?php if($order['invoice_path']){ ?> <a style="text-decoration: underline" target="_blank" href="/images/invoice/<?php echo $order['invoice_path'] ?>"> <?php echo $order['invoice_path'] ?> </a> <?php } ?></span>
                 <form method="post" action="/dashboard/teacher/upload-invoice" enctype="multipart/form-data" class="upload-file-form" >
-                    <input id="FileUpload1" type="file" name="file" style="display: none">
+                    <input id="FileUpload1" class="FileUpload1" data-id="<?php echo $order['order_id'] ?>" type="file" name="file" style="display: none">
                     <input type="hidden" name="order_id" value="<?php echo $order['order_id']; ?>">
                     <button class="mt-2 upload-btn" style="display: none">Upload</button>
                 </form>
@@ -90,18 +90,17 @@ $user_timezone = MyDate::getUserTimeZone();
 	</table>
 </div>
     <script type="text/javascript">
-            var fileupload = document.getElementById("FileUpload1");
-            var filePath = document.getElementById("spnFilePath");
-            var image = document.getElementById("imgFileUpload");
-            image.onclick = function () {
-                fileupload.click();
-            };
-            fileupload.onchange = function () {
-                $(fileupload).next().next().show();
-                var fileName = fileupload.value.split('\\')[fileupload.value.split('\\').length - 1];
-                filePath.innerHTML = "<b>Selected File: </b>" + fileName;
-
-            };
+        $(".imgFileUpload").on('click', function () {
+            var id = $(this).data('id');
+            $(".FileUpload1[data-id='"+id+"']").click();
+            $(".FileUpload1[data-id='"+id+"']").on('change', function () {
+                $(this).next().next().show();
+                var get_val = $(this).val();
+                alert(get_val);
+                var fileName = get_val.split('\\')[get_val.split('\\').length - 1];
+                $(".spnFilePath[data-id='"+id+"']").html("<b>Selected File: </b>" + fileName) ;
+            })
+        });
     </script>
 <?php
 echo FatUtility::createHiddenFormFromData($postedData, array(
