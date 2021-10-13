@@ -673,10 +673,10 @@ class User extends MyAppModel
             unset($_SESSION['referer_page_url']);
             return $redirectUrl;
         }*/
-        if ("" == $preferredDashboard) {
+      /*  if ("" == $preferredDashboard) {
             $userRow = User::getAttributesById(UserAuthentication::getLoggedUserId(), ['user_preferred_dashboard']);
             $preferredDashboard = $userRow['user_preferred_dashboard'];
-        }
+        }*/
         switch ($preferredDashboard) {
             case User::USER_LEARNER_DASHBOARD:
                 if (true != User::isLearnerProfileCompleted()) {
