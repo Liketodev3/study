@@ -42,7 +42,7 @@ class GuestUserController extends MyAppController
         }
         $userId = UserAuthentication::getLoggedUserId();
         CommonHelper::setcookie('uc_id', $userId, time() + 3600 * 24 * 30, CONF_WEBROOT_FRONTEND, '', true);
-        $this->set('redirectUrl', User::getPreferedDashbordRedirectUrl('',false));
+        $this->set('redirectUrl', User::getPreferedDashbordRedirectUrl());
         $this->set('msg', Label::getLabel("MSG_LOGIN_SUCCESSFULL"));
         $this->_template->render(false, false, 'json-success.php');
     }

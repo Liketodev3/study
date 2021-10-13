@@ -668,11 +668,11 @@ class User extends MyAppModel
     public static function getPreferedDashbordRedirectUrl($preferredDashboard = "", $detectReferrerUrl = true)
     {
         $redirectUrl = "";
-        if (isset($_SESSION['referer_page_url']) && true == $detectReferrerUrl) {
+      /*  if (isset($_SESSION['referer_page_url']) && true == $detectReferrerUrl) {
             $redirectUrl = $_SESSION['referer_page_url'];
             unset($_SESSION['referer_page_url']);
             return $redirectUrl;
-        }
+        }*/
         if ("" == $preferredDashboard) {
             $userRow = User::getAttributesById(UserAuthentication::getLoggedUserId(), ['user_preferred_dashboard']);
             $preferredDashboard = $userRow['user_preferred_dashboard'];
