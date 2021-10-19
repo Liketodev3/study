@@ -40,6 +40,14 @@
     <h6 class="heading-6"><?php echo Label::getLabel('Lbl_History'); ?></h6>
     <nav class="menu menu--primary">
         <ul>
+            <li class="menu__item <?php echo ($controllerName == "Invoice" && $action == "index") ? 'is-active' : ''; ?>">
+                <a href="<?php echo CommonHelper::generateUrl('Invoice', 'index') ?>">
+                    <svg class="icon icon--orders margin-right-2">
+                        <use xlink:href="<?php echo CONF_WEBROOT_URL.'images/sprite.yo-coach.svg#orders'; ?>"></use>
+                    </svg>
+                    <span>Invoices</span>
+                </a>
+            </li>
             <li class="menu__item <?php echo ($controllerName == "Learner" && $action == "orders") ? 'is-active' : ''; ?>">
                 <a href="<?php echo CommonHelper::generateUrl('Learner', 'orders'); ?>">
                     <svg class="icon icon--orders margin-right-2"><use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#orders'; ?>"></use></svg>
