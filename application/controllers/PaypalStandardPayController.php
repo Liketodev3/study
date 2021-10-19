@@ -239,7 +239,7 @@ class PaypalStandardPayController extends PaymentController
                         'utxn_debit' => 0,
                         'utxn_credit' => $promo_owner_money['level1'],
                         'utxn_status' => Transaction::STATUS_COMPLETED,
-                        'utxn_order_id' => 100,
+                        'utxn_order_id' => $orderId,
                         'utxn_comments' => 'Affilate amount',
                         'utxn_type' => Transaction::TYPE_LESSON_BOOKING
                     ];
@@ -257,7 +257,7 @@ class PaypalStandardPayController extends PaymentController
                         'utxn_debit' => 0,
                         'utxn_credit' => $promo_owner_money['level2'],
                         'utxn_status' => Transaction::STATUS_COMPLETED,
-                        'utxn_order_id' => 100,
+                        'utxn_order_id' => $orderId,
                         'utxn_comments' => 'Affilate amount',
                         'utxn_type' => Transaction::TYPE_LESSON_BOOKING
                     ];
