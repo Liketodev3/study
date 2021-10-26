@@ -178,6 +178,50 @@ class GuestUserController extends MyAppController
             unset($post['used_link']);
         }
 
+        // MAILCHIMP TEST
+
+        require_once(CONF_INSTALLATION_PATH . 'library/third-party/Mailchimp.php');
+
+        if ($post === false) {
+            Message::addErrorMessage($frm->getValidationErrors());
+            FatUtility::dieWithError(Message::getHtml());
+        }
+
+        $siteLangId = CommonHelper::getLangId();
+
+        $api_key = FatApp::getConfig("CONF_MAILCHIMP_KEY");
+
+        $list_id = FatApp::getConfig("CONF_MAILCHIMP_LIST_ID");
+
+        if ($api_key == '' || $list_id == '') {
+            Message::addErrorMessage(Label::getLabel("LBL_Newsletter_is_not_configured_yet,_Please_contact_admin", $siteLangId));
+            FatUtility::dieWithError(Message::getHtml());
+        }
+
+
+        $MailchimpObj = new Mailchimp($api_key);
+        $Mailchimp_ListsObj = new Mailchimp_Lists($MailchimpObj);
+        try {
+            $subscriber = $Mailchimp_ListsObj->subscribe($list_id,
+                ['email' => $post['user_email'],
+                    'merge_fields' => ['FNAME' =>  $post['user_first_name'], 'LNAME' => $post['user_last_name'],
+                    'status' => 'subscribed'
+                    ]
+                ]);
+
+
+        } catch (Mailchimp_Error $e) {
+            var_dump($e->getMessage());exit;
+        }
+
+
+
+
+
+        // END MAILCHIMP TEST
+
+
+
         $user->assignValues($post);
         if (true !== $user->save()) {
             $db->rollbackTransaction();
