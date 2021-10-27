@@ -136,6 +136,7 @@ class GuestUserController extends MyAppController
         $frm = $this->getSignUpForm();
 
         $post = FatApp::getPostedData();
+        $type = 'Learner';
 
         if (!isset($post['user_first_name'])) {
             $post['user_first_name'] = strstr($post['user_email'], '@', true);
@@ -166,10 +167,11 @@ class GuestUserController extends MyAppController
         $user_registered_initially_for = User::USER_TYPE_LEANER;
         $posted_user_preferred_dashboard = FatApp::getPostedData('user_preferred_dashboard', FatUtility::VAR_INT, 0);
         if ($posted_user_preferred_dashboard == User::USER_TEACHER_DASHBOARD) {
+            $type = 'Teacher';
             $user_preferred_dashboard = User::USER_TEACHER_DASHBOARD;
             $user_registered_initially_for = User::USER_TYPE_TEACHER;
         }
-        $post['user_timezone'] = $_COOKIE['user_timezone'] ?? MyDate::getTimeZone();;
+        $post['user_timezone'] = $_COOKIE['user_timezone'] ?? MyDate::getTimeZone();
         $post['user_preferred_dashboard'] = $user_preferred_dashboard;
         $post['user_registered_initially_for'] = $user_registered_initially_for;
 
@@ -178,7 +180,7 @@ class GuestUserController extends MyAppController
             unset($post['used_link']);
         }
 
-        // MAILCHIMP TEST
+        // START MAILCHIMP
 
         require_once(CONF_INSTALLATION_PATH . 'library/third-party/Mailchimp.php');
 
@@ -202,25 +204,19 @@ class GuestUserController extends MyAppController
         $MailchimpObj = new Mailchimp($api_key);
         $Mailchimp_ListsObj = new Mailchimp_Lists($MailchimpObj);
         try {
-            $subscriber = $Mailchimp_ListsObj->subscribe($list_id,
-                ['email' => $post['user_email'],
-                    'merge_fields' => ['FNAME' =>  $post['user_first_name'], 'LNAME' => $post['user_last_name'],
-                    'status' => 'subscribed'
-                    ]
-                ]);
+            if($type == 'Learner'){
+                $merge_fields = array('FNAME' => $post['user_first_name'], 'LNAME' => $post['user_last_name'],'TYPE' => $type);
+            }else{
+                $merge_fields = array('TYPE' => $type);
+            }
 
+             $Mailchimp_ListsObj->subscribe($list_id, ['email' => htmlentities($post['user_email'])], $merge_fields);
 
         } catch (Mailchimp_Error $e) {
-            var_dump($e->getMessage());exit;
+     /*       var_dump($e->getMessage());exit;*/
         }
 
-
-
-
-
-        // END MAILCHIMP TEST
-
-
+        // END MAILCHIMP
 
         $user->assignValues($post);
         if (true !== $user->save()) {
